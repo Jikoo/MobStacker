@@ -2,6 +2,9 @@ package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.utils.StackUtils;
+
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,86 +18,53 @@ public class EntityExplodeListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
-    public void entityExplodeListener(EntityExplodeEvent event) {
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityExplode(EntityExplodeEvent event) {
 
-        /*
-        Quick return conditions: Entity is not a LivingEntity or is not stacked.
-        */
-        if (!(event.getEntity() instanceof LivingEntity) || !StackUtils.hasRequiredData(event.getEntity())) {
+        Entity entity = event.getEntity();
+        int quantity = StackUtils.getStackSize(entity);
+
+        // Only bother with entities that are actually stacked.
+        if (quantity < 2) {
             return;
         }
 
-        LivingEntity entity = ((LivingEntity) event.getEntity());
+        if (!plugin.getConfig().getBoolean("exploding-creeper-kills-stack")) {
 
-        /*
-        If there is a LivingEntity exploding and we have kill full stack set to false, then execute this block.
-         */
-        if (!getPlugin().getConfig().getBoolean("exploding-creeper-kills-stack")) {
+            // If we're not killing the full stack, peel off the rest.
+            entity = plugin.getStackUtils().peelOffStack(entity);
 
-            /*
-            Removes one for the chap that just blew up.
-             */
-            int newQuantity = StackUtils.getStackSize(entity) - 1;
-
-            /*
-            If a stack still remains then follow.
-             */
-            if (newQuantity > 0) {
-
-                /*
-                Spawn in a new entity to replace the old stack.
-                 */
-                LivingEntity newEntity = (LivingEntity) entity.getLocation().getWorld().spawnEntity(entity.getLocation(), entity.getType());
-
-                /*
-                Set the stacks new size.
-                 */
-                getPlugin().getStackUtils().setStackSize(newEntity, newQuantity);
-
-                /*
-                If a stack is larger than one, then give it the appropriate name.
-                 */
-                if (newQuantity > 1) {
-
-                    getPlugin().getStackUtils().renameStack(newEntity, newQuantity);
-
-                }
-
+            // Set 1 tick of no damage to prevent resulting explosion harming the new stack.
+            if (entity instanceof LivingEntity) {
+                ((LivingEntity) entity).setNoDamageTicks(1);
             }
 
-            /*
-            If config is set to kill the full stack AND amplify explosions, then follow.
-             */
-        } else if (getPlugin().getConfig().getBoolean("magnify-stack-explosion.enable")) {
+            return;
+
+        }
+
+        // Amplify explosions if configured to do so.
+        if (plugin.getConfig().getBoolean("magnify-stack-explosion.enable")) {
 
             /*
-            Get how many entities are exploding
+             * Charged creepers have a power of 6, TNT has a power of 4, normal creepers have a
+             * power of 3. For everything else, 1 is probably a safe default. Really, it's a minimum
+             * of 2 as that's how many mobs must be in the stack to reach this point.
              */
-            int quantity = StackUtils.getStackSize(entity);
+            float power = quantity + (entity instanceof Creeper ? ((Creeper) entity).isPowered() ? 5 : 2 : 0);
 
-            /*
-            Set there to be only one mob in the stack so when it blows up, it dies, giving the illusion that all have died.
-             */
-            getPlugin().getStackUtils().setStackSize(entity, 1);
+            // Cap explosion power to configured maximum.
+            quantity = Math.max(1, Math.min(quantity,
+                    plugin.getConfig().getInt("magnify-stack-explosion.max-creeper-explosion-size")));
 
-            /*
-            If the number of creepers in the stack is greater than the max explosion size, set the explosion size to the max.
-             */
-            if (quantity > getPlugin().getConfig().getInt("magnify-stack-explosion.max-creeper-explosion-size")) {
-                quantity = getPlugin().getConfig().getInt("magnify-stack-explosion.max-creeper-explosion-size");
-            }
+            // Remove the entity - exploding entities don't fly off dying, they vanish with the explosion.
+            entity.remove();
 
-            /*
-            Create this bad ass explosion where the creeper was.
-             */
-            event.getLocation().getWorld().createExplosion(event.getLocation(), quantity + 1);
+            // Create the explosion.
+            event.getLocation().getWorld().createExplosion(event.getLocation(), power);
 
         }
 
     }
 
-    public MobStacker getPlugin() {
-        return plugin;
-    }
 }

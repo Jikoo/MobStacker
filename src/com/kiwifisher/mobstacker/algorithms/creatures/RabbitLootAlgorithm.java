@@ -1,68 +1,33 @@
 package com.kiwifisher.mobstacker.algorithms.creatures;
 
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import com.kiwifisher.mobstacker.algorithms.CookableLoot;
 import com.kiwifisher.mobstacker.algorithms.Loot;
-import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
+
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-public class RabbitLootAlgorithm implements LootAlgorithm {
-
-    private List<Loot> dropArrayList = new ArrayList<>();
+public class RabbitLootAlgorithm extends AnimalLootAlgorithm {
 
     public RabbitLootAlgorithm() {
-        dropArrayList.add(new Loot(Material.RABBIT, 0, 1));
-        dropArrayList.add(new Loot(Material.RABBIT_HIDE, 0, 1));
+        this.getLootArray().add(new CookableLoot(Material.RABBIT, Material.COOKED_RABBIT, 0, 1, false));
+        this.getLootArray().add(new Loot(Material.RABBIT_HIDE, 1));
     }
 
     @Override
-    public int getExp() {
-        return 0;
-    }
+    public List<ItemStack> getRandomLoot(Entity entity, int numberOfMobs, boolean playerKill, int looting) {
+        List<ItemStack> drops = super.getRandomLoot(entity, numberOfMobs, playerKill, looting);
 
-    @Override
-    public List<Loot> getLootArray() {
-        return this.dropArrayList;
-    }
+        // 10 + 3% per level looting chance of a rabbit's foot.
+        double dropChance = (10 + looting * 3) / 100.0;
+        int amount = (int) (ThreadLocalRandom.current().nextInt((int) (numberOfMobs / dropChance)) * dropChance);
 
-    /**
-     * Get random loot results for specified number of mobs.
-     * @param numberOfMobsWorth number of mobs to get loot for.
-     * @return Returns the drops as an array
-     */
-    @Override
-    public List<ItemStack> getRandomLoot(LivingEntity entity, int numberOfMobsWorth) {
-
-        List<ItemStack> drops = new ArrayList<>();
-
-        /*
-        Iterate through for amount of mobs
-         */
-        for (int i = 0; i < numberOfMobsWorth; i++) {
-
-            /*
-            Iterate through all the possible loot for each mob.
-             */
-            for (Loot loot : getLootArray()) {
-
-                /*
-                Selects random amount of loot based on definitions in Loot object.
-                 */
-                int randomNumber = new Random().nextInt((loot.getMaxQuantity() - loot.getMinimumQuantity()) + 1) + loot.getMinimumQuantity();
-
-                /*
-                Add the loot to the drops array.
-                 */
-                drops.add(new ItemStack(loot.getMaterial(), randomNumber));
-
-            }
-
-        }
+        this.addDrops(drops, Material.RABBIT_FOOT, (short) 0, amount);
 
         return drops;
     }
+
 }

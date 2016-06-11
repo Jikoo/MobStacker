@@ -2,52 +2,34 @@ package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.utils.StackUtils;
-import org.bukkit.entity.LivingEntity;
+
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.SheepDyeWoolEvent;
 
 public class SheepDyeListener implements Listener {
 
-    private MobStacker plugin;
+    private final MobStacker plugin;
 
     public SheepDyeListener(MobStacker plugin) {
         this.plugin = plugin;
     }
 
-    @EventHandler
-    public void sheepDyeEvent(SheepDyeWoolEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onSheepDye(SheepDyeWoolEvent event) {
 
-        LivingEntity entity = event.getEntity();
+        Sheep sheep = event.getEntity();
 
-        /*
-        If mob has valid meta data
-         */
-        if (StackUtils.hasRequiredData(entity)) {
-
-            /*
-            If there is more than one mob in the stack then follow.
-             */
-            if (StackUtils.getStackSize(entity) > 1) {
-
-                /*
-                Peel off the dyed sheep.
-                 */
-                LivingEntity newEntity = getPlugin().getStackUtils().peelOffStack(entity, true);
-
-            } else {
-
-                /*
-                If it was the stack one, just try stack that fucker.
-                 */
-                getPlugin().getStackUtils().attemptToStack(0, (entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
-            }
-
+        if (StackUtils.getStackSize(sheep) > 1) {
+            // Peel off the dyed sheep.
+            plugin.getStackUtils().peelOffStack(sheep);
+        } else {
+            //If the stack is a single sheep, attempt to stack once.
+            plugin.getStackUtils().attemptToStack(sheep, 1);
         }
+
     }
 
-    public MobStacker getPlugin() {
-        return plugin;
-    }
 }

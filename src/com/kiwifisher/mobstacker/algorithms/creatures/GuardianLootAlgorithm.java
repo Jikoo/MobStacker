@@ -1,70 +1,81 @@
 package com.kiwifisher.mobstacker.algorithms.creatures;
 
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
 import com.kiwifisher.mobstacker.algorithms.Loot;
 import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
+import com.kiwifisher.mobstacker.algorithms.RareLoot;
+
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Guardian;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-public class GuardianLootAlgorithm implements LootAlgorithm {
-
-
-    private List<Loot> dropArrayList = new ArrayList<>();
+public class GuardianLootAlgorithm extends LootAlgorithm {
 
     public GuardianLootAlgorithm() {
-        dropArrayList.add(new Loot(Material.PRISMARINE_SHARD, 0, 2));
-        dropArrayList.add(new Loot(Material.PRISMARINE_CRYSTALS, 0, 1));
-        dropArrayList.add(new Loot(Material.RAW_FISH, 0, 1));
+        this.getLootArray().add(new Loot(Material.PRISMARINE_SHARD, 0, 2));
+        this.getLootArray().add(new RareLoot(Material.RAW_FISH) {
+            @Override
+            public short getData(Entity entity) {
+                double random = ThreadLocalRandom.current().nextDouble();
+                if (random < 0.13) {
+                    // 13% chance of pufferfish
+                    return 3;
+                }
+                if (random < 0.15) {
+                    // 2% chance of clownfish
+                    return 2;
+                }
+                if (random < 0.40) {
+                    // 25% chance of salmon
+                    return 1;
+                }
+                // 60% chance of normal fish
+                return 0;
+            }
+        });
     }
 
     @Override
-    public int getExp() {
-        return 0;
+    public int getExp(Entity entity, int numberOfMobs) {
+        return 10 * numberOfMobs;
     }
 
     @Override
-    public List<Loot> getLootArray() {
-        return this.dropArrayList;
-    }
+    public List<ItemStack> getRandomLoot(Entity entity, int numberOfMobs, boolean playerKill, int looting) {
+        List<ItemStack> drops = super.getRandomLoot(entity, numberOfMobs, playerKill, looting);
 
-    /**
-     * Get random loot results for specified number of mobs.
-     * @param numberOfMobsWorth number of mobs to get loot for.
-     * @return Returns the drops as an array
-     */
-    @Override
-    public List<ItemStack> getRandomLoot(LivingEntity entity, int numberOfMobsWorth) {
-
-        List<ItemStack> drops = new ArrayList<>();
+        ThreadLocalRandom random = ThreadLocalRandom.current();
 
         /*
-        Iterate through for amount of mobs
+         * Fiddly math: Guardians have a 40% chance of dropping a fish. If no fish is dropped, there
+         * is a 40% chance of dropping a prismarine crystal. To do the percent drop chance, we
+         * follow the same principal as the main loot algorithm for a percent chance with a chance
+         * of 2/5. However, the percent chance for crystals has the total fish dropped subtracted
+         * from it.
          */
-        for (int i = 0; i < numberOfMobsWorth; i++) {
+        // TODO: wiki is unclear on actual drop chances - elder guardian and guardian pages don't match, read NMS
+        int max = numberOfMobs * 5 / 2 * looting;
 
-            /*
-            Iterate through all the possible loot for each mob.
-             */
-            for (Loot loot : getLootArray()) {
+        int fish = random.nextInt(max);
 
-                /*
-                Selects random amount of loot based on definitions in Loot object.
-                 */
-                int randomNumber = new Random().nextInt((loot.getMaxQuantity() - loot.getMinimumQuantity()) + 1) + loot.getMinimumQuantity();
+        int crystals = random.nextInt(max - fish);
 
-                /*
-                Add the loot to the drops array.
-                 */
-                drops.add(new ItemStack(loot.getMaterial(), randomNumber));
+        fish = fish * 2 / 5;
+        crystals = crystals * 2 / 5;
 
-            }
+        this.addDrops(drops, Material.RAW_FISH, (short) 0, fish);
+        this.addDrops(drops, Material.PRISMARINE_CRYSTALS, (short) 0, crystals);
 
+        if (!playerKill || !(entity instanceof Guardian)) {
+            return drops;
+        }
+
+        Guardian guardian = (Guardian) entity;
+        if (guardian.isElder()) {
+            drops.add(new ItemStack(Material.SPONGE, numberOfMobs));
         }
 
         return drops;

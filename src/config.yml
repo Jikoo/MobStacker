@@ -1,36 +1,94 @@
-# The naming layout for stacked mobs. Use the {QTY} and {TYPE} tags, along with normal colour codes to customise the in game display.
+# Use the {QTY} and {TYPE} tags along with color codes to customize name display.
 stack-naming: '&e&l{QTY}X &6&l{TYPE}'
+
+# Should the stack name always be visible?
+name-always-visible: false
 
 # How far around the mob should the plugin check for mobs to stack to?
 stack-range:
-    x: 5
-    y: 2
-    z: 5
+  x: 5
+  y: 2
+  z: 5
 
 # How many seconds after a mob spawns should the plugin check for mobs to stack to?
-# The higher the number, the more work for the server to do. Keep this rather low. In SECONDS NOT TICKS.
-# Set to 0 to only try stack on spawn. Set to -1 to never stop trying to stack (Possibly lag inducive for larger number of mobs (1000+).
+# The higher the number, the more work for the server does. Keep this rather low. In SECONDS NOT TICKS.
+# Set to 0 to only try on spawn. Set to -1 to never stop trying to stack (Possibly lag-inducing for larger number of mobs (1000+).
 seconds-to-try-stack: 5
 
-# If false, named mobs will not stack, meaning pets are protected.
+# If false, named mobs will not stack.
 stack-custom-named-mobs: false
 
-# If false mobs will stack regardless of age (Baby or adult)
-stack-by-age: true
-
 # False means that animals on a leash will not stack.
-stack-leashed-aminals: false
+stack-leashed-mobs: false
 
-# Protect tamed animals from being stacked on?
-protect-tamed: true
+# Upon leashing an entity, should the full stack be leashed, or just one?
+leash-whole-stack: false
 
-# If a stack of mobs fall off should the full stack die, or just one mob in the stack?
-# All damage causes can be found at https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
-kill-whole-stack-on-death:
-    enable: true
-    multiply-loot: true
-    reasons:
-      - FALL
+# Required matching properties to stack
+stack-properties:
+  AI: true
+  age: true
+  color: true
+  poweredCreeper: true
+  maxHealth: true
+  horse:
+    type: true
+    color: true
+  playerCreatedGolem: true
+  ocelot: true
+  rabbit: true
+  sheep: true
+  tameable: true
+  villager: true
+  wolf:
+    anger: true
+    color: true
+
+# When certain damage types harm a mob, it's logical for the entire stack to take damage.
+# This will allow easier use of grinders, etc. For a list of damage causes, see
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
+persistent-damage:
+  enable: true
+  multiply-loot: true
+  reasons:
+  - CONTACT
+  - DRAGON_BREATH
+  - DROWNING
+  - FALL
+  - FIRE
+  - HOT_FLOOR
+  - LAVA
+  - MELTING
+  - STARVATION
+  - SUFFOCATION
+  - SUICIDE
+  - VOID
+
+# Should stacked chickens drop stacked eggs?
+# Note: Due to a couple Bukkit issues and restrictions, chickens spawning cannot be directly detected.
+# It would technically be possible via very careful positioning to duplicate eggs.
+# In addition, to prevent issues resulting in a loop, all eggs will be placed in one stack,
+# so a maximum higher than 16 will result in overstacked eggs being spawned.
+multiply-eggs:
+  enabled: true
+  max: 16
+
+# Should previously stacked mobs be loaded back when chunks load?
+# This requires your stack-naming option to contain the {QTY} tag.
+load-existing-stacks:
+  enabled: true
+  mob-types:
+  - CHICKEN
+  - COW
+  - HORSE
+  - OCELOT
+  - PIG
+  - RABBIT
+  - SNOWMAN
+  - SHEEP
+  - SQUID
+  - VILLAGER
+  - WOLF
 
 # If a creeper stack explodes, should the whole stack die?
 exploding-creeper-kills-stack: false
@@ -40,95 +98,76 @@ magnify-stack-explosion:
     enable: true
     max-creeper-explosion-size: 10
 
-# Should mobs always stack towards the ground? Useful for flying mobs, like blazes and ghasts.
-stack-mobs-down:
-    enable: true
-    mob-types:
-        - BLAZE
-        - GHAST
+# Should mobs always stack to the lower entity? Useful for flying mobs like blazes and ghasts.
+stack-mobs-down: true
 
-# Should coloured mobs, like sheep, be stacked separately?
-separate-stacks-by-color: true
-
-# Upon leashing an entity, should the full stack be leashed, or just one?
-leash-whole-stack: false
-
-# Should sheep be separated based on whether they are shorn or not?
-separate-by-sheared: true
-
-# If a burning stack dies, should the remaining burn time for the previous mob be carried on to the next?
-carry-over-fire:
-  enabled: true
-  # If star-new-burn is true, it will be as if the next mob in the stack has been set on fire again, otherwise it will only burn for the remaining
-  # time of the previous mob.
-  start-new-burn: false
-
-# What should the max stack size be for certain mobs? If a mob isn't listed, the stack size isn't limied. Add Mobs as shown below to create a stack limit.
+# What should the max stack size be for certain mobs?
+# Add Mobs as shown below to create a stack limit.
+# If a mob isn't listed, the stack size is limted to default.
+# 2,147,483,647 is the maximum possible.
 max-stack-sizes:
-    IRON_GOLEM: 10
+  default: 2147483647
+  IRON_GOLEM: 10
 
 # List worlds that no mobs will ever stack in. Write ALL world names in ONLY lower case.
 blacklist-world:
-    - example-world
-
-# For which spawn methods should mobs be nerfed?
-mob-nerfing:
-    - SPAWNER
+- example-world
 
 # Mobs marked with true WILL attempt to stack. Mobs spawned by building (Golems and Wither) are a bit buggy, so it is suggested to leave them false.
 stack-mob-type:
-    BAT: true
-    BLAZE: true
-    CAVE_SPIDER: true
-    CHICKEN: true
-    COW: true
-    CREEPER: true
-    ENDERMAN: true
-    ENDERMITE: true
-    GHAST: true
-    GIANT: true
-    GUARDIAN: true
-    HORSE: true
-    IRON_GOLEM: false
-    MAGMA_CUBE: true
-    MUSHROOM_COW: true
-    OCELOT: true
-    PIG: true
-    PIG_ZOMBIE: true
-    RABBIT: true
-    SHEEP: true
-    SILVERFISH: true
-    SKELETON: true
-    SLIME: true
-    SNOWMAN: false
-    SPIDER: true
-    SQUID: true
-    VILLAGER: true
-    WITCH: true
-    WITHER: false
-    WOLF: true
-    ZOMBIE: true
+  BAT: true
+  BLAZE: true
+  CAVE_SPIDER: true
+  CHICKEN: true
+  COW: true
+  CREEPER: true
+  ENDERMAN: true
+  ENDERMITE: true
+  GHAST: true
+  GIANT: true
+  GUARDIAN: true
+  HORSE: true
+  IRON_GOLEM: false
+  MAGMA_CUBE: true
+  MUSHROOM_COW: true
+  OCELOT: true
+  PIG: true
+  PIG_ZOMBIE: true
+  POLAR_BEAR: true
+  RABBIT: true
+  SHEEP: true
+  SILVERFISH: true
+  SKELETON: true
+  SLIME: true
+  SNOWMAN: false
+  SPIDER: true
+  SQUID: true
+  VILLAGER: true
+  WITCH: true
+  WITHER: false
+  WOLF: true
+  ZOMBIE: true
 
 # Spawn methods marked with true WILL attempt to stack. CUSTOM is mobs spawned by plugins - Including this one. Certain features require CUSTOM to be left true.
 # Plugin will still work if CUSTOM is set to false, jut not collecting stacks when another stack is killed nearby.
 # It is suggested to leave SLIME_SPLIT false due to duplication issues.
-stack-spawn-method:
-    SPAWNER_EGG: true
-    SPAWNER: true
-    BREEDING: false
-    BUILD_IRONGOLEM: false
-    BUILD_SNOWMAN: false
-    BUILD_WITHER: false
-    CHUNK_GEN: false
-    CURED: false
-    CUSTOM: true
-    DISPENSE_EGG: true
-    EGG: true
-    INFECTION: false
-    JOCKEY: false
-    LIGHTNING: false
-    MOUNT: false
-    NATURAL: false
-    OCELOT_BABY: false
-    SLIME_SPLIT: false
-    NETHER_PORTAL: true
+stack-spawn-reason:
+  SPAWNER_EGG: true
+  SPAWNER: true
+  BREEDING: false
+  BUILD_IRONGOLEM: false
+  BUILD_SNOWMAN: false
+  BUILD_WITHER: false
+  CHUNK_GEN: false
+  CURED: false
+  CUSTOM: true
+  DISPENSE_EGG: true
+  EGG: true
+  INFECTION: false
+  JOCKEY: false
+  LIGHTNING: false
+  MOUNT: false
+  NATURAL: false
+  OCELOT_BABY: false
+  SLIME_SPLIT: true
+  NETHER_PORTAL: true

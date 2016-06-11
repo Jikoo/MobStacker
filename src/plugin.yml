@@ -1,8 +1,33 @@
 name: MobStacker
 main: com.kiwifisher.mobstacker.MobStacker
 author: KiwiFisher
-version: 1.9.1
-softdepend: [WorldGuard, mcMMO]
+authors: [Jikoo]
+version: 1.10-Jikoo
+
 commands:
   mobstacker:
-    permission-message: You don't have access to that command!
+    permission: mobstacker.mobstacker
+
+permissions:
+  mobstacker.*:
+    default: op
+    description: Permission to use all MobStacker features.
+    children:
+      mobstacker.mobstacker:
+        default: op
+        description: Permission to use /mobstacker
+      mobstacker.reload:
+        default: op
+        description: Permission to use /mobstacker reload
+        children:
+          mobstacker.mobstacker: true
+      mobstacker.toggle:
+        default: op
+        description: Permission to use /mobstacker toggle
+        children:
+          mobstacker.mobstacker: true
+      mobstacker.clearall:
+        default: op
+        description: Permission to use /mobstacker clearall
+        children:
+          mobstacker.mobstacker: true

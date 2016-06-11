@@ -1,68 +1,79 @@
 package com.kiwifisher.mobstacker.algorithms.creatures;
 
+import java.util.List;
+
 import com.kiwifisher.mobstacker.algorithms.Loot;
 import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
+import com.kiwifisher.mobstacker.algorithms.RareLoot;
+
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+public class SkeletonLootAlgorithm extends LootAlgorithm {
 
-public class SkeletonLootAlgorithm implements LootAlgorithm {
-
-    private List<Loot> dropArrayList = new ArrayList<>();
+    private final Loot witherSkull;
 
     public SkeletonLootAlgorithm() {
-        dropArrayList.add(new Loot(Material.ARROW, 0, 2));
-        dropArrayList.add(new Loot(Material.BONE, 0, 2));
-    }
-
-    @Override
-    public int getExp() {
-        return 0;
-    }
-
-    @Override
-    public List<Loot> getLootArray() {
-        return this.dropArrayList;
-    }
-
-    /**
-     * Get random loot results for specified number of mobs.
-     * @param numberOfMobsWorth number of mobs to get loot for.
-     * @return Returns the drops as an array
-     */
-    @Override
-    public List<ItemStack> getRandomLoot(LivingEntity entity, int numberOfMobsWorth) {
-
-        List<ItemStack> drops = new ArrayList<>();
-
-        /*
-        Iterate through for amount of mobs
-         */
-        for (int i = 0; i < numberOfMobsWorth; i++) {
-
-            /*
-            Iterate through all the possible loot for each mob.
-             */
-            for (Loot loot : getLootArray()) {
-
-                /*
-                Selects random amount of loot based on definitions in Loot object.
-                 */
-                int randomNumber = new Random().nextInt((loot.getMaxQuantity() - loot.getMinimumQuantity()) + 1) + loot.getMinimumQuantity();
-
-                /*
-                Add the loot to the drops array.
-                 */
-                drops.add(new ItemStack(loot.getMaterial(), randomNumber));
-
+        this.getLootArray().add(new Loot(Material.BONE, 0, 2));
+        this.getLootArray().add(new Loot(Material.ARROW, 0, 2) {
+            @Override
+            public Material getMaterial(Entity entity) {
+                if (entity instanceof Skeleton && ((Skeleton) entity).getSkeletonType() == SkeletonType.WITHER) {
+                    return Material.COAL;
+                }
+                return super.getMaterial(entity);
             }
+        });
+        this.witherSkull = new RareLoot(Material.SKULL_ITEM, (short) 1);
+    }
 
+    @Override
+    public int getExp(Entity entity, int numberOfMobs) {
+        return 5 * numberOfMobs;
+    }
+
+    @Override
+    public List<ItemStack> getRandomLoot(Entity entity, int numberOfMobs, boolean playerKill, int looting) {
+        List<ItemStack> drops = super.getRandomLoot(entity, numberOfMobs, playerKill, looting);
+
+        if (playerKill && entity instanceof Skeleton && ((Skeleton) entity).getSkeletonType() == SkeletonType.WITHER) {
+            int amount = this.getRandomQuantity(witherSkull, numberOfMobs, looting);
+            this.addDrops(drops, witherSkull.getMaterial(entity), witherSkull.getData(entity), amount);
+            return drops;
+        }
+
+        // Strays drop arrows of slowness.
+        if (!playerKill || entity instanceof Skeleton && ((Skeleton) entity).getSkeletonType() != SkeletonType.STRAY) {
+            return drops;
+        }
+
+        int amount = this.getRandomQuantity(0, 1, (2 * looting + 1) / (2 * looting + 2), numberOfMobs);
+
+        ItemStack arrow = new ItemStack(Material.TIPPED_ARROW);
+        PotionMeta meta = (PotionMeta) arrow.getItemMeta();
+        meta.setBasePotionData(new PotionData(PotionType.SLOWNESS));
+        arrow.setItemMeta(meta);
+
+        while (amount > 0) {
+            if (amount > 64) {
+                ItemStack clone = arrow.clone();
+                clone.setAmount(64);
+                drops.add(clone);
+                amount -= 64;
+            } else {
+                arrow.setAmount(amount);
+                drops.add(arrow);
+                amount = 0;
+            }
         }
 
         return drops;
     }
+
 }

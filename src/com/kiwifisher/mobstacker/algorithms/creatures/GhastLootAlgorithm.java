@@ -6,15 +6,21 @@ import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 
-public class SnowGolemLootAlgorithm extends LootAlgorithm {
+/**
+ * LootAlgorithm for Ghasts.
+ * 
+ * @author Jikoo
+ */
+public class GhastLootAlgorithm extends LootAlgorithm {
 
-    public SnowGolemLootAlgorithm() {
-        this.getLootArray().add(new Loot(Material.SNOW_BALL, 0, 15));
+    public GhastLootAlgorithm() {
+        this.getLootArray().add(new Loot(Material.GHAST_TEAR, 1));
+        this.getLootArray().add(new Loot(Material.SULPHUR, 2));
     }
 
     @Override
     public int getExp(Entity entity, int numberOfMobs) {
-        return 0;
+        return 5 * numberOfMobs;
     }
 
 }

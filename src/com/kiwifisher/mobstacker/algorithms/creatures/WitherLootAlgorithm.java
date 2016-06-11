@@ -6,15 +6,20 @@ import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 
-public class SnowGolemLootAlgorithm extends LootAlgorithm {
+/**
+ * LootAlgorithm for Withers.
+ * 
+ * @author Jikoo
+ */
+public class WitherLootAlgorithm extends LootAlgorithm {
 
-    public SnowGolemLootAlgorithm() {
-        this.getLootArray().add(new Loot(Material.SNOW_BALL, 0, 15));
+    public WitherLootAlgorithm() {
+        this.getLootArray().add(new Loot(Material.NETHER_STAR, 1, 1));
     }
 
     @Override
     public int getExp(Entity entity, int numberOfMobs) {
-        return 0;
+        return 50 * numberOfMobs;
     }
 
 }

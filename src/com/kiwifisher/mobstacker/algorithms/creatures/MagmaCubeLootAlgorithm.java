@@ -4,26 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kiwifisher.mobstacker.algorithms.Loot;
-import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
 import org.bukkit.inventory.ItemStack;
 
-public class SlimeLootAlgorithm extends LootAlgorithm {
+/**
+ * LootAlgorithm for Magma Cubes.
+ * 
+ * @author Jikoo
+ */
+public class MagmaCubeLootAlgorithm extends SlimeLootAlgorithm {
 
-    public SlimeLootAlgorithm() {
-        this.getLootArray().add(new Loot(Material.SLIME_BALL, 0, 2));
-    }
-
-    @Override
-    public int getExp(Entity entity, int numberOfMobs) {
-        if (!(entity instanceof Slime)) {
-            return 0;
-        }
-
-        return (((Slime) entity).getSize() + 1) * numberOfMobs;
+    public MagmaCubeLootAlgorithm() {
+        this.getLootArray().add(new Loot(Material.MAGMA_CREAM, 1, 1.0/4));
     }
 
     @Override
@@ -32,7 +27,7 @@ public class SlimeLootAlgorithm extends LootAlgorithm {
             return new ArrayList<>();
         }
 
-        if (((Slime) entity).getSize() == 0) {
+        if (((Slime) entity).getSize() != 1) {
             return super.getRandomLoot(entity, numberOfMobs, playerKill, looting);
         }
 
