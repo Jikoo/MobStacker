@@ -160,32 +160,31 @@ public class StackUtils {
      */
     public Pair<Entity, Boolean> stackEntities(Entity entity1, Entity entity2, int maxStackSize) {
 
-        int additionalStacks = getStackSize(entity2);
-        int newStackSize = getStackSize(entity1) + additionalStacks;
-
-        if (!canStack(entity1, entity2, maxStackSize, newStackSize)) {
-            return new ImmutablePair<>(entity1, false);
-        }
-
-        // Get the current average health of the added entity for later use
-        double addedAverageHealth = getAverageHealth(entity2, true);
-
         Entity mergeTo = entity1;
         Entity removed = entity2;
-        // If entities are supposed to stack down, ensure existingEntity is the lower one.
+        // If entities are supposed to stack down, ensure mergeTo is the lower one.
         if (entity1.getLocation().getBlockY() > entity2.getLocation().getBlockY()
                 && plugin.getConfig().getBoolean("stack-mobs-down")) {
             mergeTo = entity2;
             removed = entity1;
-
         }
+
+        int additionalStacks = getStackSize(removed);
+        int newStackSize = getStackSize(mergeTo) + additionalStacks;
+
+        if (!canStack(mergeTo, removed, maxStackSize, newStackSize)) {
+            return new ImmutablePair<>(entity1, false);
+        }
+
+        // Get the current average health of the added entity for later use
+        double addedAverageHealth = getAverageHealth(removed, true);
 
         // Set stack size to new stack size
         setStackSize(mergeTo, newStackSize);
 
         // TODO: mergeProperties method - merge potion effects, meta, etc.? For now, using copyEntityProperties
         try {
-            copyEntityProperties(mergeTo, entity1);
+            copyEntityProperties(mergeTo, removed);
         } catch (Exception e) {
             // Catch generic exception to prevent unforeseen issues causing entity dupes
             e.printStackTrace();
@@ -196,7 +195,7 @@ public class StackUtils {
         // Remove merged entity
         removed.remove();
 
-        return new ImmutablePair<>(entity1, true);
+        return new ImmutablePair<>(mergeTo, true);
 
     }
 
@@ -213,6 +212,20 @@ public class StackUtils {
         if (entity1.equals(entity2) || entity1.isDead() || entity2.isDead()
                 || entity1.getType() != entity2.getType() || !isStackable(entity1)
                 || !isStackable(entity2) || maxStackSize < newStackSize) {
+            return false;
+        }
+
+        long lastBred1 = entity1.hasMetadata("lastBred") ? entity1.getMetadata("lastBred").get(0).asLong() : 0;
+        long lastBred2 = entity2.hasMetadata("lastBred") ? entity2.getMetadata("lastBred").get(0).asLong() : 0;
+        // Breeding status takes 5 minutes to reset.
+        long irrelevantAfter = System.currentTimeMillis() - 300000L;
+
+        /*
+         * Assuming entity1 is the entity being stacked to: If entity2 was bred later, it has a
+         * longer time until it can next breed and should not stack. However, if it was bred earlier
+         * than 5 minutes ago, it doesn't matter - the breeding timer resets then.
+         */
+        if (lastBred1 < lastBred2 && lastBred2 < irrelevantAfter) {
             return false;
         }
 
@@ -801,6 +814,12 @@ public class StackUtils {
             return false;
         }
 
+        // Do not allow entities bred within the last 15 seconds to stack at all
+        if (entity.hasMetadata("lastBred")
+                && entity.getMetadata("lastBred").get(0).asLong() < System.currentTimeMillis() - 15000) {
+            return false;
+        }
+
         return true;
     }
 
@@ -819,6 +838,24 @@ public class StackUtils {
      */
     public void setStackable(Entity entity, boolean stackable) {
         setMetadata(entity, "stackable", stackable);
+    }
+
+    /**
+     * Sets an entity recently bred.
+     * 
+     * @param entity the Entity
+     */
+    public void setBred(Entity entity) {
+        setMetadata(entity, "lastBred", System.currentTimeMillis());
+    }
+
+    /**
+     * Gets an entity's breedability.
+     * 
+     * @param entity the Entity
+     */
+    public boolean canBreed(Entity entity) {
+        return !entity.hasMetadata("lastBred") || entity.getMetadata("lastBred").get(0).asLong() < System.currentTimeMillis() - 300000L;
     }
 
     /**
