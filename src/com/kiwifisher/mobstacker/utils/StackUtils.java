@@ -176,17 +176,17 @@ public class StackUtils {
             return new ImmutablePair<>(entity1, false);
         }
 
-        // Get the current average health of the added entity for later use
+        // Get the current average health of the added entity for later use.
         double addedAverageHealth = getAverageHealth(removed, true);
 
-        // Set stack size to new stack size
+        // Set stack size to new stack size.
         setStackSize(mergeTo, newStackSize);
 
         // TODO: mergeProperties method - merge potion effects, meta, etc.? For now, using copyEntityProperties
         try {
             copyEntityProperties(mergeTo, removed);
         } catch (Exception e) {
-            // Catch generic exception to prevent unforeseen issues causing entity dupes
+            // Catch generic exception to prevent unforeseen issues causing entity duplication.
             e.printStackTrace();
         };
 
@@ -215,8 +215,10 @@ public class StackUtils {
             return false;
         }
 
-        long lastBred1 = entity1.hasMetadata("lastBred") ? entity1.getMetadata("lastBred").get(0).asLong() : 0;
-        long lastBred2 = entity2.hasMetadata("lastBred") ? entity2.getMetadata("lastBred").get(0).asLong() : 0;
+        MetadataValue meta = getValue(entity1, "lastBred");
+        long lastBred1 = meta != null ? meta.asLong() : 0;
+        meta = getValue(entity2, "lastBred");
+        long lastBred2 = meta != null ? meta.asLong() : 0;
         // Breeding status takes 5 minutes to reset.
         long irrelevantAfter = System.currentTimeMillis() - 300000L;
 
@@ -225,7 +227,7 @@ public class StackUtils {
          * longer time until it can next breed and should not stack. However, if it was bred earlier
          * than 5 minutes ago, it doesn't matter - the breeding timer resets then.
          */
-        if (lastBred1 < lastBred2 && lastBred2 < irrelevantAfter) {
+        if (lastBred1 < lastBred2 && lastBred2 > irrelevantAfter) {
             return false;
         }
 
@@ -250,6 +252,7 @@ public class StackUtils {
                     return false;
                 }
             } else if (living1.isLeashed() != living2.isLeashed()) {
+                return false;
             }
         }
 
@@ -681,17 +684,14 @@ public class StackUtils {
      */
     public static int getStackSize(Entity entity) {
 
-        if (!entity.hasMetadata("quantity")) {
-            return 1;
-        }
+        MetadataValue meta = getValue(entity, "quantity");
 
-        List<MetadataValue> list = entity.getMetadata("quantity");
-        if (list.isEmpty()) {
+        if (meta == null) {
             return 1;
         }
 
         // Sanity, return at least 1.
-        return Math.max(1, list.get(0).asInt());
+        return Math.max(1, meta.asInt());
     }
 
     /**
@@ -810,13 +810,14 @@ public class StackUtils {
 
     private boolean isMetaStackable(Entity entity) {
 
-        if (entity.hasMetadata("stackable") && !entity.getMetadata("stackable").get(0).asBoolean()) {
+        MetadataValue meta = getValue(entity, "stackable");
+        if (meta != null && meta.asBoolean()) {
             return false;
         }
 
         // Do not allow entities bred within the last 15 seconds to stack at all
-        if (entity.hasMetadata("lastBred")
-                && entity.getMetadata("lastBred").get(0).asLong() < System.currentTimeMillis() - 15000) {
+        meta = getValue(entity, "lastBred");
+        if (meta != null && meta.asLong() > System.currentTimeMillis() - 15000) {
             return false;
         }
 
@@ -855,7 +856,8 @@ public class StackUtils {
      * @param entity the Entity
      */
     public boolean canBreed(Entity entity) {
-        return !entity.hasMetadata("lastBred") || entity.getMetadata("lastBred").get(0).asLong() < System.currentTimeMillis() - 300000L;
+        MetadataValue meta = getValue(entity, "lastBred");
+        return meta == null || meta.asLong() < System.currentTimeMillis() - 300000L;
     }
 
     /**
@@ -875,38 +877,36 @@ public class StackUtils {
             return 0;
         }
 
-        List<MetadataValue> list;
+        MetadataValue meta = getValue(entity, "stackAverageHealth");
 
         // Check if metadata is set.
-        if (recalculate || !entity.hasMetadata("stackAverageHealth")
-                || (list = entity.getMetadata("stackAverageHealth")).isEmpty()) {
+        if (meta != null && !recalculate) {
+            return meta.asDouble();
+        }
 
-            // Check if the entity is a Damageable.
-            if (entity instanceof Damageable) {
-                Damageable damageable = (Damageable) entity;
-
-                // Are we supposed to include current health in calculation?
-                if (!recalculate) {
-                    return damageable.getMaxHealth();
-                }
-
-                int stackSize = getStackSize(entity);
-                double currentHealth = damageable.getHealth();
-
-                // If the stack is larger than 1, average total maximum health in.
-                if (stackSize > 1) {
-                    currentHealth += (stackSize - 1) * damageable.getMaxHealth();
-                    currentHealth /= stackSize;
-                }
-
-                // Return the current health.
-                return currentHealth;
-            }
-
+        // Ensure that the entity is a Damageable.
+        if (!(entity instanceof Damageable)) {
             return 0;
         }
 
-        return list.get(0).asDouble();
+        Damageable damageable = (Damageable) entity;
+
+        // Are we supposed to include current health in calculation?
+        if (!recalculate) {
+            return damageable.getMaxHealth();
+        }
+
+        int stackSize = getStackSize(entity);
+        double currentHealth = damageable.getHealth();
+
+        // If the stack is larger than 1, average total maximum health in.
+        if (stackSize > 1) {
+            currentHealth += (stackSize - 1) * damageable.getMaxHealth();
+            currentHealth /= stackSize;
+        }
+
+        // Return the current health.
+        return currentHealth;
     }
 
     /**
@@ -940,6 +940,27 @@ public class StackUtils {
         averageHealth /= getStackSize(entity);
 
         averageHealth = Math.min(((Damageable) entity).getMaxHealth(), averageHealth);
+    }
+
+    /**
+     * Helper method for retrieving the first available MetadataValue.
+     * 
+     * @param entity the Entity to retrieve metadata for
+     * @param key the metadata key
+     * @return the first MetadataValue, or null if none is found.
+     */
+    private static MetadataValue getValue(Entity entity, String key) {
+        if (!entity.hasMetadata(key)) {
+            return null;
+        }
+
+        List<MetadataValue> meta = entity.getMetadata(key);
+
+        if (meta.isEmpty()) {
+            return null;
+        }
+
+        return meta.get(0);
     }
 
     /**

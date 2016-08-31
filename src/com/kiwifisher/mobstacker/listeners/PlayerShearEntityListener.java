@@ -25,9 +25,10 @@ public class PlayerShearEntityListener implements Listener {
         if (StackUtils.getStackSize(entity) > 1) {
             // Peel off the sheared entity.
             plugin.getStackUtils().peelOffStack(entity);
-            // Attempt to re-stack the new entity.
-            plugin.getStackUtils().attemptToStack(entity, 1);
         }
+
+        // Attempt to re-stack.
+        plugin.getStackUtils().attemptToStack(entity, 1);
 
     }
 
