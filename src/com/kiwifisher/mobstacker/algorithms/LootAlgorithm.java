@@ -70,20 +70,23 @@ public abstract class LootAlgorithm {
     }
 
     protected final int getRandomQuantity(int min, int max, double dropChance, int numberOfMobs) {
-        /*
-         * Math:
-         * Total mobs * (loot max - loot min) is the maximum possible increase.
-         * To simulate drop chance per, the max is divided by the drop chance. Ex. 1/3 drop chance = 3/1 * max.
-         * For our final random increase, multiply by drop chance to reduce back down.
-         * Finally, add the minimum in. By design, minimum must be 0 if drop chance != 1.
-         */
-        min *= numberOfMobs;
-        if (dropChance > 1) {
-            // Prevent high levels of looting causing excess drops.
-            dropChance = 1;
+        if (dropChance >= 1) {
+            // Guaranteed drops
+            min *= numberOfMobs;
+            max = max * numberOfMobs - min;
+            return ThreadLocalRandom.current().nextInt(max) + min;
         }
-        max = (int) (max * numberOfMobs / dropChance) - min;
-        return (int) (ThreadLocalRandom.current().nextInt(max) * dropChance) + min;
+
+        // By design, minimum must be 0 (and can be ignored) if drop chance < 1
+        int total = 0;
+        // Total attempts to make = 1 per maximum drop quantity per mob
+        numberOfMobs *= max;
+        for (int i = 0; i < numberOfMobs; i++) {
+            if (ThreadLocalRandom.current().nextDouble() < dropChance) {
+                total++;
+            }
+        }
+        return total;
     }
 
     protected final void addDrops(List<ItemStack> drops, Material material, short data, int amount) {

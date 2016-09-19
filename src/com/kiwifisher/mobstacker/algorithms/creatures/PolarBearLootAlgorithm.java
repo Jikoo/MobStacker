@@ -25,6 +25,7 @@ public class PolarBearLootAlgorithm extends AnimalLootAlgorithm {
          * Polar bears drop either fish or salmon with a 75% bias towards fish. To keep drops fair
          * and even, we'll handle it similarly to guardians.
          */
+        // TODO: Fix math
         int max = numberOfMobs * (2 + looting) * 100;
 
         int fish = random.nextInt(max / 75);

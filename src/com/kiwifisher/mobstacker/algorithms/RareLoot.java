@@ -10,11 +10,15 @@ import org.bukkit.Material;
 public class RareLoot extends Loot {
 
     public RareLoot(Material material) {
-        super(material, 1, 0.025, false);
+        this(material, 0);
     }
 
     public RareLoot(Material material, short data) {
         super(material, data, 1, 0.025, false);
+    }
+
+    public RareLoot(Material material, double dropChance) {
+        super(material, (short) 0, 1, dropChance, false);
     }
 
     @Override

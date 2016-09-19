@@ -57,6 +57,7 @@ public class GuardianLootAlgorithm extends LootAlgorithm {
          * from it.
          */
         // TODO: wiki is unclear on actual drop chances - elder guardian and guardian pages don't match, read NMS
+        // TODO: Fix math
         int max = numberOfMobs * 5 / 2 * looting;
 
         int fish = random.nextInt(max);
@@ -75,7 +76,7 @@ public class GuardianLootAlgorithm extends LootAlgorithm {
 
         Guardian guardian = (Guardian) entity;
         if (guardian.isElder()) {
-            drops.add(new ItemStack(Material.SPONGE, numberOfMobs));
+            this.addDrops(drops, Material.SPONGE, (short) 1, numberOfMobs);
         }
 
         return drops;

@@ -18,7 +18,7 @@ public class CookableLoot extends Loot {
     }
 
     public CookableLoot(Material raw, Material cooked, int minimumQuantity, int maxQuantity, boolean doLooting) {
-        super(raw, minimumQuantity, maxQuantity, false);
+        super(raw, minimumQuantity, maxQuantity, doLooting);
         this.cooked = cooked;
     }
 
