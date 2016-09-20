@@ -12,6 +12,8 @@ public class Loot {
     private final double dropChance;
     private final boolean addLooting;
 
+    // TODO: Convert loot types (RareLoot) etc. to Loot via additional options, create LootBuilder
+
     public Loot(Material material, int maxQuantity) {
         this(material, 0, maxQuantity);
     }

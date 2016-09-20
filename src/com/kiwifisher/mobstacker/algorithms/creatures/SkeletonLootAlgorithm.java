@@ -53,7 +53,7 @@ public class SkeletonLootAlgorithm extends LootAlgorithm {
             return drops;
         }
 
-        int amount = this.getRandomQuantity(0, 1, (2 * looting + 1) / (2 * looting + 2), numberOfMobs);
+        int amount = this.getRandomQuantity(0, 1, (2D * looting + 1) / (2D * looting + 2), numberOfMobs);
 
         ItemStack arrow = new ItemStack(Material.TIPPED_ARROW);
         PotionMeta meta = (PotionMeta) arrow.getItemMeta();

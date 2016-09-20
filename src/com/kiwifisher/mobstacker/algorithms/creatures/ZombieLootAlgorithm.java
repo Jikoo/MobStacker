@@ -13,8 +13,8 @@ public class ZombieLootAlgorithm extends LootAlgorithm {
     public ZombieLootAlgorithm() {
         this.getLootArray().add(new Loot(Material.ROTTEN_FLESH, 0, 2));
         this.getLootArray().add(new RareLoot(Material.IRON_INGOT));
-        this.getLootArray().add(new RareLoot(Material.CARROT));
-        this.getLootArray().add(new RareLoot(Material.POTATO));
+        this.getLootArray().add(new RareLoot(Material.CARROT_ITEM));
+        this.getLootArray().add(new RareLoot(Material.POTATO_ITEM));
     }
 
     @Override
