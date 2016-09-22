@@ -1,10 +1,9 @@
 package com.kiwifisher.mobstacker.algorithms.creatures;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.kiwifisher.mobstacker.algorithms.Loot;
+import com.kiwifisher.mobstacker.algorithms.loot.LootBuilder;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -14,7 +13,13 @@ import org.bukkit.inventory.ItemStack;
 public class HorseLootAlgorithm extends AnimalLootAlgorithm {
 
     public HorseLootAlgorithm() {
-        this.getLootArray().add(new Loot(Material.LEATHER, 0, 2));
+        /*
+         * Future note: In 1.11, Skeletal/Undead horses drop the same quantity of their material as
+         * horses do leather. They'll probably be a separate entity though. Either way, no need to
+         * override getRandomLoot then.
+         */
+        this.getLootArray().add(new LootBuilder(Material.LEATHER).withMaximum(2)
+                .withAdditionalLootingResults().toLoot());
     }
 
     @Override
@@ -32,9 +37,13 @@ public class HorseLootAlgorithm extends AnimalLootAlgorithm {
 
         switch (horse.getVariant()) {
         case SKELETON_HORSE:
-            return Arrays.asList(new ItemStack(Material.BONE, 1));
+            ArrayList<ItemStack> skeletonDrops = new ArrayList<>();
+            this.addDrops(skeletonDrops, Material.BONE, (short) 0, numberOfMobs);
+            return skeletonDrops;
         case UNDEAD_HORSE:
-            return Arrays.asList(new ItemStack(Material.ROTTEN_FLESH, 1));
+            ArrayList<ItemStack> undeadDrops = new ArrayList<>();
+            this.addDrops(undeadDrops, Material.ROTTEN_FLESH, (short) 0, numberOfMobs);
+            return undeadDrops;
         case DONKEY:
         case HORSE:
         case MULE:

@@ -3,8 +3,8 @@ package com.kiwifisher.mobstacker.algorithms.creatures;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kiwifisher.mobstacker.algorithms.Loot;
 import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
+import com.kiwifisher.mobstacker.algorithms.loot.LootBuilder;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -14,7 +14,8 @@ import org.bukkit.inventory.ItemStack;
 public class SlimeLootAlgorithm extends LootAlgorithm {
 
     public SlimeLootAlgorithm() {
-        this.getLootArray().add(new Loot(Material.SLIME_BALL, 0, 2));
+        this.getLootArray().add(new LootBuilder(Material.SLIME_BALL).withMaximum(2)
+                .withAdditionalLootingResults().toLoot());
     }
 
     @Override
@@ -37,6 +38,10 @@ public class SlimeLootAlgorithm extends LootAlgorithm {
         }
 
         return new ArrayList<>();
+    }
+
+    protected List<ItemStack> superLoot(Entity entity, int numberOfMobs, boolean playerKill, int looting) {
+        return super.getRandomLoot(entity, numberOfMobs, playerKill, looting);
     }
 
 }

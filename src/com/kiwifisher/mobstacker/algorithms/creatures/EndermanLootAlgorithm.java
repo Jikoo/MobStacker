@@ -1,7 +1,7 @@
 package com.kiwifisher.mobstacker.algorithms.creatures;
 
-import com.kiwifisher.mobstacker.algorithms.Loot;
 import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
+import com.kiwifisher.mobstacker.algorithms.loot.LootBuilder;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -9,7 +9,8 @@ import org.bukkit.entity.Entity;
 public class EndermanLootAlgorithm extends LootAlgorithm {
 
     public EndermanLootAlgorithm() {
-        this.getLootArray().add(new Loot(Material.ENDER_PEARL, 0, 1));
+        this.getLootArray().add(new LootBuilder(Material.ENDER_PEARL)
+                .withAdditionalLootingResults().toLoot());
     }
 
     @Override

@@ -3,9 +3,10 @@ package com.kiwifisher.mobstacker.algorithms.creatures;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.kiwifisher.mobstacker.algorithms.Loot;
 import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
-import com.kiwifisher.mobstacker.algorithms.RareLoot;
+import com.kiwifisher.mobstacker.algorithms.loot.Function;
+import com.kiwifisher.mobstacker.algorithms.loot.LootBuilder;
+import com.kiwifisher.mobstacker.algorithms.loot.LootUtil;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -15,27 +16,31 @@ import org.bukkit.inventory.ItemStack;
 public class GuardianLootAlgorithm extends LootAlgorithm {
 
     public GuardianLootAlgorithm() {
-        this.getLootArray().add(new Loot(Material.PRISMARINE_SHARD, 0, 2));
-        this.getLootArray().add(new RareLoot(Material.RAW_FISH) {
-            @Override
-            public short getData(Entity entity) {
-                double random = ThreadLocalRandom.current().nextDouble();
-                if (random < 0.13) {
-                    // 13% chance of pufferfish
-                    return 3;
-                }
-                if (random < 0.15) {
-                    // 2% chance of clownfish
-                    return 2;
-                }
-                if (random < 0.40) {
-                    // 25% chance of salmon
-                    return 1;
-                }
-                // 60% chance of normal fish
-                return 0;
-            }
-        });
+        this.getLootArray().add(new LootBuilder(Material.PRISMARINE_SHARD).withMaximum(2)
+                .withAdditionalLootingResults().toLoot());
+        this.getLootArray().add(new LootBuilder(Material.RAW_FISH)
+                .withDataFunction(new Function<Entity, Short>() {
+                    @Override
+                    public Short apply(Entity entity) {
+                        double random = ThreadLocalRandom.current().nextDouble();
+                        if (random < 0.13) {
+                            // 13% chance of pufferfish
+                            return 3;
+                        }
+                        if (random < 0.15) {
+                            // 2% chance of clownfish
+                            return 2;
+                        }
+                        if (random < 0.40) {
+                            // 25% chance of salmon
+                            return 1;
+                        }
+                        // 60% chance of normal fish
+                        return 0;
+                    }
+                })
+                .withPlayerKillRequired().withDropChance(LootUtil.RARE_LOOT_CHANCE)
+                .withLootingDropChanceModifier(LootUtil.RARE_LOOT_MODIFER).toLoot());
     }
 
     @Override
@@ -46,6 +51,12 @@ public class GuardianLootAlgorithm extends LootAlgorithm {
     @Override
     public List<ItemStack> getRandomLoot(Entity entity, int numberOfMobs, boolean playerKill, int looting) {
         List<ItemStack> drops = super.getRandomLoot(entity, numberOfMobs, playerKill, looting);
+
+        if (!(entity instanceof Guardian)) {
+            return drops;
+        }
+
+        boolean elder = ((Guardian) entity).isElder();
 
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
@@ -70,12 +81,12 @@ public class GuardianLootAlgorithm extends LootAlgorithm {
         this.addDrops(drops, Material.RAW_FISH, (short) 0, fish);
         this.addDrops(drops, Material.PRISMARINE_CRYSTALS, (short) 0, crystals);
 
-        if (!playerKill || !(entity instanceof Guardian)) {
+        if (!playerKill) {
             return drops;
         }
 
-        Guardian guardian = (Guardian) entity;
-        if (guardian.isElder()) {
+        if (elder) {
+            // Note: Due to a bug, sponge is currently dry. Fixed in 1.11, so we drop wet.
             this.addDrops(drops, Material.SPONGE, (short) 1, numberOfMobs);
         }
 

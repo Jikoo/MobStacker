@@ -1,7 +1,7 @@
 package com.kiwifisher.mobstacker.algorithms.creatures;
 
-import com.kiwifisher.mobstacker.algorithms.Loot;
 import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
+import com.kiwifisher.mobstacker.algorithms.loot.LootBuilder;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Entity;
 public class WitherLootAlgorithm extends LootAlgorithm {
 
     public WitherLootAlgorithm() {
-        this.getLootArray().add(new Loot(Material.NETHER_STAR, 1, 1));
+        this.getLootArray().add(new LootBuilder(Material.NETHER_STAR).withMinimum(1).toLoot());
     }
 
     @Override

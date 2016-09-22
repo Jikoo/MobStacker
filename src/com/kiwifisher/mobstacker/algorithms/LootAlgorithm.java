@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.kiwifisher.mobstacker.algorithms.loot.Loot;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -49,8 +51,8 @@ public abstract class LootAlgorithm {
         List<ItemStack> drops = new ArrayList<>();
 
         for (Loot loot : getLootArray()) {
-            // Rare loot requires a player kill.
-            if (loot instanceof RareLoot && !playerKill) {
+            // Check if loot requires a player kill.
+            if (loot.getPlayerKillRequired() && !playerKill) {
                 continue;
             }
 
@@ -63,27 +65,39 @@ public abstract class LootAlgorithm {
 
     protected final int getRandomQuantity(Loot loot, int numberOfMobs, int looting) {
         int max = loot.getMaxQuantity();
-        if (loot.lootingAddsResults()) {
+
+        if (loot.getLootingAddsResults()) {
             max += looting;
         }
+
         return getRandomQuantity(loot.getMinimumQuantity(), max, loot.getDropChance(looting), numberOfMobs);
     }
 
     protected final int getRandomQuantity(int min, int max, double dropChance, int numberOfMobs) {
-        if (dropChance >= 1) {
+        if (dropChance >= 1 && min > -1) {
             // Guaranteed drops
+            if (min >= max) {
+                return min * numberOfMobs;
+            }
+
             min *= numberOfMobs;
             max = max * numberOfMobs - min;
-            return ThreadLocalRandom.current().nextInt(max) + min;
+            return ThreadLocalRandom.current().nextInt(max + 1) + min;
         }
 
-        // By design, minimum must be 0 (and can be ignored) if drop chance < 1
         int total = 0;
         // Total attempts to make = 1 per maximum drop quantity per mob
-        numberOfMobs *= max;
         for (int i = 0; i < numberOfMobs; i++) {
-            if (ThreadLocalRandom.current().nextDouble() < dropChance) {
-                total++;
+            // The drop has a set chance and/or is weighted.
+            if (dropChance >= 1 || ThreadLocalRandom.current().nextDouble() < dropChance) {
+                if (min >= max) {
+                    // Drop has set chance, unweighted. Don't bother with RNG.
+                    total += min;
+                    continue;
+                }
+
+                // Drop is weighted. Roll number.
+                total += Math.min(0, ThreadLocalRandom.current().nextInt(min, max + 1));
             }
         }
         return total;

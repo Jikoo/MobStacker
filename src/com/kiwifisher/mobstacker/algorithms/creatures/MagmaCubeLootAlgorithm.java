@@ -3,7 +3,7 @@ package com.kiwifisher.mobstacker.algorithms.creatures;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kiwifisher.mobstacker.algorithms.Loot;
+import com.kiwifisher.mobstacker.algorithms.loot.LootBuilder;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -18,7 +18,8 @@ import org.bukkit.inventory.ItemStack;
 public class MagmaCubeLootAlgorithm extends SlimeLootAlgorithm {
 
     public MagmaCubeLootAlgorithm() {
-        this.getLootArray().add(new Loot(Material.MAGMA_CREAM, 1, 1.0/4));
+        this.getLootArray().add(new LootBuilder(Material.MAGMA_CREAM).withMinimum(-2)
+                .withAdditionalLootingResults().toLoot());
     }
 
     @Override
@@ -28,7 +29,7 @@ public class MagmaCubeLootAlgorithm extends SlimeLootAlgorithm {
         }
 
         if (((Slime) entity).getSize() != 1) {
-            return super.getRandomLoot(entity, numberOfMobs, playerKill, looting);
+            return this.superLoot(entity, numberOfMobs, playerKill, looting);
         }
 
         return new ArrayList<>();
