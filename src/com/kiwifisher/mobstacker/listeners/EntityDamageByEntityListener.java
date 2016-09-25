@@ -37,6 +37,14 @@ public class EntityDamageByEntityListener implements Listener {
         this.plugin = plugin;
     }
 
+    /*
+     * I don't like to suppress warnings, however, in this case it seems justified. This is not an
+     * anticheat plugin - one assumes that if a player is reporting invalid states, either the
+     * server administrator does not care to prevent it or the server's anticheat will prevent it.
+     * There is no alternative aside from decently extensive and potentially inaccurate
+     * velocity/block checking.
+     */
+    @SuppressWarnings("deprecation")
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 
@@ -50,6 +58,12 @@ public class EntityDamageByEntityListener implements Listener {
         }
 
         Player player = (Player) event.getDamager();
+
+        // Swipe attacks require players to be on the ground and moving relatively slowly.
+        if (player.isSprinting() || !player.isOnGround()) {
+            return;
+        }
+
         ItemStack hand = player.getInventory().getItemInMainHand();
 
         // Ensure item in hand is a sword.
