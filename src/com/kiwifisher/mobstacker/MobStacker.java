@@ -19,11 +19,28 @@ import com.kiwifisher.mobstacker.listeners.PlayerLeashEntityListener;
 import com.kiwifisher.mobstacker.listeners.PlayerShearEntityListener;
 import com.kiwifisher.mobstacker.listeners.SheepDyeListener;
 import com.kiwifisher.mobstacker.listeners.SheepRegrowWoolListener;
+import com.kiwifisher.mobstacker.loot.LootManager;
+import com.kiwifisher.mobstacker.loot.impl.ConditionKilledByPlayer;
+import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult;
+import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesOnFire;
+import com.kiwifisher.mobstacker.loot.impl.ConditionSlimeSize;
+import com.kiwifisher.mobstacker.loot.impl.ExperienceEntry;
+import com.kiwifisher.mobstacker.loot.impl.ExperiencePool;
+import com.kiwifisher.mobstacker.loot.impl.FunctionFurnaceSmelt;
+import com.kiwifisher.mobstacker.loot.impl.FunctionLootingBonus;
+import com.kiwifisher.mobstacker.loot.impl.FunctionMatchSheepWool;
+import com.kiwifisher.mobstacker.loot.impl.FunctionSetData;
+import com.kiwifisher.mobstacker.loot.impl.FunctionSetMeta;
+import com.kiwifisher.mobstacker.loot.impl.LootEntry;
+import com.kiwifisher.mobstacker.loot.impl.LootPool;
+import com.kiwifisher.mobstacker.loot.impl.RandomChance;
+import com.kiwifisher.mobstacker.loot.impl.SlimeExperienceEntry;
 import com.kiwifisher.mobstacker.utils.StackUtils;
 
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,17 +48,42 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MobStacker extends JavaPlugin {
 
     private StackUtils stackUtils;
+    private LootManager lootManager;
     private final Map<String, Boolean> nerfSpawnerMobsWorlds = new HashMap<>();
 
     private boolean nerfSpawnerMobsDefault = false;
     private boolean stacking = true;
 
     @Override
+    public void onLoad() {
+        registerSerializableClasses();
+    }
+
+    private static void registerSerializableClasses() {
+        ConfigurationSerialization.registerClass(ConditionKilledByPlayer.class);
+        ConfigurationSerialization.registerClass(ConditionPropertiesAdult.class);
+        ConfigurationSerialization.registerClass(ConditionPropertiesOnFire.class);
+        ConfigurationSerialization.registerClass(ConditionSlimeSize.class);
+        ConfigurationSerialization.registerClass(ExperienceEntry.class);
+        ConfigurationSerialization.registerClass(ExperiencePool.class);
+        ConfigurationSerialization.registerClass(FunctionFurnaceSmelt.class);
+        ConfigurationSerialization.registerClass(FunctionLootingBonus.class);
+        ConfigurationSerialization.registerClass(FunctionMatchSheepWool.class);
+        ConfigurationSerialization.registerClass(FunctionSetData.class);
+        ConfigurationSerialization.registerClass(FunctionSetMeta.class);
+        ConfigurationSerialization.registerClass(LootEntry.class);
+        ConfigurationSerialization.registerClass(LootPool.class);
+        ConfigurationSerialization.registerClass(RandomChance.class);
+        ConfigurationSerialization.registerClass(SlimeExperienceEntry.class);
+    }
+ 
+    @Override
     public void onEnable() {
 
         saveDefaultConfig();
 
         this.stackUtils = new StackUtils(this);
+        this.lootManager = new LootManager(this);
 
         this.getServer().getPluginManager().registerEvents(new ChunkLoadListener(this), this);
         this.getServer().getPluginManager().registerEvents(new ChunkUnloadListener(this), this);
@@ -131,6 +173,10 @@ public class MobStacker extends JavaPlugin {
 
     public StackUtils getStackUtils() {
         return stackUtils;
+    }
+
+    public LootManager getLootManager() {
+        return lootManager;
     }
 
     public boolean nerfSpawnerMobs(World world) {

@@ -1,8 +1,7 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.algorithms.AlgorithmEnum;
-import com.kiwifisher.mobstacker.algorithms.LootAlgorithm;
+import com.kiwifisher.mobstacker.loot.LootManager;
 import com.kiwifisher.mobstacker.utils.StackUtils;
 
 import org.bukkit.enchantments.Enchantment;
@@ -56,22 +55,15 @@ public class EntityDeathListener implements Listener {
             return;
         }
 
+        LootManager manager = plugin.getLootManager();
+
         // Set proportionate experience.
+        event.setDroppedExp(event.getDroppedExp() + manager.getExperience(entity, stackSize - 1));
 
         // Try to drop proportionate loot.
-        try {
-            LootAlgorithm algorithm = AlgorithmEnum.valueOf(entity.getType().name()).getLootAlgorithm();
-            Player player = event.getEntity().getKiller();
-            int looting = player != null ? player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
-            event.getDrops().addAll(algorithm.getRandomLoot(entity, stackSize - 1, player != null, looting));
-            if (event.getDroppedExp() > 0) {
-                event.setDroppedExp(algorithm.getExp(entity, stackSize));
-            }
-        } catch (IllegalArgumentException e) {
-            event.setDroppedExp(event.getDroppedExp() * stackSize);
-            // Rather than print a stack trace, warn about unimplemented loot.
-            plugin.log(entity.getType().name() + " doesn't have proportionate loot implemented - please request it be added if you need it");
-        }
+        Player player = event.getEntity().getKiller();
+        int looting = player != null ? player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
+        event.getDrops().addAll(manager.getLoot(entity, stackSize - 1, looting));
 
     }
 

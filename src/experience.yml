@@ -1,0 +1,86 @@
+DEFAULT:
+  BAT: &id001
+    ==: com.kiwifisher.mobstacker.loot.impl.ExperiencePool
+  IRON_GOLEM: *id001
+  SNOW_GOLEM: *id001
+  VILLAGER: *id001
+  BLAZE: &id002
+    ==: com.kiwifisher.mobstacker.loot.impl.ExperiencePool
+    entries:
+    - ==: com.kiwifisher.mobstacker.loot.impl.ExperienceEntry
+      minimum: 10
+  GUARDIAN: *id002
+  ELDER_GUARDIAN: *id002
+  EVOCATION_ILLAGER: *id002
+  CHICKEN: &id003
+    ==: com.kiwifisher.mobstacker.loot.impl.ExperiencePool
+    entries:
+    - ==: com.kiwifisher.mobstacker.loot.impl.ExperienceEntry
+      maximum: 3
+      conditions:
+      - ==: com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult
+      minimum: 1
+  COW: *id003
+  DONKEY: *id003
+  HORSE: *id003
+  LLAMA: *id003
+  MULE: *id003
+  MUSHROOM_COW: *id003
+  OCELOT: *id003
+  PIG: *id003
+  POLAR_BEAR: *id003
+  SHEEP: *id003
+  SKELETON_HORSE: *id003
+  SQUID: *id003
+  RABBIT: *id003
+  WOLF: *id003
+  ZOMBIE_HORSE: *id003
+  CAVE_SPIDER: &id004
+    ==: com.kiwifisher.mobstacker.loot.impl.ExperiencePool
+    entries:
+    - ==: com.kiwifisher.mobstacker.loot.impl.ExperienceEntry
+      minimum: 5
+  CREEPER: *id004
+  ENDERMAN: *id004
+  GHAST: *id004
+  SHULKER: *id004
+  SILVERFISH: *id004
+  SKELETON: *id004
+  SPIDER: *id004
+  STRAY: *id004
+  VINDICATION_ILLAGER: *id004
+  WITCH: *id004
+  WITHER_SKELETON: *id004
+  HUSK: &id005
+    ==: com.kiwifisher.mobstacker.loot.impl.ExperiencePool
+    entries:
+    - ==: com.kiwifisher.mobstacker.loot.impl.ExperienceEntry
+      minimum: 5
+    - ==: com.kiwifisher.mobstacker.loot.impl.ExperienceEntry
+      conditions:
+      - ==: com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult
+        adult: false
+      minimum: 7
+  PIG_ZOMBIE: *id005
+  ZOMBIE: *id005
+  ENDERMITE: &id006
+    ==: com.kiwifisher.mobstacker.loot.impl.ExperiencePool
+    entries:
+    - ==: com.kiwifisher.mobstacker.loot.impl.ExperienceEntry
+      minimum: 3
+  VEX: *id006
+  ENDER_DRAGON:
+    ==: com.kiwifisher.mobstacker.loot.impl.ExperiencePool
+    entries:
+    - ==: com.kiwifisher.mobstacker.loot.impl.ExperienceEntry
+      minimum: 500
+  WITHER:
+    ==: com.kiwifisher.mobstacker.loot.impl.ExperiencePool
+    entries:
+    - ==: com.kiwifisher.mobstacker.loot.impl.ExperienceEntry
+      minimum: 50
+  SLIME: &id007
+    ==: com.kiwifisher.mobstacker.loot.impl.ExperiencePool
+    entries:
+    - ==: com.kiwifisher.mobstacker.loot.impl.SlimeExperienceEntry
+  MAGMA_CUBE: *id007
