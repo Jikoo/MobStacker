@@ -34,8 +34,9 @@ public class ExperiencePool implements IExperiencePool {
             if (!ConditionUtils.meetsConditions(entity, entry)) {
                 continue;
             }
-            min += entry.getMinimum(entity);
-            max += entry.getMaximum(entity);
+            int entryMin = entry.getMinimum(entity);
+            min += entryMin;
+            max += Math.min(entryMin, entry.getMaximum(entity));
         }
 
         min *= numberOfMobs;
