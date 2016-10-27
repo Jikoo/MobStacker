@@ -12,7 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
 
 /**
- * 
+ * IExperienceEntry implementation returning amounts based on the size of the slime.
  * 
  * @author Jikoo
  */
@@ -29,9 +29,6 @@ public class SlimeExperienceEntry implements IExperienceEntry {
         this.conditions = conditions;
     }
 
-    /* (non-Javadoc)
-     * @see com.kiwifisher.mobstacker.loot.api.IExperienceEntry#getMinimum(org.bukkit.entity.Entity)
-     */
     @Override
     public int getMinimum(Entity entity) {
         if (!(entity instanceof Slime)) {

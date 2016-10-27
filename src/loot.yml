@@ -52,6 +52,8 @@ DEFAULT:
       - ==: com.kiwifisher.mobstacker.loot.impl.FunctionLootingBonus
       minimumQuantity: 0
       maximumQuantity: 2
+    conditions:
+    - ==: com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult
   - ==: com.kiwifisher.mobstacker.loot.impl.LootPool
     entries:
     - ==: com.kiwifisher.mobstacker.loot.impl.LootEntry
@@ -61,6 +63,8 @@ DEFAULT:
         conditions:
         - ==: com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesOnFire
       - ==: com.kiwifisher.mobstacker.loot.impl.FunctionLootingBonus
+    conditions:
+    - ==: com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult
   COW: &id003
   - ==: com.kiwifisher.mobstacker.loot.impl.LootPool
     entries:
