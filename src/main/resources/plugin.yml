@@ -6,28 +6,20 @@ version: ${project.version}
 
 commands:
   mobstacker:
-    permission: mobstacker.mobstacker
+    usage: /mobstacker help
+    permission: mobstacker.reload;mobstacker.toggle;mobstacker.clearall
 
 permissions:
   mobstacker.*:
     default: op
     description: Permission to use all MobStacker features.
     children:
-      mobstacker.mobstacker:
-        default: op
-        description: Permission to use /mobstacker
       mobstacker.reload:
         default: op
         description: Permission to use /mobstacker reload
-        children:
-          mobstacker.mobstacker: true
       mobstacker.toggle:
         default: op
         description: Permission to use /mobstacker toggle
-        children:
-          mobstacker.mobstacker: true
       mobstacker.clearall:
         default: op
         description: Permission to use /mobstacker clearall
-        children:
-          mobstacker.mobstacker: true

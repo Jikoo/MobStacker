@@ -6,8 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
 public class MobStackerCommands implements CommandExecutor {
 
@@ -18,48 +16,48 @@ public class MobStackerCommands implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        if (args.length > 0) {
+            args[0] = args[0].toLowerCase();
+        }
 
-        if (command.getLabel().equalsIgnoreCase("mobstacker") && commandSender instanceof Player) {
-
-            Player player = (Player) commandSender;
-
-            if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("help"))) {
-                player.sendMessage(ChatColor.GREEN + "Toggle: " + ChatColor.YELLOW + "/mobstacker toggle" + ChatColor.GRAY + " - Toggles whether mobs stack globally");
-                player.sendMessage(ChatColor.GREEN + "Toggle: " + ChatColor.YELLOW + "/mobstacker reload" + ChatColor.GRAY + " - Reloads the config");
-
-            } else if (args.length == 1 && args[0].equalsIgnoreCase("reload") && player.hasPermission("mobstacker.reload")) {
-                getPlugin().reloadConfig();
-                player.sendMessage(ChatColor.GREEN + "Reloaded the config for MobStacker");
-
-            } else if (args.length == 1 && args[0].equalsIgnoreCase("toggle") && player.hasPermission("mobstacker.toggle")) {
-                getPlugin().setStacking(!getPlugin().isStacking());
-
-                player.sendMessage(ChatColor.GREEN + "Mob stacking is now " + (getPlugin().isStacking() ? ChatColor.GREEN + "enabled" : ChatColor.RED + "disabled"));
-
-            } if (args.length == 1 && args[0].equalsIgnoreCase("clearall") && player.hasPermission("mobstacker.clearall")) {
-
-                getPlugin().removeAllStacks();
-
-            } else {
-                player.sendMessage(ChatColor.RED + "Unrecognised command. Please check /mobstacker help");
+        if (args.length < 1 || args[0].equals("help")) {
+            if (sender.hasPermission("mobstacker.toggle")) {
+                sender.sendMessage(ChatColor.YELLOW + "/mobstacker toggle" + ChatColor.GRAY + " - Toggle whether mobs stack globally.");
+            }
+            if (sender.hasPermission("mobstacker.reload")) {
+                sender.sendMessage(ChatColor.YELLOW + "/mobstacker reload" + ChatColor.GRAY + " - Reload the config.");
+            }
+            if (sender.hasPermission("mobstacker.clearall")) {
+                sender.sendMessage(ChatColor.YELLOW + "/mobstacker clearall" + ChatColor.GRAY + " - Remove all loaded stacks.");
             }
 
-        } else if (command.getLabel().equalsIgnoreCase("mobstacker") && commandSender instanceof ConsoleCommandSender) {
+            return true;
+        }
 
-            if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                getPlugin().reloadConfig();
-                getPlugin().log("Reloaded the config for MobStacker");
+        if (args[0].equals("reload") && sender.hasPermission("mobstacker.reload")) {
+            getPlugin().reloadConfig();
 
-            }
+            sender.sendMessage(ChatColor.GREEN + "Reloaded the config for MobStacker.");
 
-            if (args.length == 1 && args[0].equalsIgnoreCase("toggle")) {
-                getPlugin().setStacking(!getPlugin().isStacking());
+            return true;
+        }
 
-                getPlugin().log("Mob stacking is now " + (getPlugin().isStacking() ? "enabled" : "disabled"));
+        if (args[0].equals("toggle") && sender.hasPermission("mobstacker.toggle")) {
+            getPlugin().setStacking(!getPlugin().isStacking());
 
-            }
+            sender.sendMessage(ChatColor.GREEN + "Mob stacking is now " + (getPlugin().isStacking() ? ChatColor.GREEN + "enabled" : ChatColor.RED + "disabled") + ChatColor.GREEN + ".");
 
+            return true;
+        }
+
+        if (args[0].equals("clearall") && sender.hasPermission("mobstacker.clearall")) {
+
+            getPlugin().removeAllStacks();
+
+            sender.sendMessage(ChatColor.GREEN + "Removed all existing stacks.");
+
+            return true;
         }
 
         return false;
