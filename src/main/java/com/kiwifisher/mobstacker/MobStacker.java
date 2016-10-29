@@ -59,7 +59,7 @@ public class MobStacker extends JavaPlugin {
         registerSerializableClasses();
     }
 
-    private static void registerSerializableClasses() {
+    static void registerSerializableClasses() {
         ConfigurationSerialization.registerClass(ConditionKilledByPlayer.class);
         ConfigurationSerialization.registerClass(ConditionPropertiesAdult.class);
         ConfigurationSerialization.registerClass(ConditionPropertiesOnFire.class);

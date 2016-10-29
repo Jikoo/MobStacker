@@ -2,7 +2,7 @@ name: MobStacker
 main: com.kiwifisher.mobstacker.MobStacker
 author: KiwiFisher
 authors: [Jikoo]
-version: 1.10.1-Jikoo
+version: ${project.version}
 
 commands:
   mobstacker:
