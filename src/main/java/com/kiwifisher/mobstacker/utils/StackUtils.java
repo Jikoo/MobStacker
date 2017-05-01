@@ -3,6 +3,7 @@ package com.kiwifisher.mobstacker.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,28 +17,34 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Llama;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
+import org.bukkit.entity.ZombieVillager;
 import org.bukkit.material.Colorable;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -275,18 +282,15 @@ public class StackUtils {
         }
 
         if (plugin.getConfig().getBoolean("stack-properties.maxHealth", true)
-                && entity1 instanceof Damageable && entity2 instanceof Damageable
-                &&((Damageable) entity1).getMaxHealth() != ((Damageable) entity2).getMaxHealth()) {
+                && entity1 instanceof Attributable && entity2 instanceof Attributable
+                && ((Attributable) entity1).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()
+                != ((Attributable) entity2).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
             return false;
         }
 
         if (entity1 instanceof Horse && entity2 instanceof Horse) {
             Horse horse1 = (Horse) entity1;
             Horse horse2 = (Horse) entity2;
-            if (plugin.getConfig().getBoolean("stack-properties.horse.type", true)
-                    && horse1.getVariant() != horse2.getVariant()) {
-                return false;
-            }
 
             if (plugin.getConfig().getBoolean("stack-properties.horse.color", true)
                     && (horse1.getStyle() != horse2.getStyle() || horse1.getColor() != horse2.getColor())) {
@@ -347,18 +351,6 @@ public class StackUtils {
             }
         }
 
-        // Separate guardians by elder status
-        if (entity1 instanceof Guardian && entity2 instanceof Guardian
-                && ((Guardian) entity1).isElder() != ((Guardian) entity2).isElder()) {
-            return false;
-        }
-
-        // Separate skeletons by type
-        if (entity1 instanceof Skeleton && entity2 instanceof Skeleton
-                && ((Skeleton) entity1).getSkeletonType() != ((Skeleton) entity2).getSkeletonType()) {
-            return false;
-        }
-
         // Separate slimes by size
         if (entity1 instanceof Slime && entity2 instanceof Slime
                 && ((Slime) entity1).getSize() != ((Slime) entity2).getSize()) {
@@ -366,8 +358,8 @@ public class StackUtils {
         }
 
         // Separate zombies by type
-        if (entity1 instanceof Zombie && entity2 instanceof Zombie
-                && ((Zombie) entity1).getVillagerProfession() != ((Zombie) entity2).getVillagerProfession()) {
+        if (entity1 instanceof ZombieVillager && entity2 instanceof ZombieVillager
+                && ((ZombieVillager) entity1).getVillagerProfession() != ((ZombieVillager) entity2).getVillagerProfession()) {
             return false;
         }
 
@@ -519,6 +511,20 @@ public class StackUtils {
 //            }
 //        }
 
+        // TODO: Remove if config added for above
+        if (original instanceof Attributable && copy instanceof Attributable) {
+            AttributeInstance originalAttribute = ((Attributable) original).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            AttributeInstance copyAttribute = ((Attributable) copy).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            copyAttribute.setBaseValue(originalAttribute.getBaseValue());
+            // Don't bother cloning existing attribute modifiers multiple times, each should be unique.
+            Collection<AttributeModifier> copyModifiers = copyAttribute.getModifiers();
+            for (AttributeModifier modifier : originalAttribute.getModifiers()) {
+                if (!copyModifiers.contains(modifier)) {
+                    copyAttribute.addModifier(modifier);
+                }
+            }
+        }
+
         if (original instanceof Colorable && copy instanceof Colorable) {
             ((Colorable) copy).setColor(((Colorable) original).getColor());
         }
@@ -531,31 +537,34 @@ public class StackUtils {
             ((Creeper) copy).setPowered(((Creeper) original).isPowered());
         }
 
-        if (original instanceof Damageable && copy instanceof Damageable) {
-            ((Damageable) copy).setMaxHealth(((Damageable) original).getMaxHealth());
-        }
-
         if (original instanceof EnderDragon && copy instanceof EnderDragon) {
             ((EnderDragon) copy).setPhase(((EnderDragon) original).getPhase());
         }
 
         // Enderman: held block drops on death, do not set to prevent dupes
 
-        if (original instanceof Guardian && copy instanceof Guardian) {
-            ((Guardian) copy).setElder(((Guardian) original).isElder());
+        if (original instanceof AbstractHorse && copy instanceof AbstractHorse) {
+            AbstractHorse originalAbstractHorse = (AbstractHorse) original;
+            AbstractHorse copyAbstractHorse = (AbstractHorse) copy;
+            copyAbstractHorse.setDomestication(originalAbstractHorse.getDomestication());
+            // Don't set jump strength - prevent duplication of good horses
+            copyAbstractHorse.setJumpStrength(originalAbstractHorse.getJumpStrength());
+            copyAbstractHorse.setMaxDomestication(originalAbstractHorse.getMaxDomestication());
         }
 
         if (original instanceof Horse && copy instanceof Horse) {
             Horse originalHorse = (Horse) original;
             Horse copyHorse = (Horse) copy;
-            copyHorse.setVariant(originalHorse.getVariant());
-            copyHorse.setCarryingChest(originalHorse.isCarryingChest());
             copyHorse.setColor(originalHorse.getColor());
-            copyHorse.setDomestication(originalHorse.getDomestication());
-            // Don't set jump strength - prevent duplication of good horses
-            copyHorse.setJumpStrength(originalHorse.getJumpStrength());
-            copyHorse.setMaxDomestication(originalHorse.getMaxDomestication());
             copyHorse.setStyle(originalHorse.getStyle());
+        }
+
+        if (original instanceof ChestedHorse && copy instanceof ChestedHorse) {
+            ((ChestedHorse) copy).setCarryingChest(((ChestedHorse) original).isCarryingChest());
+        }
+
+        if (original instanceof Llama && copy instanceof Llama) {
+            ((Llama) copy).setColor(((Llama) original).getColor());
         }
 
         if (original instanceof IronGolem && copy instanceof IronGolem) {
@@ -602,10 +611,6 @@ public class StackUtils {
             ((Sheep) copy).setSheared(((Sheep) original).isSheared());
         }
 
-        if (original instanceof Skeleton && copy instanceof Skeleton) {
-            ((Skeleton) copy).setSkeletonType(((Skeleton) original).getSkeletonType());
-        }
-
         if (original instanceof Slime && copy instanceof Slime) {
             ((Slime) copy).setSize(((Slime) original).getSize());
         }
@@ -638,10 +643,11 @@ public class StackUtils {
         }
 
         if (original instanceof Zombie && copy instanceof Zombie) {
-            Zombie originalZombie = (Zombie) original;
-            Zombie copyZombie = (Zombie) copy;
-            copyZombie.setBaby(originalZombie.isBaby());
-            copyZombie.setVillagerProfession(originalZombie.getVillagerProfession());
+            ((Zombie) copy).setBaby(((Zombie) original).isBaby());
+        }
+
+        if (original instanceof ZombieVillager && copy instanceof ZombieVillager) {
+            ((ZombieVillager) copy).setVillagerProfession(((ZombieVillager) original).getVillagerProfession());
         }
 
         /*
@@ -884,16 +890,17 @@ public class StackUtils {
             return meta.asDouble();
         }
 
-        // Ensure that the entity is a Damageable.
-        if (!(entity instanceof Damageable)) {
+        // Ensure that the entity is a Damageable Attributable.
+        if (!(entity instanceof Attributable && entity instanceof Damageable)) {
             return 0;
         }
 
         Damageable damageable = (Damageable) entity;
+        AttributeInstance attribute = ((Attributable) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH);
 
         // Are we supposed to include current health in calculation?
         if (!recalculate) {
-            return damageable.getMaxHealth();
+            return attribute.getValue();
         }
 
         int stackSize = getStackSize(entity);
@@ -901,7 +908,7 @@ public class StackUtils {
 
         // If the stack is larger than 1, average total maximum health in.
         if (stackSize > 1) {
-            currentHealth += (stackSize - 1) * damageable.getMaxHealth();
+            currentHealth += (stackSize - 1) * attribute.getValue();
             currentHealth /= stackSize;
         }
 
@@ -932,14 +939,18 @@ public class StackUtils {
         double averageHealth = getAverageHealth(entity, false);
 
         // Entity is undamageable or dead.
-        if (averageHealth <= 0 || !(entity instanceof Damageable)) {
+        if (averageHealth <= 0 || !(entity instanceof Attributable)) {
             return;
         }
 
+        int originalStackSize = Math.min(1, getStackSize(entity) - addedSize);
+        averageHealth *= originalStackSize;
         averageHealth += addedSize * addedHealth;
-        averageHealth /= getStackSize(entity);
+        averageHealth /= originalStackSize + addedHealth;
 
-        averageHealth = Math.min(((Damageable) entity).getMaxHealth(), averageHealth);
+        averageHealth = Math.min(((Attributable) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), averageHealth);
+
+        setMetadata(entity, "stackAverageHealth", averageHealth);
     }
 
     /**

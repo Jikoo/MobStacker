@@ -16,13 +16,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Guardian;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Horse.Variant;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Villager.Profession;
-import org.bukkit.entity.Zombie;
+import org.bukkit.entity.ZombieVillager;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -126,42 +121,13 @@ public class LootManager {
     private String getEntityName(Entity entity) {
         EntityType type = entity.getType();
         switch (type) {
-        case GUARDIAN:
-            if (entity instanceof Guardian && ((Guardian) entity).isElder()) {
-                return "ELDER_GUARDIAN";
-            }
-            return type.name();
-        case HORSE:
-            if (!(entity instanceof Horse)) {
-                return type.name();
-            }
-            Variant variant = ((Horse) entity).getVariant();
-            switch (variant) {
-            case UNDEAD_HORSE:
-                return "ZOMBIE_HORSE";
-            default:
-                return variant.name();
-            }
         case PIG_ZOMBIE:
             return "ZOMBIE_PIGMAN";
-        case SKELETON:
-            if (!(entity instanceof Skeleton)) {
+        case ZOMBIE_VILLAGER:
+            if (!(entity instanceof ZombieVillager)) {
                 return type.name();
             }
-            SkeletonType skeletonType = ((Skeleton) entity).getSkeletonType();
-            switch (skeletonType) {
-            case WITHER:
-                return "WITHER_SKELETON";
-            case STRAY:
-                return "STRAY";
-            default:
-                return type.name();
-            }
-        case ZOMBIE:
-            if (!(entity instanceof Zombie)) {
-                return type.name();
-            }
-            Profession profession = ((Zombie) entity).getVillagerProfession();
+            Profession profession = ((ZombieVillager) entity).getVillagerProfession();
             if (profession == null) {
                 return type.name();
             }
@@ -171,6 +137,10 @@ public class LootManager {
             default:
                 return "ZOMBIE_VILLAGER";
             }
+        case EVOKER:
+            return "EVOCATION_ILLAGER";
+        case VINDICATOR:
+            return "VINDICATION_ILLAGER";
         default:
             return type.name();
         }

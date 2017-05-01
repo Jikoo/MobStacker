@@ -50,11 +50,11 @@ stack-properties:
 persistent-damage:
   enable: true
   multiply-loot: true
-  swipe-attack-whole-stack: true
   reasons:
   - CONTACT
   - DRAGON_BREATH
   - DROWNING
+  - ENTITY_SWEEP_ATTACK
   - FALL
   - FIRE
   - HOT_FLOOR
