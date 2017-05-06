@@ -1,12 +1,12 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
@@ -56,21 +56,7 @@ public class SlimeExperienceEntry implements IExperienceEntry {
     public static SlimeExperienceEntry deserialize(Map<String, Object> serialization) {
         SlimeExperienceEntry experienceEntry = new SlimeExperienceEntry();
 
-        if (serialization.containsKey("conditions")) {
-            Object conditions = serialization.get("conditions");
-            if (conditions instanceof List) {
-                List<ICondition> newConditions = new ArrayList<>();
-                List<?> conditionList = (List<?>) conditions;
-                for (Object condition : conditionList) {
-                    if (condition instanceof ICondition) {
-                        newConditions.add((ICondition) condition);
-                    }
-                }
-                if (!newConditions.isEmpty()) {
-                    experienceEntry.setConditions(newConditions);
-                }
-            }
-        }
+        SerializationUtils.loadList(experienceEntry, ICondition.class, "conditions", serialization);
 
         return experienceEntry;
     }

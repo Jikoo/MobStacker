@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.kiwifisher.mobstacker.loot.api.IRandomChance;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 /**
  * A class used to represent vanilla's random chance condition. To reduce load, Conditions are only
@@ -32,7 +33,7 @@ public class RandomChance implements IRandomChance {
         return chance;
     }
 
-    public void setChance(double chance) {
+    public void setChance(Double chance) {
         this.chance = chance;
     }
 
@@ -40,7 +41,7 @@ public class RandomChance implements IRandomChance {
         return lootingModifier;
     }
 
-    public void setLootingModifier(double lootingModifier) {
+    public void setLootingModifier(Double lootingModifier) {
         this.lootingModifier = lootingModifier;
     }
 
@@ -55,19 +56,8 @@ public class RandomChance implements IRandomChance {
     public static RandomChance deserialize(Map<String, Object> serialization) {
         RandomChance randomChance = new RandomChance();
 
-        if (serialization.containsKey("chance")) {
-            Object chance = serialization.get("chance");
-            if (double.class.isAssignableFrom(chance.getClass())) {
-                randomChance.setChance((double) chance);
-            }
-        }
-
-        if (serialization.containsKey("lootingModifier")) {
-            Object lootingModifier = serialization.get("lootingModifier");
-            if (double.class.isAssignableFrom(lootingModifier.getClass())) {
-                randomChance.setLootingModifier((double) lootingModifier);
-            }
-        }
+        SerializationUtils.load(randomChance, Double.class, "chance", serialization);
+        SerializationUtils.load(randomChance, Double.class, "lootingModifier", serialization);
 
         return randomChance;
     }

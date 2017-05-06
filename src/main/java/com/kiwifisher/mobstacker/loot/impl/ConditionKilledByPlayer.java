@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -26,7 +27,7 @@ public class ConditionKilledByPlayer implements ICondition {
         return inverse;
     }
 
-    public void setInverse(boolean inverse) {
+    public void setInverse(Boolean inverse) {
         this.inverse = inverse;
     }
 
@@ -54,12 +55,7 @@ public class ConditionKilledByPlayer implements ICondition {
     public ConditionKilledByPlayer deserialize(Map<String, Object> serialization) {
         ConditionKilledByPlayer condition = new ConditionKilledByPlayer();
 
-        if (serialization.containsKey("inverse")) {
-            Object inverse = serialization.get("inverse");
-            if (boolean.class.isAssignableFrom(inverse.getClass())) {
-                condition.setInverse((boolean) inverse);
-            }
-        }
+        SerializationUtils.load(condition, Boolean.class, "inverse", serialization);
 
         return condition;
     }

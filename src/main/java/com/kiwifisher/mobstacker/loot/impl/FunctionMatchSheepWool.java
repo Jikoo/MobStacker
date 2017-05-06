@@ -1,11 +1,10 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.LootData;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.material.Colorable;
@@ -21,6 +20,14 @@ public class FunctionMatchSheepWool extends Function {
 
     public FunctionMatchSheepWool() {
         this.invert = false;
+    }
+
+    public boolean getInvert() {
+        return invert;
+    }
+
+    public void setInvert(Boolean invert) {
+        this.invert = invert;
     }
 
     @Override
@@ -41,14 +48,6 @@ public class FunctionMatchSheepWool extends Function {
         return false;
     }
 
-    public boolean getInvert() {
-        return invert;
-    }
-
-    public void setInvert(boolean invert) {
-        this.invert = invert;
-    }
-
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> serialization = super.serialize();
@@ -63,28 +62,8 @@ public class FunctionMatchSheepWool extends Function {
     public FunctionMatchSheepWool deserialize(Map<String, Object> serialization) {
         FunctionMatchSheepWool function = new FunctionMatchSheepWool();
 
-        if (serialization.containsKey("conditions")) {
-            Object conditions = serialization.get("conditions");
-            if (conditions instanceof List) {
-                List<ICondition> newConditions = new ArrayList<>();
-                List<?> conditionList = (List<?>) conditions;
-                for (Object condition : conditionList) {
-                    if (condition instanceof ICondition) {
-                        newConditions.add((ICondition) condition);
-                    }
-                }
-                if (!newConditions.isEmpty()) {
-                    function.setConditions(newConditions);
-                }
-            }
-        }
-
-        if (serialization.containsKey("invert")) {
-            Object invert = serialization.get("invert");
-            if (boolean.class.isAssignableFrom(invert.getClass())) {
-                function.setInvert((boolean) invert);
-            }
-        }
+        SerializationUtils.load(function, Boolean.class, "invert", serialization);
+        SerializationUtils.loadList(function, ICondition.class, "conditions", serialization);
 
         return function;
     }

@@ -78,6 +78,8 @@ public class MobStacker extends JavaPlugin {
  
     @Override
     public void onEnable() {
+        // In case of the plugin being unloaded by another source, re-register classes on enable.
+        registerSerializableClasses();
 
         saveDefaultConfig();
 
@@ -109,7 +111,7 @@ public class MobStacker extends JavaPlugin {
 
             if (worlds != null) {
                 nerfSpawnerMobsDefault = worlds.getBoolean("default.nerf-spawner-mobs");
-    
+
                 for (String world : worlds.getKeys(false)) {
                     if (world.equals("default")) {
                         continue;

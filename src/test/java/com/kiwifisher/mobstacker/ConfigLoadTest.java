@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import org.junit.Test;
 
@@ -17,14 +18,10 @@ import org.junit.Test;
  */
 public class ConfigLoadTest {
 
-    /*
-     * Currently nonfunctional - default loot.yml requires loading a PotionMeta. Due to Bukkit's
-     * implementation, this cannot be tested without a running server instance or OBC access.
-     */
-//    @Test
-//    public void testLoot() {
-//        loadYaml("src/main/resources/loot.yml");
-//    }
+    @Test
+    public void testLoot() {
+        loadYaml("src/main/resources/loot.yml");
+    }
 
     @Test
     public void testExperience() {
@@ -33,6 +30,7 @@ public class ConfigLoadTest {
 
     public void loadYaml(String fileName) {
         MobStacker.registerSerializableClasses();
+        ConfigurationSerialization.registerClass(DummyItemMeta.class, "ItemMeta");
         File file = new File(fileName);
         if (!file.exists()) {
             fail("File not found: " + fileName);

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 
@@ -24,7 +25,7 @@ public class ConditionPropertiesOnFire implements ICondition {
         return burning;
     }
 
-    public void setBurning(boolean burning) {
+    public void setBurning(Boolean burning) {
         this.burning = burning;
     }
 
@@ -48,12 +49,7 @@ public class ConditionPropertiesOnFire implements ICondition {
     public static ConditionPropertiesOnFire deserialize(Map<String, Object> serialization) {
         ConditionPropertiesOnFire condition = new ConditionPropertiesOnFire();
 
-        if (serialization.containsKey("burning")) {
-            Object burning = serialization.get("burning");
-            if (boolean.class.isAssignableFrom(burning.getClass())) {
-                condition.setBurning((boolean) burning);
-            }
-        }
+        SerializationUtils.load(condition, Boolean.class, "burning", serialization);
 
         return condition;
     }

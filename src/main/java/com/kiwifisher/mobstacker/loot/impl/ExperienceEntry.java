@@ -1,12 +1,12 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 
@@ -43,7 +43,7 @@ public class ExperienceEntry implements IExperienceEntry {
         return minimum;
     }
 
-    public void setMinimum(int minimum) {
+    public void setMinimum(Integer minimum) {
         this.minimum = Math.max(0, minimum);
     }
 
@@ -56,7 +56,7 @@ public class ExperienceEntry implements IExperienceEntry {
         return this.maximum;
     }
 
-    public void setMaximum(int maximum) {
+    public void setMaximum(Integer maximum) {
         this.maximum = Math.max(0, maximum);
     }
 
@@ -80,35 +80,9 @@ public class ExperienceEntry implements IExperienceEntry {
     public ExperienceEntry deserialize(Map<String, Object> serialization) {
         ExperienceEntry experienceEntry = new ExperienceEntry();
 
-        if (serialization.containsKey("minimum")) {
-            Object minimum = serialization.get("minimum");
-            if (int.class.isAssignableFrom(minimum.getClass())) {
-                experienceEntry.setMinimum((int) minimum);
-            }
-        }
-
-        if (serialization.containsKey("maximum")) {
-            Object maximum = serialization.get("maximum");
-            if (int.class.isAssignableFrom(maximum.getClass())) {
-                experienceEntry.setMaximum((int) maximum);
-            }
-        }
-
-        if (serialization.containsKey("conditions")) {
-            Object conditions = serialization.get("conditions");
-            if (conditions instanceof List) {
-                List<ICondition> newConditions = new ArrayList<>();
-                List<?> conditionList = (List<?>) conditions;
-                for (Object condition : conditionList) {
-                    if (condition instanceof ICondition) {
-                        newConditions.add((ICondition) condition);
-                    }
-                }
-                if (!newConditions.isEmpty()) {
-                    experienceEntry.setConditions(newConditions);
-                }
-            }
-        }
+        SerializationUtils.load(experienceEntry, Integer.class, "minimum", serialization);
+        SerializationUtils.load(experienceEntry, Integer.class, "maximum", serialization);
+        SerializationUtils.loadList(experienceEntry, ICondition.class, "conditions", serialization);
 
         return experienceEntry;
     }

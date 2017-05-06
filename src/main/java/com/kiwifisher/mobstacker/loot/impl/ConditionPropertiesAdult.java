@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
@@ -19,6 +20,14 @@ public class ConditionPropertiesAdult implements ICondition {
 
     public ConditionPropertiesAdult() {
         this.adult = true;
+    }
+
+    public boolean isAdult() {
+        return adult;
+    }
+
+    public void setAdult(Boolean adult) {
+        this.adult = adult;
     }
 
     @Override
@@ -45,22 +54,9 @@ public class ConditionPropertiesAdult implements ICondition {
     public static ConditionPropertiesAdult deserialize(Map<String, Object> serialization) {
         ConditionPropertiesAdult condition = new ConditionPropertiesAdult();
 
-        if (serialization.containsKey("adult")) {
-            Object adult = serialization.get("adult");
-            if (boolean.class.isAssignableFrom(adult.getClass())) {
-                condition.setAdult((boolean) adult);
-            }
-        }
+        SerializationUtils.load(condition, Boolean.class, "adult", serialization);
 
         return condition;
-    }
-
-    public boolean isAdult() {
-        return adult;
-    }
-
-    public void setAdult(boolean adult) {
-        this.adult = adult;
     }
 
 }

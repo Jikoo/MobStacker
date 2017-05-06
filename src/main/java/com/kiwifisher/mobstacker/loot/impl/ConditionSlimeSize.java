@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
@@ -21,6 +22,22 @@ public class ConditionSlimeSize implements ICondition {
         this.maximum = 255;
     }
 
+    public int getMinimum() {
+        return minimum;
+    }
+
+    public void setMinimum(Integer minimum) {
+        this.minimum = minimum;
+    }
+
+    public int getMaximum() {
+        return maximum;
+    }
+
+    public void setMaximum(Integer maximum) {
+        this.maximum = maximum;
+    }
+
     @Override
     public boolean test(Entity entity) {
         if (!(entity instanceof Slime)) {
@@ -34,22 +51,6 @@ public class ConditionSlimeSize implements ICondition {
             return slime.getSize() == this.getMinimum();
         }
         return slime.getSize() <= this.getMaximum();
-    }
-
-    public int getMinimum() {
-        return minimum;
-    }
-
-    public void setMinimum(int minimum) {
-        this.minimum = minimum;
-    }
-
-    public int getMaximum() {
-        return maximum;
-    }
-
-    public void setMaximum(int maximum) {
-        this.maximum = maximum;
     }
 
     @Override
@@ -70,19 +71,8 @@ public class ConditionSlimeSize implements ICondition {
     public ConditionSlimeSize deserialize(Map<String, Object> serialization) {
         ConditionSlimeSize condition = new ConditionSlimeSize();
 
-        if (serialization.containsKey("minimum")) {
-            Object minimum = serialization.get("minimum");
-            if (short.class.isAssignableFrom(minimum.getClass())) {
-                condition.setMinimum((short) minimum);
-            }
-        }
-
-        if (serialization.containsKey("maximum")) {
-            Object maximum = serialization.get("maximum");
-            if (short.class.isAssignableFrom(maximum.getClass())) {
-                condition.setMaximum((short) maximum);
-            }
-        }
+        SerializationUtils.load(condition, Short.class, "minimum", serialization);
+        SerializationUtils.load(condition, Short.class, "maximum", serialization);
 
         return condition;
     }

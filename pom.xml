@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.jikoo</groupId>
   <artifactId>MobStacker</artifactId>
-  <version>1.11-SNAPSHOT</version>
+  <version>1.11.1-SNAPSHOT</version>
 
   <dependencies>
     <dependency>

@@ -1,6 +1,5 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,7 @@ import com.kiwifisher.mobstacker.loot.api.ILootEntry;
 import com.kiwifisher.mobstacker.loot.api.ILootPool;
 import com.kiwifisher.mobstacker.loot.api.IRandomChance;
 import com.kiwifisher.mobstacker.utils.ConditionUtils;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -38,6 +38,64 @@ public class LootPool implements ILootPool {
         this.rollsMax = 1;
         this.bonusRollsMin = 0;
         this.bonusRollsMax = 0;
+    }
+
+    public int getRollsMin() {
+        return rollsMin;
+    }
+
+    public void setRollsMin(Integer rollsMin) {
+        this.rollsMin = Math.min(0, rollsMin);
+    }
+
+    public int getRollsMax() {
+        return rollsMax;
+    }
+
+    public void setRollsMax(Integer rollsMax) {
+        this.rollsMax = Math.min(0, rollsMax);
+    }
+
+    public int getBonusRollsMin() {
+        return bonusRollsMin;
+    }
+
+    public void setBonusRollsMin(Integer bonusRollsMin) {
+        this.bonusRollsMin = bonusRollsMin;
+    }
+
+    public int getBonusRollsMax() {
+        return bonusRollsMax;
+    }
+
+    public void setBonusRollsMax(Integer bonusRollsMax) {
+        this.bonusRollsMax = bonusRollsMax;
+    }
+
+    public List<ILootEntry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<ILootEntry> entries) {
+        this.entries = entries;
+    }
+
+    @Override
+    public List<ICondition> getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(List<ICondition> conditions) {
+        this.conditions = conditions;
+    }
+
+    @Override
+    public IRandomChance getRandomChance() {
+        return this.randomChance;
+    }
+
+    public void setRandomChance(IRandomChance randomChance) {
+        this.randomChance = randomChance;
     }
 
     @Override
@@ -137,64 +195,6 @@ public class LootPool implements ILootPool {
         return weightedEntries;
     }
 
-    public int getRollsMin() {
-        return rollsMin;
-    }
-
-    public void setRollsMin(int rollsMin) {
-        this.rollsMin = Math.min(0, rollsMin);
-    }
-
-    public int getRollsMax() {
-        return rollsMax;
-    }
-
-    public void setRollsMax(int rollsMax) {
-        this.rollsMax = Math.min(0, rollsMax);
-    }
-
-    public int getBonusRollsMin() {
-        return bonusRollsMin;
-    }
-
-    public void setBonusRollsMin(int bonusRollsMin) {
-        this.bonusRollsMin = bonusRollsMin;
-    }
-
-    public int getBonusRollsMax() {
-        return bonusRollsMax;
-    }
-
-    public void setBonusRollsMax(int bonusRollsMax) {
-        this.bonusRollsMax = bonusRollsMax;
-    }
-
-    public List<ILootEntry> getEntries() {
-        return entries;
-    }
-
-    public void setEntries(List<ILootEntry> entries) {
-        this.entries = entries;
-    }
-
-    @Override
-    public List<ICondition> getConditions() {
-        return conditions;
-    }
-
-    public void setConditions(List<ICondition> conditions) {
-        this.conditions = conditions;
-    }
-
-    @Override
-    public IRandomChance getRandomChance() {
-        return this.randomChance;
-    }
-
-    public void setRandomChance(IRandomChance randomChance) {
-        this.randomChance = randomChance;
-    }
-
     @Override
     public Map<String, Object> serialize() {
         LootPool defaults = new LootPool();
@@ -228,72 +228,13 @@ public class LootPool implements ILootPool {
     public static LootPool deserialize(Map<String, Object> serialization) {
         LootPool pool = new LootPool();
 
-        if (serialization.containsKey("rollsMin")) {
-            Object rollsMin = serialization.get("rollsMin");
-            if (int.class.isAssignableFrom(rollsMin.getClass())) {
-                pool.setRollsMin((int) rollsMin);
-            }
-        }
-
-        if (serialization.containsKey("rollsMax")) {
-            Object rollsMax = serialization.get("rollsMax");
-            if (int.class.isAssignableFrom(rollsMax.getClass())) {
-                pool.setRollsMax((int) rollsMax);
-            }
-        }
-
-        if (serialization.containsKey("bonusRollsMin")) {
-            Object bonusRollsMin = serialization.get("bonusRollsMin");
-            if (int.class.isAssignableFrom(bonusRollsMin.getClass())) {
-                pool.setBonusRollsMin((int) bonusRollsMin);
-            }
-        }
-
-        if (serialization.containsKey("bonusRollsMax")) {
-            Object bonusRollsMax = serialization.get("bonusRollsMax");
-            if (int.class.isAssignableFrom(bonusRollsMax.getClass())) {
-                pool.setBonusRollsMax((int) bonusRollsMax);
-            }
-        }
-
-        if (serialization.containsKey("conditions")) {
-            Object conditions = serialization.get("conditions");
-            if (conditions instanceof List) {
-                List<ICondition> newConditions = new ArrayList<>();
-                List<?> conditionList = (List<?>) conditions;
-                for (Object condition : conditionList) {
-                    if (condition instanceof ICondition) {
-                        newConditions.add((ICondition) condition);
-                    }
-                }
-                if (!newConditions.isEmpty()) {
-                    pool.setConditions(newConditions);
-                }
-            }
-        }
-
-        if (serialization.containsKey("entries")) {
-            Object entries = serialization.get("entries");
-            if (entries instanceof List) {
-                List<ILootEntry> newEntries = new ArrayList<>();
-                List<?> entryList = (List<?>) entries;
-                for (Object entry : entryList) {
-                    if (entry instanceof ILootEntry) {
-                        newEntries.add((ILootEntry) entry);
-                    }
-                }
-                if (!newEntries.isEmpty()) {
-                    pool.setEntries(newEntries);
-                }
-            }
-        }
-
-        if (serialization.containsKey("randomChance")) {
-            Object randomChance = serialization.get("randomChance");
-            if (randomChance instanceof IRandomChance) {
-                pool.setRandomChance((IRandomChance) randomChance);
-            }
-        }
+        SerializationUtils.load(pool, Integer.class, "rollsMin", serialization);
+        SerializationUtils.load(pool, Integer.class, "rollsMax", serialization);
+        SerializationUtils.load(pool, Integer.class, "bonusRollsMin", serialization);
+        SerializationUtils.load(pool, Integer.class, "bonusRollsMax", serialization);
+        SerializationUtils.load(pool, IRandomChance.class, "randomChance", serialization);
+        SerializationUtils.loadList(pool, ICondition.class, "conditions", serialization);
+        SerializationUtils.loadList(pool, ILootEntry.class, "entries", serialization);
 
         return pool;
     }

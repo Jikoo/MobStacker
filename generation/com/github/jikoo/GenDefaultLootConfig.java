@@ -1,9 +1,14 @@
+package com.github.jikoo;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.kiwifisher.mobstacker.DummyItemMeta;
 import com.kiwifisher.mobstacker.loot.api.ILootEntry;
 import com.kiwifisher.mobstacker.loot.api.ILootPool;
 import com.kiwifisher.mobstacker.loot.impl.ConditionKilledByPlayer;
@@ -24,16 +29,16 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
- * Generates the default loot.yml file.
- * <p>
- * Any section marked with a TODO cannot (easily) be created programmatically at this time. Manual
- * editing is required.
+ * Generates the default loot.yml file. N.B. Due to an issue with Bukkit's serialization system, the
+ * DummyItemMeta currently does not save as ItemMeta and instead saves as
+ * com.kiwifisher.mobstacker.DummyItemMeta. This must (for now) be manually fixed.
  * 
  * @author Jikoo
  */
 public class GenDefaultLootConfig {
 
     public static void main(String[] args) {
+
         File file = new File("loot.yml");
         YamlConfiguration config = new YamlConfiguration();
 
@@ -224,7 +229,7 @@ public class GenDefaultLootConfig {
         pools = new ArrayList<>();
         pool = new LootPool();
         entry = new LootEntry();
-        entry.setMaterial(Material.AIR); // TODO: placeholder, material does not exist
+        entry.setMaterial(Material.TOTEM);
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
         pool = new LootPool();
@@ -472,7 +477,7 @@ public class GenDefaultLootConfig {
         randomChance.setLootingModifier(0.0625);
         pool.setRandomChance(randomChance);
         entry = new LootEntry();
-        entry.setMaterial(Material.AIR); // TODO: placeholder, material does not exist
+        entry.setMaterial(Material.SHULKER_SHELL);
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
         config.set("DEFAULT.SHULKER", pools);
@@ -567,15 +572,12 @@ public class GenDefaultLootConfig {
         entry = new LootEntry();
         entry.setMaterial(Material.TIPPED_ARROW);
         entry.setMinimumQuantity(0);
-        entry.setFunctions(Arrays.asList(new FunctionLootingBonus(), new FunctionSetMeta())); // TODO: fill in meta
-        /* 
-         * Because meta is made using the ItemFactory, it cannot be created without a running server instance or OBC.
-         * Meta block:
-         * meta:
-         *   ==: ItemMeta
-         *   meta-type: POTION
-         *   potion-type: minecraft:slowness
-         */
+        Map<String, Object> serializedMeta = new HashMap<>();
+        serializedMeta.put("meta-type", "POTION");
+        serializedMeta.put("potion-type", "minecraft:slowness");
+        FunctionSetMeta functionSetMeta = new FunctionSetMeta();
+        functionSetMeta.setMeta(DummyItemMeta.deserialize(serializedMeta));
+        entry.setFunctions(Arrays.asList(new FunctionLootingBonus(), functionSetMeta));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
         config.set("DEFAULT.STRAY", pools);

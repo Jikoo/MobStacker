@@ -1,6 +1,5 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,7 @@ import com.kiwifisher.mobstacker.loot.api.IFunction;
 import com.kiwifisher.mobstacker.loot.api.ILootEntry;
 import com.kiwifisher.mobstacker.loot.api.IRandomChance;
 import com.kiwifisher.mobstacker.loot.api.LootData;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -37,6 +37,94 @@ public class LootEntry implements ILootEntry {
         this.weight = 1;
         this.quality = 0;
         this.hasVariableFunctions = false;
+    }
+
+    @Override
+    public Material getMaterial() {
+        return this.material;
+    }
+
+    public void setMaterial(Material material) {
+        if (material == null) {
+            this.material = Material.AIR;
+        } else {
+            this.material = material;
+        }
+    }
+
+    @Override
+    public int getMinimumQuantity() {
+        return this.minimumQuantity;
+    }
+
+    public void setMinimumQuantity(Integer minimumQuantity) {
+        this.minimumQuantity = minimumQuantity;
+    }
+
+    @Override
+    public int getMaximumQuantity() {
+        return this.maximumQuantity;
+    }
+
+    public void setMaximumQuantity(Integer maximumQuantity) {
+        this.maximumQuantity = maximumQuantity;
+    }
+
+    @Override
+    public int getWeight() {
+        return this.weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    @Override
+    public double getQuality() {
+        return this.quality;
+    }
+
+    public void setQuality(Integer quality) {
+        this.quality = quality;
+    }
+
+    @Override
+    public List<ICondition> getConditions() {
+        return this.conditions;
+    }
+
+    public void setConditions(List<ICondition> conditions) {
+        this.conditions = conditions;
+    }
+
+    public List<IFunction> getFunctions() {
+        return functions;
+    }
+
+    public void setFunctions(List<IFunction> functions) {
+        this.functions = functions;
+
+        if (functions == null) {
+            this.hasVariableFunctions = false;
+            return;
+        }
+
+        for (IFunction function : functions) {
+            if (function.isVariable()) {
+                this.hasVariableFunctions = true;
+                return;
+            }
+        }
+        this.hasVariableFunctions = false;
+    }
+
+    @Override
+    public IRandomChance getRandomChance() {
+        return this.randomChance;
+    }
+
+    public void setRandomChance(IRandomChance randomChance) {
+        this.randomChance = randomChance;
     }
 
     @Override
@@ -125,94 +213,6 @@ public class LootEntry implements ILootEntry {
     }
 
     @Override
-    public List<ICondition> getConditions() {
-        return this.conditions;
-    }
-
-    public void setConditions(List<ICondition> conditions) {
-        this.conditions = conditions;
-    }
-
-    public List<IFunction> getFunctions() {
-        return functions;
-    }
-
-    public void setFunctions(List<IFunction> functions) {
-        this.functions = functions;
-
-        if (functions == null) {
-            this.hasVariableFunctions = false;
-            return;
-        }
-
-        for (IFunction function : functions) {
-            if (function.isVariable()) {
-                this.hasVariableFunctions = true;
-                return;
-            }
-        }
-        this.hasVariableFunctions = false;
-    }
-
-    @Override
-    public IRandomChance getRandomChance() {
-        return this.randomChance;
-    }
-
-    public void setRandomChance(IRandomChance randomChance) {
-        this.randomChance = randomChance;
-    }
-
-    @Override
-    public int getWeight() {
-        return this.weight;
-    }
-
-    public void setWeight(int weight) {
-        this.weight = weight;
-    }
-
-    @Override
-    public double getQuality() {
-        return this.quality;
-    }
-
-    public void setQuality(int quality) {
-        this.quality = quality;
-    }
-
-    @Override
-    public Material getMaterial() {
-        return this.material;
-    }
-
-    public void setMaterial(Material material) {
-        if (material == null) {
-            this.material = Material.AIR;
-        } else {
-            this.material = material;
-        }
-    }
-
-    @Override
-    public int getMinimumQuantity() {
-        return this.minimumQuantity;
-    }
-
-    public void setMinimumQuantity(int minimumQuantity) {
-        this.minimumQuantity = minimumQuantity;
-    }
-
-    @Override
-    public int getMaximumQuantity() {
-        return this.maximumQuantity;
-    }
-
-    public void setMaximumQuantity(int maximumQuantity) {
-        this.maximumQuantity = maximumQuantity;
-    }
-
-    @Override
     public Map<String, Object> serialize() {
         LootEntry defaults = new LootEntry();
         Map<String, Object> serialization = new HashMap<>();
@@ -254,72 +254,13 @@ public class LootEntry implements ILootEntry {
             }
         }
 
-        if (serialization.containsKey("minimumQuantity")) {
-            Object minimumQuantity = serialization.get("minimumQuantity");
-            if (int.class.isAssignableFrom(minimumQuantity.getClass())) {
-                lootEntry.setMinimumQuantity((int) minimumQuantity);
-            }
-        }
-
-        if (serialization.containsKey("maximumQuantity")) {
-            Object maximumQuantity = serialization.get("maximumQuantity");
-            if (int.class.isAssignableFrom(maximumQuantity.getClass())) {
-                lootEntry.setMaximumQuantity((int) maximumQuantity);
-            }
-        }
-
-        if (serialization.containsKey("weight")) {
-            Object weight = serialization.get("weight");
-            if (int.class.isAssignableFrom(weight.getClass())) {
-                lootEntry.setWeight((int) weight);
-            }
-        }
-
-        if (serialization.containsKey("quality")) {
-            Object quality = serialization.get("quality");
-            if (int.class.isAssignableFrom(quality.getClass())) {
-                lootEntry.setQuality((int) quality);
-            }
-        }
-
-        if (serialization.containsKey("conditions")) {
-            Object conditions = serialization.get("conditions");
-            if (conditions instanceof List) {
-                List<ICondition> newConditions = new ArrayList<>();
-                List<?> conditionList = (List<?>) conditions;
-                for (Object condition : conditionList) {
-                    if (condition instanceof ICondition) {
-                        newConditions.add((ICondition) condition);
-                    }
-                }
-                if (!newConditions.isEmpty()) {
-                    lootEntry.setConditions(newConditions);
-                }
-            }
-        }
-
-        if (serialization.containsKey("entries")) {
-            Object entries = serialization.get("entries");
-            if (entries instanceof List) {
-                List<IFunction> newFunctions = new ArrayList<>();
-                List<?> entryList = (List<?>) entries;
-                for (Object entry : entryList) {
-                    if (entry instanceof IFunction) {
-                        newFunctions.add((IFunction) entry);
-                    }
-                }
-                if (!newFunctions.isEmpty()) {
-                    lootEntry.setFunctions(newFunctions);
-                }
-            }
-        }
-
-        if (serialization.containsKey("randomChance")) {
-            Object randomChance = serialization.get("randomChance");
-            if (randomChance instanceof IRandomChance) {
-                lootEntry.setRandomChance((IRandomChance) randomChance);
-            }
-        }
+        SerializationUtils.load(lootEntry, Integer.class, "minimumQuantity", serialization);
+        SerializationUtils.load(lootEntry, Integer.class, "maximumQuantity", serialization);
+        SerializationUtils.load(lootEntry, Integer.class, "weight", serialization);
+        SerializationUtils.load(lootEntry, Integer.class, "quality", serialization);
+        SerializationUtils.load(lootEntry, IRandomChance.class, "randomChance", serialization);
+        SerializationUtils.loadList(lootEntry, ICondition.class, "conditions", serialization);
+        SerializationUtils.loadList(lootEntry, IFunction.class, "functions", serialization);
 
         return lootEntry;
     }

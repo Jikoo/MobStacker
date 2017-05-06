@@ -1,12 +1,14 @@
 package com.kiwifisher.mobstacker.loot;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
@@ -32,7 +34,10 @@ public class LootManager {
 
     public LootManager(MobStacker plugin) {
         // Save default loot configuration if not present.
-        plugin.saveResource("loot.yml", false);
+        // For some reason, Bukkit always logs when not saving due to existence, which is annoying.
+        if (!new File(plugin.getDataFolder(), "loot.yml").exists()) {
+            plugin.saveResource("loot.yml", false);
+        }
 
         // Load loot configuration.
         YamlConfiguration lootConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "loot.yml"));
@@ -68,7 +73,9 @@ public class LootManager {
         }
 
         // Save default experience configuration if not present.
-        plugin.saveResource("experience.yml", false);
+        if (!new File(plugin.getDataFolder(), "experience.yml").exists()) {
+            plugin.saveResource("experience.yml", false);
+        }
 
         // Load experience configuration.
         YamlConfiguration experienceConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "experience.yml"));
@@ -87,6 +94,28 @@ public class LootManager {
                     experience.put(world + "." + entity, (IExperiencePool) pool);
                 }
             }
+        }
+
+        File testDump = new File(plugin.getDataFolder(), "LOOTDUMP.yml");
+        YamlConfiguration testConfiguration = new YamlConfiguration();
+        for (Map.Entry<String, Collection<ILootPool>> entry : loot.entrySet()) {
+            testConfiguration.set(entry.getKey(), entry.getValue());
+        }
+        try {
+            testConfiguration.save(testDump);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        testDump = new File(plugin.getDataFolder(), "EXPDUMP.yml");
+        testConfiguration = new YamlConfiguration();
+        for (Entry<String, IExperiencePool> entry : experience.entrySet()) {
+            testConfiguration.set(entry.getKey(), entry.getValue());
+        }
+        try {
+            testConfiguration.save(testDump);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,6 +1,5 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
 import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
 import com.kiwifisher.mobstacker.utils.ConditionUtils;
+import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 
@@ -72,21 +72,7 @@ public class ExperiencePool implements IExperiencePool {
     public static ExperiencePool deserialize(Map<String, Object> serialization) {
         ExperiencePool pool = new ExperiencePool();
 
-        if (serialization.containsKey("entries")) {
-            Object entries = serialization.get("entries");
-            if (entries instanceof List) {
-                List<IExperienceEntry> newEntries = new ArrayList<>();
-                List<?> entryList = (List<?>) entries;
-                for (Object entry : entryList) {
-                    if (entry instanceof IExperienceEntry) {
-                        newEntries.add((IExperienceEntry) entry);
-                    }
-                }
-                if (!newEntries.isEmpty()) {
-                    pool.setEntries(newEntries);
-                }
-            }
-        }
+        SerializationUtils.loadList(pool, IExperienceEntry.class, "entries", serialization);
 
         return pool;
     }
