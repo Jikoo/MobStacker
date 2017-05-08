@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+
 import com.kiwifisher.mobstacker.commands.MobStackerCommands;
 import com.kiwifisher.mobstacker.listeners.ChunkLoadListener;
 import com.kiwifisher.mobstacker.listeners.ChunkUnloadListener;
@@ -19,6 +23,13 @@ import com.kiwifisher.mobstacker.listeners.PlayerShearEntityListener;
 import com.kiwifisher.mobstacker.listeners.SheepDyeListener;
 import com.kiwifisher.mobstacker.listeners.SheepRegrowWoolListener;
 import com.kiwifisher.mobstacker.loot.LootManager;
+import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
+import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
+import com.kiwifisher.mobstacker.loot.api.IFunction;
+import com.kiwifisher.mobstacker.loot.api.ILootEntry;
+import com.kiwifisher.mobstacker.loot.api.ILootPool;
+import com.kiwifisher.mobstacker.loot.api.IRandomChance;
 import com.kiwifisher.mobstacker.loot.impl.ConditionKilledByPlayer;
 import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult;
 import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesOnFire;
@@ -39,12 +50,13 @@ import com.kiwifisher.mobstacker.utils.StackUtils;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MobStacker extends JavaPlugin {
+
+    private static Gson gson;
 
     private StackUtils stackUtils;
     private LootManager lootManager;
@@ -53,34 +65,39 @@ public class MobStacker extends JavaPlugin {
     private boolean nerfSpawnerMobsDefault = false;
     private boolean stacking = true;
 
-    @Override
-    public void onLoad() {
-        registerSerializableClasses();
-    }
-
-    static void registerSerializableClasses() {
-        ConfigurationSerialization.registerClass(ConditionKilledByPlayer.class);
-        ConfigurationSerialization.registerClass(ConditionPropertiesAdult.class);
-        ConfigurationSerialization.registerClass(ConditionPropertiesOnFire.class);
-        ConfigurationSerialization.registerClass(ConditionSlimeSize.class);
-        ConfigurationSerialization.registerClass(ExperienceEntry.class);
-        ConfigurationSerialization.registerClass(ExperiencePool.class);
-        ConfigurationSerialization.registerClass(FunctionFurnaceSmelt.class);
-        ConfigurationSerialization.registerClass(FunctionLootingBonus.class);
-        ConfigurationSerialization.registerClass(FunctionMatchSheepWool.class);
-        ConfigurationSerialization.registerClass(FunctionSetData.class);
-        ConfigurationSerialization.registerClass(FunctionSetMeta.class);
-        ConfigurationSerialization.registerClass(LootEntry.class);
-        ConfigurationSerialization.registerClass(LootPool.class);
-        ConfigurationSerialization.registerClass(RandomChance.class);
-        ConfigurationSerialization.registerClass(SlimeExperienceEntry.class);
+    public static Gson getGson() {
+        if (gson == null) {
+            gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting()
+                    .disableHtmlEscaping()
+                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IRandomChance.class)
+                            .registerSubtype(RandomChance.class))
+                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ICondition.class)
+                            .registerSubtype(ConditionKilledByPlayer.class)
+                            .registerSubtype(ConditionPropertiesAdult.class)
+                            .registerSubtype(ConditionPropertiesOnFire.class)
+                            .registerSubtype(ConditionSlimeSize.class))
+                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IFunction.class)
+                            .registerSubtype(FunctionFurnaceSmelt.class)
+                            .registerSubtype(FunctionLootingBonus.class)
+                            .registerSubtype(FunctionMatchSheepWool.class)
+                            .registerSubtype(FunctionSetData.class)
+                            .registerSubtype(FunctionSetMeta.class))
+                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ILootEntry.class)
+                            .registerSubtype(LootEntry.class))
+                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ILootPool.class)
+                            .registerSubtype(LootPool.class))
+                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IExperienceEntry.class)
+                            .registerSubtype(ExperienceEntry.class)
+                            .registerSubtype(SlimeExperienceEntry.class))
+                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IExperiencePool.class)
+                            .registerSubtype(ExperiencePool.class))
+                    .create();
+        }
+        return gson;
     }
  
     @Override
     public void onEnable() {
-        // In case of the plugin being unloaded by another source, re-register classes on enable.
-        registerSerializableClasses();
-
         saveDefaultConfig();
 
         this.stackUtils = new StackUtils(this);

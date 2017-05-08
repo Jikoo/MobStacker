@@ -1,11 +1,10 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.google.gson.annotations.Expose;
+
 import com.kiwifisher.mobstacker.loot.api.IRandomChance;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 /**
  * A class used to represent vanilla's random chance condition. To reduce load, Conditions are only
@@ -16,8 +15,8 @@ import com.kiwifisher.mobstacker.utils.SerializationUtils;
  */
 public class RandomChance implements IRandomChance {
 
-    private double chance;
-    private double lootingModifier;
+    @Expose
+    private double chance, lootingModifier;
 
     public RandomChance() {
         this.chance = 1;
@@ -43,23 +42,6 @@ public class RandomChance implements IRandomChance {
 
     public void setLootingModifier(Double lootingModifier) {
         this.lootingModifier = lootingModifier;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> serialization = new HashMap<>();
-        serialization.put("chance", this.getChance());
-        serialization.put("lootingModifier", this.getLootingModifier());
-        return serialization;
-    }
-
-    public static RandomChance deserialize(Map<String, Object> serialization) {
-        RandomChance randomChance = new RandomChance();
-
-        SerializationUtils.load(randomChance, Double.class, "chance", serialization);
-        SerializationUtils.load(randomChance, Double.class, "lootingModifier", serialization);
-
-        return randomChance;
     }
 
 }

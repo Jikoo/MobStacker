@@ -1,10 +1,8 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.Map;
+import com.google.gson.annotations.Expose;
 
-import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.LootData;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 
@@ -15,6 +13,7 @@ import org.bukkit.entity.Entity;
  */
 public class FunctionLootingBonus extends Function {
 
+    @Expose
     private int minimumBonus, maximumBonus;
 
     public FunctionLootingBonus() {
@@ -47,31 +46,6 @@ public class FunctionLootingBonus extends Function {
     @Override
     public boolean isVariable() {
         return false;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        FunctionLootingBonus defaults = new FunctionLootingBonus();
-        Map<String, Object> serialization = super.serialize();
-
-        if (this.minimumBonus != defaults.getMinimumBonus()) {
-            serialization.put("minimumBonus", this.minimumBonus);
-        }
-        if (this.maximumBonus != defaults.getMaximumBonus()) {
-            serialization.put("maximumBonus", this.maximumBonus);
-        }
-
-        return serialization;
-    }
-
-    public FunctionLootingBonus deserialize(Map<String, Object> serialization) {
-        FunctionLootingBonus function = new FunctionLootingBonus();
-
-        SerializationUtils.load(function, Integer.class, "minimumBonus", serialization);
-        SerializationUtils.load(function, Integer.class, "maximumBonus", serialization);
-        SerializationUtils.loadList(function, ICondition.class, "conditions", serialization);
-
-        return function;
     }
 
 }

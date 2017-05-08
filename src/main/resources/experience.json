@@ -1,0 +1,551 @@
+{
+  "DEFAULT": {
+    "ENDERMAN": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "SILVERFISH": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "MAGMA_CUBE": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "SlimeExperienceEntry"
+        }
+      ]
+    },
+    "EVOCATION_ILLAGER": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 10,
+          "maximum": 0
+        }
+      ]
+    },
+    "MULE": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "LLAMA": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "HUSK": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        },
+        {
+          "type": "ExperienceEntry",
+          "minimum": 7,
+          "maximum": 0,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": false
+            }
+          ]
+        }
+      ]
+    },
+    "SHEEP": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "VEX": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 3,
+          "maximum": 0
+        }
+      ]
+    },
+    "ENDER_DRAGON": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 500,
+          "maximum": 0
+        }
+      ]
+    },
+    "WITCH": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "SPIDER": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "VILLAGER": {
+      "type": "ExperiencePool"
+    },
+    "SKELETON": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "WITHER_SKELETON": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "POLAR_BEAR": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "WITHER": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 50,
+          "maximum": 0
+        }
+      ]
+    },
+    "MUSHROOM_COW": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "CREEPER": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "CHICKEN": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "ZOMBIE_HORSE": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "CAVE_SPIDER": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "SLIME": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "SlimeExperienceEntry"
+        }
+      ]
+    },
+    "SNOW_GOLEM": {
+      "type": "ExperiencePool"
+    },
+    "SHULKER": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "GUARDIAN": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 10,
+          "maximum": 0
+        }
+      ]
+    },
+    "SQUID": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "ELDER_GUARDIAN": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 10,
+          "maximum": 0
+        }
+      ]
+    },
+    "HORSE": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "BLAZE": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 10,
+          "maximum": 0
+        }
+      ]
+    },
+    "SKELETON_HORSE": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "COW": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "GHAST": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "ENDERMITE": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 3,
+          "maximum": 0
+        }
+      ]
+    },
+    "PIG": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "STRAY": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "BAT": {
+      "type": "ExperiencePool"
+    },
+    "ZOMBIE": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        },
+        {
+          "type": "ExperienceEntry",
+          "minimum": 7,
+          "maximum": 0,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": false
+            }
+          ]
+        }
+      ]
+    },
+    "RABBIT": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "WOLF": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "DONKEY": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "IRON_GOLEM": {
+      "type": "ExperiencePool"
+    },
+    "PIG_ZOMBIE": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        },
+        {
+          "type": "ExperienceEntry",
+          "minimum": 7,
+          "maximum": 0,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": false
+            }
+          ]
+        }
+      ]
+    },
+    "VINDICATION_ILLAGER": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "OCELOT": {
+      "type": "ExperiencePool",
+      "entries": [
+        {
+          "type": "ExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

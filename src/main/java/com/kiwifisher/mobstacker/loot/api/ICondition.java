@@ -1,6 +1,5 @@
 package com.kiwifisher.mobstacker.loot.api;
 
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Entity;
 
 /**
@@ -8,7 +7,7 @@ import org.bukkit.entity.Entity;
  * 
  * @author Jikoo
  */
-public interface ICondition extends ConfigurationSerializable {
+public interface ICondition {
 
     public abstract boolean test(Entity entity);
 

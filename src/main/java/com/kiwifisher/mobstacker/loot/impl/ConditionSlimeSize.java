@@ -1,10 +1,8 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.annotations.Expose;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
@@ -16,7 +14,9 @@ import org.bukkit.entity.Slime;
  */
 public class ConditionSlimeSize implements ICondition {
 
+    @Expose
     private int minimum, maximum;
+
     public ConditionSlimeSize() {
         this.minimum = 0;
         this.maximum = 255;
@@ -51,30 +51,6 @@ public class ConditionSlimeSize implements ICondition {
             return slime.getSize() == this.getMinimum();
         }
         return slime.getSize() <= this.getMaximum();
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        ConditionSlimeSize defaults = new ConditionSlimeSize();
-        Map<String, Object> serialization = new HashMap<>();
-
-        if (this.minimum != defaults.getMinimum()) {
-            serialization.put("minimum", this.minimum);
-        }
-        if (this.maximum != defaults.getMaximum()) {
-            serialization.put("maximum", this.maximum);
-        }
-
-        return serialization;
-    }
-
-    public ConditionSlimeSize deserialize(Map<String, Object> serialization) {
-        ConditionSlimeSize condition = new ConditionSlimeSize();
-
-        SerializationUtils.load(condition, Short.class, "minimum", serialization);
-        SerializationUtils.load(condition, Short.class, "maximum", serialization);
-
-        return condition;
     }
 
 }

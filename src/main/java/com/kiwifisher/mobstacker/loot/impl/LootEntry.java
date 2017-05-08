@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.google.gson.annotations.Expose;
+
 import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.IFunction;
 import com.kiwifisher.mobstacker.loot.api.ILootEntry;
 import com.kiwifisher.mobstacker.loot.api.IRandomChance;
 import com.kiwifisher.mobstacker.loot.api.LootData;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -24,11 +25,17 @@ import org.bukkit.inventory.ItemStack;
 public class LootEntry implements ILootEntry {
 
     private Material material;
+    @Expose
+    private String materialName;
+    @Expose
     private int minimumQuantity, maximumQuantity, weight, quality;
+    @Expose
     private List<ICondition> conditions;
+    @Expose
     private List<IFunction> functions;
+    @Expose
     private IRandomChance randomChance;
-    private boolean hasVariableFunctions;
+    private Boolean hasVariableFunctions;
 
     public LootEntry() {
         this.material = Material.AIR;
@@ -36,11 +43,16 @@ public class LootEntry implements ILootEntry {
         this.maximumQuantity = 1;
         this.weight = 1;
         this.quality = 0;
-        this.hasVariableFunctions = false;
     }
 
     @Override
     public Material getMaterial() {
+        if (this.material == null) {
+            this.material = Material.matchMaterial(this.materialName);
+            if (this.material == null) {
+                this.material = Material.AIR;
+            }
+        }
         return this.material;
     }
 
@@ -50,6 +62,7 @@ public class LootEntry implements ILootEntry {
         } else {
             this.material = material;
         }
+        this.materialName = material.name();
     }
 
     @Override
@@ -129,6 +142,12 @@ public class LootEntry implements ILootEntry {
 
     @Override
     public void generateLoot(List<ItemStack> stacks, int value, Entity entity, int looting) {
+
+        if (hasVariableFunctions == null) {
+            // Ensure variable functions boolean is set, loading from JSON does not set.
+            this.setFunctions(this.functions);
+        }
+
         if (hasVariableFunctions) {
             // Variable functions. Looping required so they can generate random whatever.
             Map<LootData, Integer> lootDataTotals = new HashMap<>();
@@ -210,59 +229,6 @@ public class LootEntry implements ILootEntry {
                 amount = 0;
             }
         }
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        LootEntry defaults = new LootEntry();
-        Map<String, Object> serialization = new HashMap<>();
-
-        serialization.put("material", this.getMaterial().name());
-
-        if (this.minimumQuantity != defaults.getMinimumQuantity()) {
-            serialization.put("minimumQuantity", this.minimumQuantity);
-        }
-        if (this.maximumQuantity != defaults.getMaximumQuantity()) {
-            serialization.put("maximumQuantity", this.maximumQuantity);
-        }
-        if (this.weight != defaults.getWeight()) {
-            serialization.put("weight", this.weight);
-        }
-        if (this.quality != defaults.getQuality()) {
-            serialization.put("quality", this.quality);
-        }
-        if (this.conditions != null) {
-            serialization.put("conditions", this.conditions);
-        }
-        if (this.functions != null) {
-            serialization.put("functions", this.functions);
-        }
-        if (this.randomChance != null) {
-            serialization.put("randomChance", this.randomChance);
-        }
-
-        return serialization;
-    }
-
-    public LootEntry deserialize(Map<String, Object> serialization) {
-        LootEntry lootEntry = new LootEntry();
-
-        if (serialization.containsKey("material")) {
-            Object material = serialization.get("material");
-            if (String.class.isAssignableFrom(material.getClass())) {
-                lootEntry.setMaterial(Material.matchMaterial((String) material));
-            }
-        }
-
-        SerializationUtils.load(lootEntry, Integer.class, "minimumQuantity", serialization);
-        SerializationUtils.load(lootEntry, Integer.class, "maximumQuantity", serialization);
-        SerializationUtils.load(lootEntry, Integer.class, "weight", serialization);
-        SerializationUtils.load(lootEntry, Integer.class, "quality", serialization);
-        SerializationUtils.load(lootEntry, IRandomChance.class, "randomChance", serialization);
-        SerializationUtils.loadList(lootEntry, ICondition.class, "conditions", serialization);
-        SerializationUtils.loadList(lootEntry, IFunction.class, "functions", serialization);
-
-        return lootEntry;
     }
 
 }

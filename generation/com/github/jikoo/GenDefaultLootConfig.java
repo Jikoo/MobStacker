@@ -1,14 +1,17 @@
 package com.github.jikoo;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.kiwifisher.mobstacker.DummyItemMeta;
+import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.loot.api.ILootEntry;
 import com.kiwifisher.mobstacker.loot.api.ILootPool;
 import com.kiwifisher.mobstacker.loot.impl.ConditionKilledByPlayer;
@@ -26,7 +29,6 @@ import com.kiwifisher.mobstacker.loot.impl.LootPool;
 import com.kiwifisher.mobstacker.loot.impl.RandomChance;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * Generates the default loot.yml file. N.B. Due to an issue with Bukkit's serialization system, the
@@ -38,9 +40,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class GenDefaultLootConfig {
 
     public static void main(String[] args) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("loot.json")))) {
+            writer.write(getConfigJSON());
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        File file = new File("loot.yml");
-        YamlConfiguration config = new YamlConfiguration();
+    public static String getConfigJSON() {
+        Map<String, Collection<ILootPool>> defaults = new HashMap<>();
 
         List<ILootPool> pools;
         LootPool pool;
@@ -52,13 +61,13 @@ public class GenDefaultLootConfig {
         RandomChance randomChance;
 
         pool = new LootPool();
-        config.set("DEFAULT.BAT", Arrays.asList(pool));
-        config.set("DEFAULT.ENDERMITE", Arrays.asList(pool));
-        config.set("DEFAULT.GIANT", Arrays.asList(pool));
-        config.set("DEFAULT.OCELOT", Arrays.asList(pool));
-        config.set("DEFAULT.SILVERFISH", Arrays.asList(pool));
-        config.set("DEFAULT.VILLAGER", Arrays.asList(pool));
-        config.set("DEFAULT.WOLF", Arrays.asList(pool));
+        defaults.put("BAT", Arrays.asList(pool));
+        defaults.put("ENDERMITE", Arrays.asList(pool));
+        defaults.put("GIANT", Arrays.asList(pool));
+        defaults.put("OCELOT", Arrays.asList(pool));
+        defaults.put("SILVERFISH", Arrays.asList(pool));
+        defaults.put("VILLAGER", Arrays.asList(pool));
+        defaults.put("WOLF", Arrays.asList(pool));
 
         pool = new LootPool();
         entry = new LootEntry();
@@ -67,7 +76,7 @@ public class GenDefaultLootConfig {
         entry.setConditions(Arrays.asList(new ConditionKilledByPlayer()));
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
-        config.set("DEFAULT.BLAZE", Arrays.asList(pool));
+        defaults.put("BLAZE", Arrays.asList(pool));
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -87,8 +96,8 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.CAVE_SPIDER", pools);
-        config.set("DEFAULT.SPIDER", pools);
+        defaults.put("CAVE_SPIDER", pools);
+        defaults.put("SPIDER", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -109,7 +118,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(function, new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.CHICKEN", pools);
+        defaults.put("CHICKEN", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -131,8 +140,8 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(function, new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.COW", pools);
-        config.set("DEFAULT.MUSHROOM_COW", pools);
+        defaults.put("COW", pools);
+        defaults.put("MUSHROOM_COW", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -143,7 +152,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.CREEPER", pools);
+        defaults.put("CREEPER", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -155,10 +164,10 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.DONKEY", pools);
-        config.set("DEFAULT.HORSE", pools);
-        config.set("DEFAULT.LLAMA", pools);
-        config.set("DEFAULT.MULE", pools);
+        defaults.put("DONKEY", pools);
+        defaults.put("HORSE", pools);
+        defaults.put("LLAMA", pools);
+        defaults.put("MULE", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -214,7 +223,7 @@ public class GenDefaultLootConfig {
         entries.add(entry);
         pool.setEntries(entries);
         pools.add(pool);
-        config.set("DEFAULT.ELDER_GUARDIAN", pools);
+        defaults.put("ELDER_GUARDIAN", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -224,7 +233,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.ENDERMAN", pools);
+        defaults.put("ENDERMAN", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -240,7 +249,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.EVOCATION_ILLAGER", pools);
+        defaults.put("EVOCATION_ILLAGER", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -258,7 +267,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.GHAST", pools);
+        defaults.put("GHAST", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -314,7 +323,7 @@ public class GenDefaultLootConfig {
         entries.add(entry);
         pool.setEntries(entries);
         pools.add(pool);
-        config.set("DEFAULT.GUARDIAN", pools);
+        defaults.put("GUARDIAN", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -343,9 +352,9 @@ public class GenDefaultLootConfig {
         entries.add(entry);
         pool.setEntries(entries);
         pools.add(pool);
-        config.set("DEFAULT.HUSK", pools);
-        config.set("DEFAULT.ZOMBIE", pools);
-        config.set("DEFAULT.ZOMBIE_VILLAGER", pools);
+        defaults.put("HUSK", pools);
+        defaults.put("ZOMBIE", pools);
+        defaults.put("ZOMBIE_VILLAGER", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -362,7 +371,7 @@ public class GenDefaultLootConfig {
         entry.setMaximumQuantity(5);
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.IRON_GOLEM", pools);
+        defaults.put("IRON_GOLEM", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -385,7 +394,7 @@ public class GenDefaultLootConfig {
         entries.add(entry);
         pool.setEntries(entries);
         pools.add(pool);
-        config.set("DEFAULT.MAGMA_CUBE", pools);
+        defaults.put("MAGMA_CUBE", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -398,7 +407,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(function, new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.PIG", pools);
+        defaults.put("PIG", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -417,7 +426,7 @@ public class GenDefaultLootConfig {
         entries.add(entry);
         pool.setEntries(entries);
         pools.add(pool);
-        config.set("DEFAULT.POLAR_BEAR", pools);
+        defaults.put("POLAR_BEAR", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -448,7 +457,7 @@ public class GenDefaultLootConfig {
         entry.setMaterial(Material.RABBIT_FOOT);
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.RABBIT", pools);
+        defaults.put("RABBIT", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -468,7 +477,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(function, new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.SHEEP", pools);
+        defaults.put("SHEEP", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -480,7 +489,7 @@ public class GenDefaultLootConfig {
         entry.setMaterial(Material.SHULKER_SHELL);
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.SHULKER", pools);
+        defaults.put("SHULKER", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -499,7 +508,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.SKELETON", pools);
+        defaults.put("SKELETON", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -511,7 +520,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.SKELETON_HORSE", pools);
+        defaults.put("SKELETON_HORSE", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -527,7 +536,7 @@ public class GenDefaultLootConfig {
         entries.add(entry);
         pool.setEntries(entries);
         pools.add(pool);
-        config.set("DEFAULT.SLIME", pools);
+        defaults.put("SLIME", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -537,7 +546,7 @@ public class GenDefaultLootConfig {
         entry.setMaximumQuantity(15);
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.SNOWMAN", pools);
+        defaults.put("SNOWMAN", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -548,7 +557,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.SQUID", pools);
+        defaults.put("SQUID", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -573,14 +582,15 @@ public class GenDefaultLootConfig {
         entry.setMaterial(Material.TIPPED_ARROW);
         entry.setMinimumQuantity(0);
         Map<String, Object> serializedMeta = new HashMap<>();
+        serializedMeta.put("==", "ItemMeta");
         serializedMeta.put("meta-type", "POTION");
         serializedMeta.put("potion-type", "minecraft:slowness");
         FunctionSetMeta functionSetMeta = new FunctionSetMeta();
-        functionSetMeta.setMeta(DummyItemMeta.deserialize(serializedMeta));
+        functionSetMeta.setSerializedMeta(serializedMeta);
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus(), functionSetMeta));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.STRAY", pools);
+        defaults.put("STRAY", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -631,7 +641,7 @@ public class GenDefaultLootConfig {
         entries.add(entry);
         pool.setEntries(entries);
         pools.add(pool);
-        config.set("DEFAULT.WITCH", pools);
+        defaults.put("WITCH", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -639,7 +649,7 @@ public class GenDefaultLootConfig {
         entry.setMaterial(Material.NETHER_STAR);
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.WITHER", pools);
+        defaults.put("WITHER", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -671,7 +681,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(functionSetData));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.WITHER_SKELETON", pools);
+        defaults.put("WITHER_SKELETON", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -692,7 +702,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.VINDICATION_ILLAGER", pools);
+        defaults.put("VINDICATION_ILLAGER", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -704,7 +714,7 @@ public class GenDefaultLootConfig {
         entry.setFunctions(Arrays.asList(new FunctionLootingBonus()));
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.ZOMBIE_HORSE", pools);
+        defaults.put("ZOMBIE_HORSE", pools);
 
         pools = new ArrayList<>();
         pool = new LootPool();
@@ -731,13 +741,12 @@ public class GenDefaultLootConfig {
         entry.setMaterial(Material.GOLD_INGOT);
         pool.setEntries(Arrays.asList(entry));
         pools.add(pool);
-        config.set("DEFAULT.ZOMBIE_PIGMAN", pools);
+        defaults.put("ZOMBIE_PIGMAN", pools);
 
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Map<String, Map<String, Collection<ILootPool>>> mappings = new HashMap<>();
+        mappings.put("DEFAULT", defaults);
+
+        return MobStacker.getGson().toJson(mappings);
     }
 
 }

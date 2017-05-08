@@ -7,12 +7,13 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.google.gson.annotations.Expose;
+
 import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.ILootEntry;
 import com.kiwifisher.mobstacker.loot.api.ILootPool;
 import com.kiwifisher.mobstacker.loot.api.IRandomChance;
 import com.kiwifisher.mobstacker.utils.ConditionUtils;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -28,9 +29,13 @@ import org.bukkit.inventory.ItemStack;
  */
 public class LootPool implements ILootPool {
 
+    @Expose
     private int rollsMin, rollsMax, bonusRollsMin, bonusRollsMax;
+    @Expose
     private List<ICondition> conditions;
+    @Expose
     private List<ILootEntry> entries;
+    @Expose
     private IRandomChance randomChance;
 
     public LootPool() {
@@ -193,50 +198,6 @@ public class LootPool implements ILootPool {
         }
 
         return weightedEntries;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        LootPool defaults = new LootPool();
-        Map<String, Object> serialization = new HashMap<>();
-
-        if (this.rollsMin != defaults.getRollsMin()) {
-            serialization.put("rollsMin", this.rollsMin);
-        }
-        if (this.rollsMax != defaults.getRollsMax()) {
-            serialization.put("rollsMax", this.rollsMax);
-        }
-        if (this.bonusRollsMin != defaults.getBonusRollsMin()) {
-            serialization.put("bonusRollsMin", this.bonusRollsMin);
-        }
-        if (this.bonusRollsMax != defaults.getBonusRollsMax()) {
-            serialization.put("bonusRollsMax", this.bonusRollsMax);
-        }
-        if (this.conditions != null) {
-            serialization.put("conditions", this.conditions);
-        }
-        if (this.entries != null) {
-            serialization.put("entries", this.entries);
-        }
-        if (this.randomChance != null) {
-            serialization.put("randomChance", this.randomChance);
-        }
-
-        return serialization;
-    }
-
-    public static LootPool deserialize(Map<String, Object> serialization) {
-        LootPool pool = new LootPool();
-
-        SerializationUtils.load(pool, Integer.class, "rollsMin", serialization);
-        SerializationUtils.load(pool, Integer.class, "rollsMax", serialization);
-        SerializationUtils.load(pool, Integer.class, "bonusRollsMin", serialization);
-        SerializationUtils.load(pool, Integer.class, "bonusRollsMax", serialization);
-        SerializationUtils.load(pool, IRandomChance.class, "randomChance", serialization);
-        SerializationUtils.loadList(pool, ICondition.class, "conditions", serialization);
-        SerializationUtils.loadList(pool, ILootEntry.class, "entries", serialization);
-
-        return pool;
     }
 
 }

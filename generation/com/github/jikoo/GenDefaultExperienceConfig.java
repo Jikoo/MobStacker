@@ -1,18 +1,22 @@
 package com.github.jikoo;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
+import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
 import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult;
 import com.kiwifisher.mobstacker.loot.impl.ExperienceEntry;
 import com.kiwifisher.mobstacker.loot.impl.ExperiencePool;
 import com.kiwifisher.mobstacker.loot.impl.SlimeExperienceEntry;
-
-import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * Generates the default experience.yml file.
@@ -22,27 +26,35 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class GenDefaultExperienceConfig {
 
     public static void main(String[] args) {
-        File file = new File("experience.yml");
-        YamlConfiguration config = new YamlConfiguration();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("experience.json")))) {
+            writer.write(getConfigJSON());
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getConfigJSON() {
+        Map<String, IExperiencePool> defaults = new HashMap<>();
 
         ExperiencePool pool;
         List<IExperienceEntry> entries;
         ExperienceEntry entry;
 
         pool = new ExperiencePool();
-        config.set("DEFAULT.BAT", pool);
-        config.set("DEFAULT.IRON_GOLEM", pool);
-        config.set("DEFAULT.SNOW_GOLEM", pool);
-        config.set("DEFAULT.VILLAGER", pool);
+        defaults.put("BAT", pool);
+        defaults.put("IRON_GOLEM", pool);
+        defaults.put("SNOW_GOLEM", pool);
+        defaults.put("VILLAGER", pool);
 
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(10);
         pool.setEntries(Arrays.asList(entry));
-        config.set("DEFAULT.BLAZE", pool);
-        config.set("DEFAULT.GUARDIAN", pool);
-        config.set("DEFAULT.ELDER_GUARDIAN", pool);
-        config.set("DEFAULT.EVOCATION_ILLAGER", pool);
+        defaults.put("BLAZE", pool);
+        defaults.put("GUARDIAN", pool);
+        defaults.put("ELDER_GUARDIAN", pool);
+        defaults.put("EVOCATION_ILLAGER", pool);
 
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
@@ -50,39 +62,39 @@ public class GenDefaultExperienceConfig {
         entry.setMaximum(3);
         entry.setConditions(Arrays.asList(new ConditionPropertiesAdult()));
         pool.setEntries(Arrays.asList(entry));
-        config.set("DEFAULT.CHICKEN", pool);
-        config.set("DEFAULT.COW", pool);
-        config.set("DEFAULT.DONKEY", pool);
-        config.set("DEFAULT.HORSE", pool);
-        config.set("DEFAULT.LLAMA", pool);
-        config.set("DEFAULT.MULE", pool);
-        config.set("DEFAULT.MUSHROOM_COW", pool);
-        config.set("DEFAULT.OCELOT", pool);
-        config.set("DEFAULT.PIG", pool);
-        config.set("DEFAULT.POLAR_BEAR", pool);
-        config.set("DEFAULT.SHEEP", pool);
-        config.set("DEFAULT.SKELETON_HORSE", pool);
-        config.set("DEFAULT.SQUID", pool);
-        config.set("DEFAULT.RABBIT", pool);
-        config.set("DEFAULT.WOLF", pool);
-        config.set("DEFAULT.ZOMBIE_HORSE", pool);
+        defaults.put("CHICKEN", pool);
+        defaults.put("COW", pool);
+        defaults.put("DONKEY", pool);
+        defaults.put("HORSE", pool);
+        defaults.put("LLAMA", pool);
+        defaults.put("MULE", pool);
+        defaults.put("MUSHROOM_COW", pool);
+        defaults.put("OCELOT", pool);
+        defaults.put("PIG", pool);
+        defaults.put("POLAR_BEAR", pool);
+        defaults.put("SHEEP", pool);
+        defaults.put("SKELETON_HORSE", pool);
+        defaults.put("SQUID", pool);
+        defaults.put("RABBIT", pool);
+        defaults.put("WOLF", pool);
+        defaults.put("ZOMBIE_HORSE", pool);
 
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(5);
         pool.setEntries(Arrays.asList(entry));
-        config.set("DEFAULT.CAVE_SPIDER", pool);
-        config.set("DEFAULT.CREEPER", pool);
-        config.set("DEFAULT.ENDERMAN", pool);
-        config.set("DEFAULT.GHAST", pool);
-        config.set("DEFAULT.SHULKER", pool);
-        config.set("DEFAULT.SILVERFISH", pool);
-        config.set("DEFAULT.SKELETON", pool);
-        config.set("DEFAULT.SPIDER", pool);
-        config.set("DEFAULT.STRAY", pool);
-        config.set("DEFAULT.VINDICATION_ILLAGER", pool);
-        config.set("DEFAULT.WITCH", pool);
-        config.set("DEFAULT.WITHER_SKELETON", pool);
+        defaults.put("CAVE_SPIDER", pool);
+        defaults.put("CREEPER", pool);
+        defaults.put("ENDERMAN", pool);
+        defaults.put("GHAST", pool);
+        defaults.put("SHULKER", pool);
+        defaults.put("SILVERFISH", pool);
+        defaults.put("SKELETON", pool);
+        defaults.put("SPIDER", pool);
+        defaults.put("STRAY", pool);
+        defaults.put("VINDICATION_ILLAGER", pool);
+        defaults.put("WITCH", pool);
+        defaults.put("WITHER_SKELETON", pool);
 
         pool = new ExperiencePool();
         entries = new ArrayList<>();
@@ -97,39 +109,39 @@ public class GenDefaultExperienceConfig {
         entry.setConditions(Arrays.asList(conditionAdult));
         entries.add(entry);
         pool.setEntries(entries);
-        config.set("DEFAULT.HUSK", pool);
-        config.set("DEFAULT.PIG_ZOMBIE", pool);
-        config.set("DEFAULT.ZOMBIE", pool);
+        defaults.put("HUSK", pool);
+        defaults.put("PIG_ZOMBIE", pool);
+        defaults.put("ZOMBIE", pool);
 
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(3);
         pool.setEntries(Arrays.asList(entry));
-        config.set("DEFAULT.ENDERMITE", pool);
-        config.set("DEFAULT.VEX", pool);
+        defaults.put("ENDERMITE", pool);
+        defaults.put("VEX", pool);
 
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(500);
         pool.setEntries(Arrays.asList(entry));
-        config.set("DEFAULT.ENDER_DRAGON", pool);
+        defaults.put("ENDER_DRAGON", pool);
 
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(50);
         pool.setEntries(Arrays.asList(entry));
-        config.set("DEFAULT.WITHER", pool);
+        defaults.put("WITHER", pool);
 
         pool = new ExperiencePool();
         pool.setEntries(Arrays.asList(new SlimeExperienceEntry()));
-        config.set("DEFAULT.SLIME", pool);
-        config.set("DEFAULT.MAGMA_CUBE", pool);
+        defaults.put("SLIME", pool);
+        defaults.put("MAGMA_CUBE", pool);
 
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Map<String, Map<String, IExperiencePool>> mappings = new HashMap<>();
+        mappings.put("DEFAULT", defaults);
+
+        return MobStacker.getGson().toJson(mappings);
+
     }
 
 }

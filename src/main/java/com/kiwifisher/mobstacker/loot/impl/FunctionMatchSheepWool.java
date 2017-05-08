@@ -1,10 +1,8 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.Map;
+import com.google.gson.annotations.Expose;
 
-import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.LootData;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.material.Colorable;
@@ -16,6 +14,7 @@ import org.bukkit.material.Colorable;
  */
 public class FunctionMatchSheepWool extends Function {
 
+    @Expose
     private boolean invert;
 
     public FunctionMatchSheepWool() {
@@ -46,26 +45,6 @@ public class FunctionMatchSheepWool extends Function {
     @Override
     public boolean isVariable() {
         return false;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> serialization = super.serialize();
-
-        if (this.invert) {
-            serialization.put("invert", this.invert);
-        }
-
-        return serialization;
-    }
-
-    public FunctionMatchSheepWool deserialize(Map<String, Object> serialization) {
-        FunctionMatchSheepWool function = new FunctionMatchSheepWool();
-
-        SerializationUtils.load(function, Boolean.class, "invert", serialization);
-        SerializationUtils.loadList(function, ICondition.class, "conditions", serialization);
-
-        return function;
     }
 
 }

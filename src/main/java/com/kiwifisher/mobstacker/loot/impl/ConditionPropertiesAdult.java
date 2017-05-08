@@ -1,10 +1,8 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.annotations.Expose;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
@@ -16,6 +14,7 @@ import org.bukkit.entity.Entity;
  */
 public class ConditionPropertiesAdult implements ICondition {
 
+    @Expose
     private boolean adult;
 
     public ConditionPropertiesAdult() {
@@ -37,26 +36,6 @@ public class ConditionPropertiesAdult implements ICondition {
         }
 
         return adult;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> serialization = new HashMap<>();
-
-        // Default value is true, prevent clutter.
-        if (adult == false) {
-            serialization.put("adult", false);
-        }
-
-        return serialization;
-    }
-
-    public static ConditionPropertiesAdult deserialize(Map<String, Object> serialization) {
-        ConditionPropertiesAdult condition = new ConditionPropertiesAdult();
-
-        SerializationUtils.load(condition, Boolean.class, "adult", serialization);
-
-        return condition;
     }
 
 }

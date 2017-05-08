@@ -1,12 +1,11 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import com.google.gson.annotations.Expose;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
@@ -18,6 +17,7 @@ import org.bukkit.entity.Slime;
  */
 public class SlimeExperienceEntry implements IExperienceEntry {
 
+    @Expose
     private List<ICondition> conditions;
 
     @Override
@@ -40,25 +40,6 @@ public class SlimeExperienceEntry implements IExperienceEntry {
     @Override
     public int getMaximum(Entity entity) {
         return 0;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> serialization = new HashMap<>();
-
-        if (this.conditions != null && !this.conditions.isEmpty()) {
-            serialization.put("conditions", this.conditions);
-        }
-
-        return serialization;
-    }
-
-    public static SlimeExperienceEntry deserialize(Map<String, Object> serialization) {
-        SlimeExperienceEntry experienceEntry = new SlimeExperienceEntry();
-
-        SerializationUtils.loadList(experienceEntry, ICondition.class, "conditions", serialization);
-
-        return experienceEntry;
     }
 
 }

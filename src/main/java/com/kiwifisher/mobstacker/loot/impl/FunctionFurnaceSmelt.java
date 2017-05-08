@@ -1,11 +1,8 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
 import java.util.Iterator;
-import java.util.Map;
 
-import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.LootData;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -57,14 +54,6 @@ public class FunctionFurnaceSmelt extends Function {
     @Override
     public boolean isVariable() {
         return false;
-    }
-
-    public static FunctionFurnaceSmelt deserialize(Map<String, Object> serialization) {
-        FunctionFurnaceSmelt function = new FunctionFurnaceSmelt();
-
-        SerializationUtils.loadList(function, ICondition.class, "conditions", serialization);
-
-        return function;
     }
 
 }

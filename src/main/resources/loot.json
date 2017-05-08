@@ -1,0 +1,2207 @@
+{
+  "DEFAULT": {
+    "ENDERMAN": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "ENDER_PEARL",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "SILVERFISH": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0
+      }
+    ],
+    "MAGMA_CUBE": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "MAGMA_CREAM",
+            "minimumQuantity": -2,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "conditions": [
+              {
+                "type": "ConditionSlimeSize",
+                "minimum": 0,
+                "maximum": 0
+              }
+            ],
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "MAGMA_CREAM",
+            "minimumQuantity": -2,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "conditions": [
+              {
+                "type": "ConditionSlimeSize",
+                "minimum": 2,
+                "maximum": 255
+              }
+            ],
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "EVOCATION_ILLAGER": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "TOTEM",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "EMERALD",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ZOMBIE_VILLAGER": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "ROTTEN_FLESH",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "IRON_INGOT",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "CARROT_ITEM",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "POTATO_ITEM",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ],
+        "randomChance": {
+          "type": "RandomChance",
+          "chance": 0.025,
+          "lootingModifier": 0.01
+        }
+      }
+    ],
+    "MULE": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "LEATHER",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "LLAMA": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "LEATHER",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "HUSK": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "ROTTEN_FLESH",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "IRON_INGOT",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "CARROT_ITEM",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "POTATO_ITEM",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ],
+        "randomChance": {
+          "type": "RandomChance",
+          "chance": 0.025,
+          "lootingModifier": 0.01
+        }
+      }
+    ],
+    "SHEEP": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "WOOL",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionMatchSheepWool",
+                "invert": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          },
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "MUTTON",
+            "minimumQuantity": 1,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionFurnaceSmelt",
+                "conditions": [
+                  {
+                    "type": "ConditionPropertiesOnFire",
+                    "burning": true
+                  }
+                ]
+              },
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "WITCH": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 0,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "GLOWSTONE_DUST",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "SUGAR",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "REDSTONE",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "SPIDER_EYE",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "GLASS_BOTTLE",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "SULPHUR",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "STICK",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 2,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "SPIDER": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "STRING",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "SPIDER_EYE",
+            "minimumQuantity": -1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "VILLAGER": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0
+      }
+    ],
+    "SKELETON": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "ARROW",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "BONE",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "WITHER_SKELETON": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "COAL",
+            "minimumQuantity": -1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "BONE",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "SKULL_ITEM",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionSetData",
+                "minimum": 1,
+                "maximum": 0
+              }
+            ]
+          }
+        ],
+        "randomChance": {
+          "type": "RandomChance",
+          "chance": 0.025,
+          "lootingModifier": 0.01
+        }
+      }
+    ],
+    "POLAR_BEAR": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 3,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionSetData",
+                "minimum": 1,
+                "maximum": 0
+              },
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "WITHER": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "NETHER_STAR",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ]
+      }
+    ],
+    "MUSHROOM_COW": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "LEATHER",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_BEEF",
+            "minimumQuantity": 1,
+            "maximumQuantity": 3,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionFurnaceSmelt",
+                "conditions": [
+                  {
+                    "type": "ConditionPropertiesOnFire",
+                    "burning": true
+                  }
+                ]
+              },
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "CREEPER": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "SULPHUR",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "SNOWMAN": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "SNOW_BALL",
+            "minimumQuantity": 0,
+            "maximumQuantity": 15,
+            "weight": 1,
+            "quality": 0
+          }
+        ]
+      }
+    ],
+    "CHICKEN": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "FEATHER",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_CHICKEN",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionFurnaceSmelt",
+                "conditions": [
+                  {
+                    "type": "ConditionPropertiesOnFire",
+                    "burning": true
+                  }
+                ]
+              },
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ZOMBIE_HORSE": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "ROTTEN_FLESH",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "CAVE_SPIDER": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "STRING",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "SPIDER_EYE",
+            "minimumQuantity": -1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "SLIME": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "SLIME_BALL",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "conditions": [
+              {
+                "type": "ConditionSlimeSize",
+                "minimum": 0,
+                "maximum": 0
+              }
+            ],
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "SHULKER": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "SHULKER_SHELL",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ],
+        "randomChance": {
+          "type": "RandomChance",
+          "chance": 0.5,
+          "lootingModifier": 0.0625
+        }
+      }
+    ],
+    "GUARDIAN": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "PRISMARINE_SHARD",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 2,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "PRISMARINE_CRYSTALS",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 2,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 60,
+            "quality": 0
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 25,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionSetData",
+                "minimum": 1,
+                "maximum": 0
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 2,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionSetData",
+                "minimum": 2,
+                "maximum": 0
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 13,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionSetData",
+                "minimum": 3,
+                "maximum": 0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "SQUID": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "INK_SACK",
+            "minimumQuantity": 1,
+            "maximumQuantity": 3,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "HORSE": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "LEATHER",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ELDER_GUARDIAN": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "PRISMARINE_SHARD",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 3,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "PRISMARINE_CRYSTALS",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 2,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 60,
+            "quality": 0
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 25,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionSetData",
+                "minimum": 1,
+                "maximum": 0
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 2,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionSetData",
+                "minimum": 2,
+                "maximum": 0
+              }
+            ]
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_FISH",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 13,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionSetData",
+                "minimum": 3,
+                "maximum": 0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "BLAZE": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "BLAZE_ROD",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "conditions": [
+              {
+                "type": "ConditionKilledByPlayer",
+                "inverse": false
+              }
+            ],
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "SKELETON_HORSE": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "BONE",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "COW": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "LEATHER",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RAW_BEEF",
+            "minimumQuantity": 1,
+            "maximumQuantity": 3,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionFurnaceSmelt",
+                "conditions": [
+                  {
+                    "type": "ConditionPropertiesOnFire",
+                    "burning": true
+                  }
+                ]
+              },
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "GHAST": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "ENDER_PEARL",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "SULPHUR",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ZOMBIE_PIGMAN": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "ROTTEN_FLESH",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "GOLD_NUGGET",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "GOLD_INGOT",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ],
+        "randomChance": {
+          "type": "RandomChance",
+          "chance": 0.025,
+          "lootingModifier": 0.01
+        }
+      }
+    ],
+    "ENDERMITE": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0
+      }
+    ],
+    "GIANT": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0
+      }
+    ],
+    "PIG": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "PORK",
+            "minimumQuantity": 1,
+            "maximumQuantity": 3,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionFurnaceSmelt",
+                "conditions": [
+                  {
+                    "type": "ConditionPropertiesOnFire",
+                    "burning": true
+                  }
+                ]
+              },
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "STRAY": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "ARROW",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "BONE",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "TIPPED_ARROW",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              },
+              {
+                "type": "FunctionSetMeta",
+                "serializedMeta": {
+                  "==": "ItemMeta",
+                  "meta-type": "POTION",
+                  "potion-type": "minecraft:slowness"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "BAT": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0
+      }
+    ],
+    "ZOMBIE": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "ROTTEN_FLESH",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "IRON_INGOT",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "CARROT_ITEM",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          },
+          {
+            "type": "LootEntry",
+            "materialName": "POTATO_ITEM",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ],
+        "randomChance": {
+          "type": "RandomChance",
+          "chance": 0.025,
+          "lootingModifier": 0.01
+        }
+      }
+    ],
+    "WOLF": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0
+      }
+    ],
+    "RABBIT": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RABBIT_HIDE",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RABBIT",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionFurnaceSmelt",
+                "conditions": [
+                  {
+                    "type": "ConditionPropertiesOnFire",
+                    "burning": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RABBIT_FOOT",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ],
+        "randomChance": {
+          "type": "RandomChance",
+          "chance": 0.1,
+          "lootingModifier": 0.03
+        }
+      }
+    ],
+    "DONKEY": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionPropertiesAdult",
+            "adult": true
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "LEATHER",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "IRON_GOLEM": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "RED_ROSE",
+            "minimumQuantity": 0,
+            "maximumQuantity": 2,
+            "weight": 1,
+            "quality": 0
+          }
+        ]
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "IRON_INGOT",
+            "minimumQuantity": 3,
+            "maximumQuantity": 5,
+            "weight": 1,
+            "quality": 0
+          }
+        ]
+      }
+    ],
+    "VINDICATION_ILLAGER": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "IRON_AXE",
+            "minimumQuantity": 1,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0
+          }
+        ],
+        "randomChance": {
+          "type": "RandomChance",
+          "chance": 0.15,
+          "lootingModifier": 0.0625
+        }
+      },
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0,
+        "conditions": [
+          {
+            "type": "ConditionKilledByPlayer",
+            "inverse": false
+          }
+        ],
+        "entries": [
+          {
+            "type": "LootEntry",
+            "materialName": "EMERALD",
+            "minimumQuantity": 0,
+            "maximumQuantity": 1,
+            "weight": 1,
+            "quality": 0,
+            "functions": [
+              {
+                "type": "FunctionLootingBonus",
+                "minimumBonus": 0,
+                "maximumBonus": 1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "OCELOT": [
+      {
+        "type": "LootPool",
+        "rollsMin": 1,
+        "rollsMax": 1,
+        "bonusRollsMin": 0,
+        "bonusRollsMax": 0
+      }
+    ]
+  }
+}

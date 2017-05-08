@@ -1,11 +1,10 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.google.gson.annotations.Expose;
+
 import com.kiwifisher.mobstacker.loot.api.LootData;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 
@@ -16,8 +15,8 @@ import org.bukkit.entity.Entity;
  */
 public class FunctionSetData extends Function {
 
-    private short minimum;
-    private short maximum;
+    @Expose
+    private short minimum, maximum;
 
     public FunctionSetData() {
         this.minimum = 0;
@@ -52,31 +51,6 @@ public class FunctionSetData extends Function {
     @Override
     public boolean isVariable() {
         return minimum < maximum;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        FunctionSetData defaults = new FunctionSetData();
-        Map<String, Object> serialization = super.serialize();
-
-        if (this.minimum != defaults.getMinimum()) {
-            serialization.put("minimum", this.minimum);
-        }
-        if (this.maximum != defaults.getMaximum()) {
-            serialization.put("maximum", this.maximum);
-        }
-
-        return serialization;
-    }
-
-    public FunctionSetData deserialize(Map<String, Object> serialization) {
-        FunctionSetData function = new FunctionSetData();
-
-        SerializationUtils.load(function, Short.class, "minimum", serialization);
-        SerializationUtils.load(function, Short.class, "minimum", serialization);
-        SerializationUtils.loadList(function, ICondition.class, "conditions", serialization);
-
-        return function;
     }
 
 }

@@ -1,10 +1,8 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.annotations.Expose;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
-import com.kiwifisher.mobstacker.utils.SerializationUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -17,6 +15,7 @@ import org.bukkit.entity.Player;
  */
 public class ConditionKilledByPlayer implements ICondition {
 
+    @Expose
     private boolean inverse;
 
     public ConditionKilledByPlayer() {
@@ -38,26 +37,6 @@ public class ConditionKilledByPlayer implements ICondition {
         }
         // instanceof essentially includes a null check, this is safe
         return ((LivingEntity) entity).getKiller() instanceof Player ? !inverse : inverse;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> serialization = new HashMap<>();
-
-        // Default value is true, prevent clutter.
-        if (inverse == true) {
-            serialization.put("inverse", true);
-        }
-
-        return serialization;
-    }
-
-    public ConditionKilledByPlayer deserialize(Map<String, Object> serialization) {
-        ConditionKilledByPlayer condition = new ConditionKilledByPlayer();
-
-        SerializationUtils.load(condition, Boolean.class, "inverse", serialization);
-
-        return condition;
     }
 
 }
