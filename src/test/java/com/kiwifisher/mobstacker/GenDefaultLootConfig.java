@@ -1,4 +1,4 @@
-package com.github.jikoo;
+package com.kiwifisher.mobstacker;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.loot.api.ILootEntry;
 import com.kiwifisher.mobstacker.loot.api.ILootPool;
 import com.kiwifisher.mobstacker.loot.impl.ConditionKilledByPlayer;
@@ -41,14 +40,14 @@ public class GenDefaultLootConfig {
 
     public static void main(String[] args) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("loot.json")))) {
-            writer.write(getConfigJSON());
+            writer.write(MobStacker.getGson().toJson(getConfigValues()));
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static String getConfigJSON() {
+    public static Map<String, Map<String, Collection<ILootPool>>> getConfigValues() {
         Map<String, Collection<ILootPool>> defaults = new HashMap<>();
 
         List<ILootPool> pools;
@@ -746,7 +745,7 @@ public class GenDefaultLootConfig {
         Map<String, Map<String, Collection<ILootPool>>> mappings = new HashMap<>();
         mappings.put("DEFAULT", defaults);
 
-        return MobStacker.getGson().toJson(mappings);
+        return mappings;
     }
 
 }

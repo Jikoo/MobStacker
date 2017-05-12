@@ -53,4 +53,22 @@ public class FunctionSetData extends Function {
         return minimum < maximum;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        FunctionSetData other = (FunctionSetData) obj;
+
+        return this.minimum == other.minimum && this.maximum == other.maximum;
+    }
+
+    @Override
+    public String toString() {
+        String superString = super.toString();
+        return String.format("%s,minimum=%s,maximum=%s)",
+                superString.substring(0, superString.length() - 1), this.minimum, this.maximum);
+    }
+
 }

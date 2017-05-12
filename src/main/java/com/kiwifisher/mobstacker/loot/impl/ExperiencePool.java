@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
 import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
+import com.kiwifisher.mobstacker.utils.CollectionUtils;
 import com.kiwifisher.mobstacker.utils.ConditionUtils;
 
 import org.bukkit.entity.Entity;
@@ -56,6 +57,17 @@ public class ExperiencePool implements IExperiencePool {
 
     public void setEntries(List<IExperienceEntry> entries) {
         this.entries = entries;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && this.getClass().equals(obj.getClass())
+                && CollectionUtils.equal(this.entries, ((ExperiencePool) obj).entries);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(entries=%s)", this.getClass().getName(), this.entries);
     }
 
 }

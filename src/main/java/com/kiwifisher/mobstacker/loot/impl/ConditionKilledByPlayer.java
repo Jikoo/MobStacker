@@ -16,18 +16,18 @@ import org.bukkit.entity.Player;
 public class ConditionKilledByPlayer implements ICondition {
 
     @Expose
-    private boolean inverse;
+    private boolean invert;
 
     public ConditionKilledByPlayer() {
-        this.inverse = false;
+        this.invert = false;
     }
 
-    public boolean getInverse() {
-        return inverse;
+    public boolean getInvert() {
+        return invert;
     }
 
-    public void setInverse(Boolean inverse) {
-        this.inverse = inverse;
+    public void setInvert(Boolean inverse) {
+        this.invert = inverse;
     }
 
     @Override
@@ -36,7 +36,18 @@ public class ConditionKilledByPlayer implements ICondition {
             return false;
         }
         // instanceof essentially includes a null check, this is safe
-        return ((LivingEntity) entity).getKiller() instanceof Player ? !inverse : inverse;
+        return ((LivingEntity) entity).getKiller() instanceof Player ? !invert : invert;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && this.getClass().equals(obj.getClass())
+                && this.invert == ((ConditionKilledByPlayer) obj).invert;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(invert=%s)", this.getClass().getName(), this.invert);
     }
 
 }

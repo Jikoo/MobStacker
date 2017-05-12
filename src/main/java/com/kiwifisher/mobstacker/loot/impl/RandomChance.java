@@ -44,4 +44,21 @@ public class RandomChance implements IRandomChance {
         this.lootingModifier = lootingModifier;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !this.getClass().equals(obj.getClass())) {
+            return false;
+        }
+
+        RandomChance other = (RandomChance) obj;
+
+        return other.chance == this.chance && other.lootingModifier == this.lootingModifier;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(chance=%s,lootingModifier=%s)", this.getClass().getName(),
+                this.chance, this.lootingModifier);
+    }
+
 }

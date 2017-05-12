@@ -38,4 +38,15 @@ public class ConditionPropertiesAdult implements ICondition {
         return adult;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && this.getClass().equals(obj.getClass())
+                && this.adult == ((ConditionPropertiesAdult) obj).adult;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(adult=%s)", this.getClass().getName(), this.adult);
+    }
+
 }

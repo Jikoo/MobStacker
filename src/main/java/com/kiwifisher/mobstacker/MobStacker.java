@@ -56,8 +56,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class MobStacker extends JavaPlugin {
 
-    private static Gson gson;
-
     private StackUtils stackUtils;
     private LootManager lootManager;
     private final Map<String, Boolean> nerfSpawnerMobsWorlds = new HashMap<>();
@@ -65,35 +63,37 @@ public class MobStacker extends JavaPlugin {
     private boolean nerfSpawnerMobsDefault = false;
     private boolean stacking = true;
 
+    /**
+     * Creates a new configured Gson instance for usage with MobStacker's serializable loot implementations.
+     * 
+     * @return the created Gson
+     */
     public static Gson getGson() {
-        if (gson == null) {
-            gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting()
-                    .disableHtmlEscaping()
-                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IRandomChance.class)
-                            .registerSubtype(RandomChance.class))
-                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ICondition.class)
-                            .registerSubtype(ConditionKilledByPlayer.class)
-                            .registerSubtype(ConditionPropertiesAdult.class)
-                            .registerSubtype(ConditionPropertiesOnFire.class)
-                            .registerSubtype(ConditionSlimeSize.class))
-                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IFunction.class)
-                            .registerSubtype(FunctionFurnaceSmelt.class)
-                            .registerSubtype(FunctionLootingBonus.class)
-                            .registerSubtype(FunctionMatchSheepWool.class)
-                            .registerSubtype(FunctionSetData.class)
-                            .registerSubtype(FunctionSetMeta.class))
-                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ILootEntry.class)
-                            .registerSubtype(LootEntry.class))
-                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ILootPool.class)
-                            .registerSubtype(LootPool.class))
-                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IExperienceEntry.class)
-                            .registerSubtype(ExperienceEntry.class)
-                            .registerSubtype(SlimeExperienceEntry.class))
-                    .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IExperiencePool.class)
-                            .registerSubtype(ExperiencePool.class))
-                    .create();
-        }
-        return gson;
+        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting()
+                .disableHtmlEscaping()
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IRandomChance.class)
+                        .registerSubtype(RandomChance.class))
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ICondition.class)
+                        .registerSubtype(ConditionKilledByPlayer.class)
+                        .registerSubtype(ConditionPropertiesAdult.class)
+                        .registerSubtype(ConditionPropertiesOnFire.class)
+                        .registerSubtype(ConditionSlimeSize.class))
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IFunction.class)
+                        .registerSubtype(FunctionFurnaceSmelt.class)
+                        .registerSubtype(FunctionLootingBonus.class)
+                        .registerSubtype(FunctionMatchSheepWool.class)
+                        .registerSubtype(FunctionSetData.class)
+                        .registerSubtype(FunctionSetMeta.class))
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ILootEntry.class)
+                        .registerSubtype(LootEntry.class))
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ILootPool.class)
+                        .registerSubtype(LootPool.class))
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IExperienceEntry.class)
+                        .registerSubtype(ExperienceEntry.class)
+                        .registerSubtype(SlimeExperienceEntry.class))
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IExperiencePool.class)
+                        .registerSubtype(ExperiencePool.class))
+                .create();
     }
  
     @Override

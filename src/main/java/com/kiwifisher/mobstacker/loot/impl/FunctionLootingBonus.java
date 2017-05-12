@@ -48,4 +48,23 @@ public class FunctionLootingBonus extends Function {
         return false;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        FunctionLootingBonus other = (FunctionLootingBonus) obj;
+
+        return this.minimumBonus == other.minimumBonus && this.maximumBonus == other.maximumBonus;
+    }
+
+    @Override
+    public String toString() {
+        String superString = super.toString();
+        return String.format("%s,minimumBonus=%s,maximumBonus=%s)",
+                superString.substring(0, superString.length() - 1), this.minimumBonus,
+                this.maximumBonus);
+    }
+
 }

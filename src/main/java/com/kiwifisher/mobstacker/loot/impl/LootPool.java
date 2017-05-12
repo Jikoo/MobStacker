@@ -13,6 +13,7 @@ import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.ILootEntry;
 import com.kiwifisher.mobstacker.loot.api.ILootPool;
 import com.kiwifisher.mobstacker.loot.api.IRandomChance;
+import com.kiwifisher.mobstacker.utils.CollectionUtils;
 import com.kiwifisher.mobstacker.utils.ConditionUtils;
 
 import org.bukkit.attribute.Attributable;
@@ -198,6 +199,31 @@ public class LootPool implements ILootPool {
         }
 
         return weightedEntries;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !this.getClass().equals(obj.getClass())) {
+            return false;
+        }
+
+        LootPool other = (LootPool) obj;
+
+        return this.rollsMin == other.rollsMin && this.rollsMax == other.rollsMax
+                && this.bonusRollsMin == other.bonusRollsMin
+                && this.bonusRollsMax == other.bonusRollsMax
+                && CollectionUtils.equal(this.conditions, other.conditions)
+                && CollectionUtils.equal(this.entries, other.entries)
+                && (this.randomChance == null && other.randomChance == null
+                        || this.randomChance != null && this.randomChance.equals(other.randomChance));
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s(rollsMin=%s,rollsMax=%s,bonusRollsMin=%s,bonusRollsMax=%s,conditions=%s,entries=%s,randomChance=%s)",
+                this.getClass().getName(), this.rollsMin, this.rollsMax, this.bonusRollsMin,
+                this.bonusRollsMax, this.conditions, this.entries, this.randomChance);
     }
 
 }

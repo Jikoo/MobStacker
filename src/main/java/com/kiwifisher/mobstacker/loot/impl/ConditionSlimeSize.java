@@ -53,4 +53,21 @@ public class ConditionSlimeSize implements ICondition {
         return slime.getSize() <= this.getMaximum();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !this.getClass().equals(obj.getClass())) {
+            return false;
+        }
+
+        ConditionSlimeSize other = (ConditionSlimeSize) obj;
+
+        return this.minimum == other.minimum && this.maximum == other.maximum;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(minimum=%s,maximum=%s)", this.getClass().getName(), this.minimum,
+                this.maximum);
+    }
+
 }

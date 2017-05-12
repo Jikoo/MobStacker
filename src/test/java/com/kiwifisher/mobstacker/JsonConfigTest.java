@@ -2,12 +2,13 @@ package com.kiwifisher.mobstacker;
 
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-import com.github.jikoo.GenDefaultExperienceConfig;
-import com.github.jikoo.GenDefaultLootConfig;
-
+import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,10 +26,12 @@ public class JsonConfigTest {
 
     @Test
     public void testLoot() {
-        String output = GenDefaultLootConfig.getConfigJSON();
+        Map<String, Map<String, Collection<ILootPool>>> defaults = GenDefaultLootConfig.getConfigValues();
+        Gson gson = MobStacker.getGson();
         try {
-            MobStacker.getGson().fromJson(output,
+            Map<String, Map<String, Collection<ILootPool>>> retrieved = gson.fromJson(gson.toJson(defaults),
                     new TypeToken<Map<String, Map<String, Collection<ILootPool>>>>() {}.getType());
+            compare(defaults, retrieved);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
             fail("Encountered exception interpreting default config.");
@@ -37,14 +40,81 @@ public class JsonConfigTest {
 
     @Test
     public void testExperience() {
-        String output = GenDefaultExperienceConfig.getConfigJSON();
+        Map<String, Map<String, IExperiencePool>> defaults = GenDefaultExperienceConfig.getConfigValues();
+        Gson gson = MobStacker.getGson();
         try {
-            MobStacker.getGson().fromJson(output,
+            Map<String, Map<String, IExperiencePool>> retrieved = gson.fromJson(gson.toJson(defaults),
                     new TypeToken<Map<String, Map<String, IExperiencePool>>>() {}.getType());
+            compare(defaults, retrieved);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
             fail("Encountered exception interpreting default config.");
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static <T> void compare(Map<String, Map<String, T>> map1, Map<String, Map<String, T>> map2) {
+        if (map1 == null || map2 == null) {
+            fail("Compared maps cannot be null!");
+        }
+
+        if (map1.size() != map2.size()) {
+            fail("Maps are not the same size");
+        }
+
+        for (Map.Entry<String, Map<String, T>> entry1 : map1.entrySet()) {
+            if (!map2.containsKey(entry1.getKey())) {
+                fail("Maps do not have identical keysets.");
+            }
+            Map<String, T> value2 = map2.get(entry1.getKey());
+
+            for (Map.Entry<String, T> subentry1 : entry1.getValue().entrySet()) {
+                if (!value2.containsKey(subentry1.getKey())) {
+                    fail("Submappings do not have identical keysets.");
+                }
+                T subvalue1 = subentry1.getValue();
+                T subvalue2 = value2.get(subentry1.getKey());
+                if (subvalue1 instanceof Collection && subvalue2 instanceof Collection) {
+                    if (!equal((Collection) subvalue1, (Collection) subvalue2)) {
+                        fail("Unequal collection contents.");
+                    }
+                } else if (!subvalue1.equals(subvalue2)) {
+                    fail("Unequal values.");
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private static boolean equal(Collection collection1, Collection collection2) {
+        if (collection1 == null && collection2 == null) {
+            return true;
+        }
+
+        if (collection1 == null && collection2 != null || collection1 != null && collection2 == null
+                || collection1.size() != collection2.size()) {
+            return false;
+        }
+
+        if (collection1.isEmpty()) {
+            // No need to check both, size already must be identical
+            return true;
+        }
+
+        /*
+         * Unfortunately, our elements are not capable of being sorted. We must iterate over the
+         * entire contents to ensure each is contained. Since there's no guarantee that each
+         * Collection contains only one of each object, we create a copy of one to modify.
+         */
+        List clonedElements = new ArrayList(collection2);
+
+        for (Iterator iterator = collection1.iterator(); iterator.hasNext();) {
+            if (!clonedElements.remove(iterator.next())) {
+                return false;
+            }
+        }
+
+        return clonedElements.isEmpty();
     }
 
 }

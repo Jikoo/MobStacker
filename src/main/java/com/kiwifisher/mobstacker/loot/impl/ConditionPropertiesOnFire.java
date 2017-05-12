@@ -33,4 +33,15 @@ public class ConditionPropertiesOnFire implements ICondition {
         return entity != null && entity.getFireTicks() > 0 ? burning : !burning;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && this.getClass().equals(obj.getClass())
+                && this.burning == ((ConditionPropertiesOnFire) obj).burning;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(burning=%s)", this.getClass().getName(), this.burning);
+    }
+
 }

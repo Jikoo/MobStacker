@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
+import com.kiwifisher.mobstacker.utils.CollectionUtils;
 
 import org.bukkit.entity.Entity;
 
@@ -59,6 +60,24 @@ public class ExperienceEntry implements IExperienceEntry {
 
     public void setMaximum(Integer maximum) {
         this.maximum = Math.max(0, maximum);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !this.getClass().equals(obj.getClass())) {
+            return false;
+        }
+
+        ExperienceEntry other = (ExperienceEntry) obj;
+
+        return this.minimum == other.minimum && this.maximum == other.maximum
+                && CollectionUtils.equal(this.conditions, other.conditions);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(minimum=%s,maximum=%s,conditions=%s)", this.getClass().getName(),
+                this.minimum, this.maximum, this.conditions);
     }
 
 }

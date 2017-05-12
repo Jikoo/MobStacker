@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
@@ -35,6 +36,8 @@ public class LootManager {
     private Map<String, Map<String, IExperiencePool>> experience = new HashMap<>();
 
     public LootManager(MobStacker plugin) {
+        Gson gson = MobStacker.getGson();
+
         File file = new File(plugin.getDataFolder(), "loot.json");
         // Save default loot configuration if not present.
         // For some reason, Bukkit always logs when not saving due to existence, which is annoying.
@@ -44,7 +47,7 @@ public class LootManager {
 
         if (file.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                loot = MobStacker.getGson().fromJson(reader,
+                loot = gson.fromJson(reader,
                         new TypeToken<Map<String, Map<String, Collection<ILootPool>>>>() {}.getType());
             } catch (IOException | JsonParseException e) {
                 e.printStackTrace();
@@ -59,7 +62,7 @@ public class LootManager {
 
         if (file.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                experience = MobStacker.getGson().fromJson(reader,
+                experience = gson.fromJson(reader,
                         new TypeToken<Map<String, Map<String, IExperiencePool>>>() {}.getType());
             } catch (IOException | JsonParseException e) {
                 e.printStackTrace();
@@ -72,10 +75,14 @@ public class LootManager {
         String worldName = entity.getWorld().getName().toUpperCase();
         Map<String, Collection<ILootPool>> worldMappings;
 
-        // Test world-specific loot and default settings.
+        // Test world-specific loot settings.
         if (!loot.containsKey(worldName)
-                || !(worldMappings = loot.get(worldName)).containsKey(entityName)
-                || !loot.containsKey(worldName = "DEFAULT")
+                || !(worldMappings = loot.get(worldName)).containsKey(entityName)) {
+            // Fall through to default settings.
+            worldName = "DEFAULT";
+        }
+
+        if (!loot.containsKey(worldName)
                 || !(worldMappings = loot.get(worldName)).containsKey(entityName)) {
             return Collections.emptyList();
         }
@@ -92,10 +99,14 @@ public class LootManager {
         String worldName = entity.getWorld().getName().toUpperCase();
         Map<String, IExperiencePool> worldMappings;
 
-        // Test world-specific experience and default settings.
+        // Test world-specific experience settings.
         if (!experience.containsKey(worldName)
-                || !(worldMappings = experience.get(worldName)).containsKey(entityName)
-                || !experience.containsKey(worldName = "DEFAULT")
+                || !(worldMappings = experience.get(worldName)).containsKey(entityName)) {
+            // Fall through to default settings.
+            worldName = "DEFAULT";
+        }
+
+        if (!experience.containsKey(worldName)
                 || !(worldMappings = experience.get(worldName)).containsKey(entityName)) {
             return 0;
         }

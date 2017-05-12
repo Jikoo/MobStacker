@@ -117,7 +117,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -173,7 +173,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -307,7 +307,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -386,7 +386,7 @@
           },
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -567,7 +567,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -706,7 +706,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -1057,7 +1057,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -1200,6 +1200,7 @@
           },
           {
             "type": "LootEntry",
+            "materialName": "AIR",
             "minimumQuantity": 1,
             "maximumQuantity": 1,
             "weight": 1,
@@ -1216,7 +1217,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -1398,6 +1399,7 @@
           },
           {
             "type": "LootEntry",
+            "materialName": "AIR",
             "minimumQuantity": 1,
             "maximumQuantity": 1,
             "weight": 1,
@@ -1414,7 +1416,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -1492,7 +1494,7 @@
             "conditions": [
               {
                 "type": "ConditionKilledByPlayer",
-                "inverse": false
+                "invert": false
               }
             ],
             "functions": [
@@ -1717,7 +1719,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -1854,7 +1856,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -1927,7 +1929,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -2144,7 +2146,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [
@@ -2172,7 +2174,7 @@
         "conditions": [
           {
             "type": "ConditionKilledByPlayer",
-            "inverse": false
+            "invert": false
           }
         ],
         "entries": [

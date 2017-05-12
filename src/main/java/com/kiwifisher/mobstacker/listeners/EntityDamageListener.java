@@ -34,11 +34,8 @@ public class EntityDamageListener implements Listener {
         }
 
         /*
-         * TODO: if sweep attack, reduce average health by less unless sword has sweeping edge.
-         * Have not implemented yet - figure out how to check if entity is the main target of the sweep attack
-         * May just always reduce, not sure.
-         * 
-         * Re-implement sweep attack check on primary target; sweep attack is only the cause if nearby.
+         * TODO Re-implement sweep attack check on primary target; sweep attack is only the cause if
+         * nearby. Need to account for Sweeping Edge.
          */
         plugin.getStackUtils().damageAverageHealth(entity, event.getFinalDamage());
     }

@@ -2,8 +2,6 @@ package com.kiwifisher.mobstacker.loot.api;
 
 import org.bukkit.entity.Entity;
 
-
-
 /**
  * Interface defining behavior for a function which alters the items resulting from an ILootEntry.
  * 

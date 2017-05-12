@@ -61,4 +61,29 @@ public class FunctionSetMeta extends Function {
         return false;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        FunctionSetMeta other = (FunctionSetMeta) obj;
+
+        if (this.serializedMeta != null && other.serializedMeta != null) {
+            // Both have meta set, compare contents.
+            return this.serializedMeta.keySet().containsAll(other.serializedMeta.keySet())
+                    && other.serializedMeta.keySet().containsAll(this.serializedMeta.keySet());
+        }
+
+        // Compare whether or not meta is set.
+        return this.serializedMeta == other.serializedMeta;
+    }
+
+    @Override
+    public String toString() {
+        String superString = super.toString();
+        return String.format("%s,serializedMeta=%s)",
+                superString.substring(0, superString.length() - 1), this.serializedMeta);
+    }
+
 }

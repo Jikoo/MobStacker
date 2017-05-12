@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 
 import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
+import com.kiwifisher.mobstacker.utils.CollectionUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
@@ -40,6 +41,17 @@ public class SlimeExperienceEntry implements IExperienceEntry {
     @Override
     public int getMaximum(Entity entity) {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && this.getClass().equals(obj.getClass())
+                && CollectionUtils.equal(this.conditions, ((SlimeExperienceEntry) obj).conditions);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(conditions=%s)", this.getClass().getName(), this.conditions);
     }
 
 }

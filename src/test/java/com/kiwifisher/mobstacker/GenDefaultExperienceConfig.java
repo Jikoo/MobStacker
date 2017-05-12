@@ -1,4 +1,4 @@
-package com.github.jikoo;
+package com.kiwifisher.mobstacker;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
 import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
 import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult;
@@ -27,14 +26,14 @@ public class GenDefaultExperienceConfig {
 
     public static void main(String[] args) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("experience.json")))) {
-            writer.write(getConfigJSON());
+            writer.write(MobStacker.getGson().toJson(getConfigValues()));
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static String getConfigJSON() {
+    public static Map<String, Map<String, IExperiencePool>> getConfigValues() {
         Map<String, IExperiencePool> defaults = new HashMap<>();
 
         ExperiencePool pool;
@@ -140,7 +139,7 @@ public class GenDefaultExperienceConfig {
         Map<String, Map<String, IExperiencePool>> mappings = new HashMap<>();
         mappings.put("DEFAULT", defaults);
 
-        return MobStacker.getGson().toJson(mappings);
+        return mappings;
 
     }
 

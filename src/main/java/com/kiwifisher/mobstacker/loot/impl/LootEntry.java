@@ -12,6 +12,8 @@ import com.kiwifisher.mobstacker.loot.api.IFunction;
 import com.kiwifisher.mobstacker.loot.api.ILootEntry;
 import com.kiwifisher.mobstacker.loot.api.IRandomChance;
 import com.kiwifisher.mobstacker.loot.api.LootData;
+import com.kiwifisher.mobstacker.utils.CollectionUtils;
+import com.kiwifisher.mobstacker.utils.ConditionUtils;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -38,7 +40,7 @@ public class LootEntry implements ILootEntry {
     private Boolean hasVariableFunctions;
 
     public LootEntry() {
-        this.material = Material.AIR;
+        this.materialName = "AIR";
         this.minimumQuantity = 1;
         this.maximumQuantity = 1;
         this.weight = 1;
@@ -155,7 +157,9 @@ public class LootEntry implements ILootEntry {
             for (int i = 0; i < value; i++) {
                 LootData data = new LootData(this.getMaterial(), this.getMinimumQuantity(), this.getMaximumQuantity());
                 for (IFunction function : functions) {
-                    function.modify(data, entity, looting);
+                    if (ConditionUtils.meetsConditions(entity, function)) {
+                        function.modify(data, entity, looting);
+                    }
                 }
 
                 // Guaranteed quantity.
@@ -180,7 +184,9 @@ public class LootEntry implements ILootEntry {
         LootData data = new LootData(this.getMaterial(), this.getMinimumQuantity(), this.getMaximumQuantity());
         if (functions != null) {
             for (IFunction function : functions) {
-                function.modify(data, entity, looting);
+                if (ConditionUtils.meetsConditions(entity, function)) {
+                    function.modify(data, entity, looting);
+                }
             }
         }
 
@@ -229,6 +235,33 @@ public class LootEntry implements ILootEntry {
                 amount = 0;
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !this.getClass().equals(obj.getClass())) {
+            return false;
+        }
+
+        LootEntry other = (LootEntry) obj;
+
+        return this.materialName.equals(other.materialName)
+                && this.minimumQuantity == other.minimumQuantity
+                && this.maximumQuantity == other.maximumQuantity && this.weight == other.weight
+                && this.quality == other.quality
+                && CollectionUtils.equal(this.conditions, other.conditions)
+                && CollectionUtils.equal(this.functions, other.functions)
+                && (this.randomChance == null && other.randomChance == null
+                        || this.randomChance != null && this.randomChance.equals(other.randomChance));
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s(materialName=%s,minimumQuantity=%s,maximumQuantity=%s,weight=%s,quality=%s,conditions=%s,functions=%s,randomChance=%s)",
+                this.getClass().getName(), this.materialName, this.minimumQuantity,
+                this.maximumQuantity, this.weight, this.quality, this.conditions, this.functions,
+                this.randomChance);
     }
 
 }

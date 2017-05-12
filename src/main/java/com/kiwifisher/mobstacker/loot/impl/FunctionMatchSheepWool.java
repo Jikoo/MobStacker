@@ -47,4 +47,16 @@ public class FunctionMatchSheepWool extends Function {
         return false;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj) && this.invert == ((FunctionMatchSheepWool) obj).invert;
+    }
+
+    @Override
+    public String toString() {
+        String superString = super.toString();
+        return String.format("%s,invert=%s)", superString.substring(0, superString.length() - 1),
+                this.invert);
+    }
+
 }
