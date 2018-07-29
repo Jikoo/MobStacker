@@ -54,7 +54,7 @@ public class EntityExplodeListener implements Listener {
             float power = quantity + (entity instanceof Creeper ? ((Creeper) entity).isPowered() ? 5 : 2 : 0);
 
             // Cap explosion power to configured maximum.
-            quantity = Math.max(1, Math.min(quantity,
+            power = Math.max(1, Math.min(power,
                     plugin.getConfig().getInt("magnify-stack-explosion.max-creeper-explosion-size")));
 
             // Remove the entity - exploding entities don't fly off dying, they vanish with the explosion.

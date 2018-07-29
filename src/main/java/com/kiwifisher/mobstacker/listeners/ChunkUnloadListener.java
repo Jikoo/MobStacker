@@ -6,13 +6,15 @@ import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.utils.StackUtils;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  * Listener for ChunkUnloadEvents. Used to remove names of stacked mobs that won't be loaded back
  * when chunks load.
- * 
+ *
  * @author Jikoo
  */
 public class ChunkUnloadListener implements Listener {
@@ -23,6 +25,7 @@ public class ChunkUnloadListener implements Listener {
         this.plugin = plugin;
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChunkUnload(ChunkUnloadEvent event) {
         // Loading existing stacks requires the {QTY} tag in naming convention.
         boolean loadStacks = plugin.getConfig().getBoolean("load-existing-stacks.enabled")

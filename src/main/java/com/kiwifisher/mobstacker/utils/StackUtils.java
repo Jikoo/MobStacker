@@ -78,9 +78,8 @@ public class StackUtils {
         naming = naming.replace("{QTY}", "\\E([0-9]+)\\Q").replace("{TYPE}", "\\E[A-Z ]+\\Q");
 
         // Prepend quote start and append quote end
-        StringBuilder builder = new StringBuilder(naming.length() + 4).append("\\Q").append(naming).append("\\E");
 
-        namePattern = Pattern.compile(builder.toString());
+        namePattern = Pattern.compile("\\Q" + naming + "\\E");
     }
 
     public void attemptToStack(final Entity stack, final int attempts) {
@@ -148,7 +147,6 @@ public class StackUtils {
 
                     if (count > attempts) {
                         cancel();
-                        return;
                     }
                 }
             }
@@ -159,7 +157,7 @@ public class StackUtils {
 
     /**
      * Attempts to merge two entities into a single stack.
-     * 
+     *
      * @param entity1 the first Entity
      * @param entity2 the second Entity
      * @param maxStackSize the maximum allowed stack size
@@ -195,7 +193,7 @@ public class StackUtils {
         } catch (Exception e) {
             // Catch generic exception to prevent unforeseen issues causing entity duplication.
             e.printStackTrace();
-        };
+        }
 
         increaseAverageHealth(mergeTo, additionalStacks, addedAverageHealth);
 
@@ -208,7 +206,7 @@ public class StackUtils {
 
     /**
      * Check if two entities are similar enough to be stacked.
-     * 
+     *
      * @param entity1 the first entity
      * @param entity2 the second entity
      * @return true if the mobs can stack
@@ -369,9 +367,8 @@ public class StackUtils {
     /**
      * This method takes a stack and turns it into a single mob, spawning in a new stack with the
      * remainder in the same location.
-     * 
+     *
      * @param entity The stack to peel off of
-     * @param restackable true if the new stack should attempt to stack again
      * @return the new stack
      */
     public Entity peelOffStack(Entity entity) {
@@ -380,9 +377,8 @@ public class StackUtils {
 
     /**
      * This method takes a stack and removes a single entity, spawning it in the same location.
-     * 
+     *
      * @param entity The stack to peel off of
-     * @param restackable true if the new stack should attempt to stack again
      * @return the new entity
      */
     public Entity peelOffSingle(Entity entity) {
@@ -453,7 +449,7 @@ public class StackUtils {
     /**
      * Copy properties to a new Entity. Both can be different types of entity safely.
      * Non-living entities are not supported (AreaEffectCloud, Boat, etc.).
-     * 
+     *
      * @param original the original Entity
      * @param copy the Entity to copy properties to
      * @throws Exception when some un-handled weird special case comes into play
@@ -671,7 +667,7 @@ public class StackUtils {
                     continue;
                 }
                 String key = entry.getKey().substring(identifier.length());
-                for (MetadataValue value : entry.getValue().values().toArray(new MetadataValue[entry.getValue().size()])) {
+                for (MetadataValue value : entry.getValue().values().toArray(new MetadataValue[0])) {
                     copy.setMetadata(key, value);
                 }
             }
@@ -684,7 +680,7 @@ public class StackUtils {
 
     /**
      * Used to get the number of mobs represented by a stack.
-     * 
+     *
      * @param entity the entity
      * @return the number of mobs
      */
@@ -702,7 +698,7 @@ public class StackUtils {
 
     /**
      * Sets an entity's stack size and updates its name.
-     * 
+     *
      * @param entity the Entity
      * @param newQuantity the new quantity
      */
@@ -720,7 +716,7 @@ public class StackUtils {
 
     /**
      * Sets a stack's name.
-     * 
+     *
      * @param entity the Entity
      * @param quantity the amount in the stack
      */
@@ -755,7 +751,7 @@ public class StackUtils {
      * Checks whether a String matches the configured naming pattern for stacked mobs.
      * <p>
      * This method will also return true if the name provided is null.
-     * 
+     *
      * @param name the String to check
      * @return true if the naming pattern matches or the name provided is null
      */
@@ -772,7 +768,7 @@ public class StackUtils {
 
     /**
      * Sets stack data for an entity based on its name.
-     * 
+     *
      * @param entity the Entity
      */
     public void loadFromName(Entity entity) {
@@ -805,7 +801,7 @@ public class StackUtils {
 
     /**
      * Gets whether an entity is stackable.
-     * 
+     *
      * @param entity the Entity
      * @return true if the Entity is stackable
      */
@@ -839,7 +835,7 @@ public class StackUtils {
     /**
      * Alters whether an entity is stackable. Note that this will not allow for stacks exceeding the
      * configured limit.
-     * 
+     *
      * @param entity the Entity
      * @param stackable if the Entity is stackable
      */
@@ -849,7 +845,7 @@ public class StackUtils {
 
     /**
      * Sets an entity recently bred.
-     * 
+     *
      * @param entity the Entity
      */
     public void setBred(Entity entity) {
@@ -858,7 +854,7 @@ public class StackUtils {
 
     /**
      * Gets an entity's breedability.
-     * 
+     *
      * @param entity the Entity
      */
     public boolean canBreed(Entity entity) {
@@ -868,7 +864,7 @@ public class StackUtils {
 
     /**
      * Gets the average health of a stacked entity.
-     * 
+     *
      * @param entity the Entity
      * @param recalculate true if the value is to be recalculated including the base entity's health
      * @return the average health
@@ -891,7 +887,7 @@ public class StackUtils {
         }
 
         // Ensure that the entity is a Damageable Attributable.
-        if (!(entity instanceof Attributable && entity instanceof Damageable)) {
+        if (!(entity instanceof Attributable)) {
             return 0;
         }
 
@@ -918,7 +914,7 @@ public class StackUtils {
 
     /**
      * Reduces the average health of a stack by the specified amount.
-     * 
+     *
      * @param entity the stacked Entity
      * @param amount the amount to reduce health by
      */
@@ -930,7 +926,7 @@ public class StackUtils {
      * Increases the average health of a stack by adding an entity's stack data.
      * </p>
      * This method assumes that the stack size has already been increased by the relevant amount.
-     * 
+     *
      * @param entity the Entity
      * @param addedSize the amount of entities added
      * @param addedHealth the average health of the added entities
@@ -955,7 +951,7 @@ public class StackUtils {
 
     /**
      * Helper method for retrieving the first available MetadataValue.
-     * 
+     *
      * @param entity the Entity to retrieve metadata for
      * @param key the metadata key
      * @return the first MetadataValue, or null if none is found.
@@ -976,7 +972,7 @@ public class StackUtils {
 
     /**
      * Helper method for replacing existing metadata with our own for simplicity.
-     * 
+     *
      * @param entity the Entity to set metadata for
      * @param key the metadata identifier
      * @param value the metadata value

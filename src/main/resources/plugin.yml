@@ -3,6 +3,7 @@ main: com.kiwifisher.mobstacker.MobStacker
 author: KiwiFisher
 authors: [Jikoo]
 version: ${project.version}
+api-version: 1.13
 
 commands:
   mobstacker:

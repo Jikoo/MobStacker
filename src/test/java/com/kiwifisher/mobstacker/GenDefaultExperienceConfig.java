@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ import com.kiwifisher.mobstacker.loot.impl.SlimeExperienceEntry;
 
 /**
  * Generates the default experience.yml file.
- * 
+ *
  * @author Jikoo
  */
 public class GenDefaultExperienceConfig {
@@ -33,13 +33,14 @@ public class GenDefaultExperienceConfig {
         }
     }
 
-    public static Map<String, Map<String, IExperiencePool>> getConfigValues() {
+    static Map<String, Map<String, IExperiencePool>> getConfigValues() {
         Map<String, IExperiencePool> defaults = new HashMap<>();
 
         ExperiencePool pool;
         List<IExperienceEntry> entries;
         ExperienceEntry entry;
 
+		// TODO: COD, DOLPHIN, DROWNED, ILLUSIONER, PARROT, PHANTOM, PUFFERFISH, SALMON, TROPICAL_FISH, TURTLE
         pool = new ExperiencePool();
         defaults.put("BAT", pool);
         defaults.put("IRON_GOLEM", pool);
@@ -49,7 +50,7 @@ public class GenDefaultExperienceConfig {
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(10);
-        pool.setEntries(Arrays.asList(entry));
+        pool.setEntries(Collections.singletonList(entry));
         defaults.put("BLAZE", pool);
         defaults.put("GUARDIAN", pool);
         defaults.put("ELDER_GUARDIAN", pool);
@@ -59,8 +60,8 @@ public class GenDefaultExperienceConfig {
         entry = new ExperienceEntry();
         entry.setMinimum(1);
         entry.setMaximum(3);
-        entry.setConditions(Arrays.asList(new ConditionPropertiesAdult()));
-        pool.setEntries(Arrays.asList(entry));
+        entry.setConditions(Collections.singletonList(new ConditionPropertiesAdult()));
+        pool.setEntries(Collections.singletonList(entry));
         defaults.put("CHICKEN", pool);
         defaults.put("COW", pool);
         defaults.put("DONKEY", pool);
@@ -81,7 +82,7 @@ public class GenDefaultExperienceConfig {
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(5);
-        pool.setEntries(Arrays.asList(entry));
+        pool.setEntries(Collections.singletonList(entry));
         defaults.put("CAVE_SPIDER", pool);
         defaults.put("CREEPER", pool);
         defaults.put("ENDERMAN", pool);
@@ -105,7 +106,7 @@ public class GenDefaultExperienceConfig {
         entry.setMinimum(7);
         ConditionPropertiesAdult conditionAdult = new ConditionPropertiesAdult();
         conditionAdult.setAdult(false);
-        entry.setConditions(Arrays.asList(conditionAdult));
+        entry.setConditions(Collections.singletonList(conditionAdult));
         entries.add(entry);
         pool.setEntries(entries);
         defaults.put("HUSK", pool);
@@ -115,24 +116,24 @@ public class GenDefaultExperienceConfig {
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(3);
-        pool.setEntries(Arrays.asList(entry));
+        pool.setEntries(Collections.singletonList(entry));
         defaults.put("ENDERMITE", pool);
         defaults.put("VEX", pool);
 
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(500);
-        pool.setEntries(Arrays.asList(entry));
+        pool.setEntries(Collections.singletonList(entry));
         defaults.put("ENDER_DRAGON", pool);
 
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
         entry.setMinimum(50);
-        pool.setEntries(Arrays.asList(entry));
+        pool.setEntries(Collections.singletonList(entry));
         defaults.put("WITHER", pool);
 
         pool = new ExperiencePool();
-        pool.setEntries(Arrays.asList(new SlimeExperienceEntry()));
+        pool.setEntries(Collections.singletonList(new SlimeExperienceEntry()));
         defaults.put("SLIME", pool);
         defaults.put("MAGMA_CUBE", pool);
 

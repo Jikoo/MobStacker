@@ -1,62 +1,39 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import com.google.gson.annotations.Expose;
-
 import com.kiwifisher.mobstacker.loot.api.LootData;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.material.Colorable;
 
 /**
  * Function implementation for setting data to match a sheep (or any Colorable)'s drop data.
- * 
+ * <br>
+ * N.B.: Material MUST be white variant.
+ *
  * @author Jikoo
  */
 public class FunctionMatchSheepWool extends Function {
 
-    @Expose
-    private boolean invert;
+	@Override
+	public void modify(LootData lootData, Entity entity, int looting) {
 
-    public FunctionMatchSheepWool() {
-        this.invert = false;
-    }
+		if (!(entity instanceof Colorable)) {
+			return;
+		}
 
-    public boolean getInvert() {
-        return invert;
-    }
+		Material newMaterial = Material.matchMaterial(lootData.getMaterial().name()
+				.replace("WHITE", ((Colorable) entity).getColor().name()));
 
-    public void setInvert(Boolean invert) {
-        this.invert = invert;
-    }
+		if (newMaterial != null) {
+			lootData.setMaterial(newMaterial);
+		}
+	}
 
-    @Override
-    public void modify(LootData lootData, Entity entity, int looting) {
-        if (!(entity instanceof Colorable)) {
-            return;
-        }
+	@Override
+	public boolean isVariable() {
 
-        if (invert) {
-            lootData.setData(((Colorable) entity).getColor().getDyeData());
-        } else {
-            lootData.setData(((Colorable) entity).getColor().getWoolData());
-        }
-    }
-
-    @Override
-    public boolean isVariable() {
-        return false;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj) && this.invert == ((FunctionMatchSheepWool) obj).invert;
-    }
-
-    @Override
-    public String toString() {
-        String superString = super.toString();
-        return String.format("%s,invert=%s)", superString.substring(0, superString.length() - 1),
-                this.invert);
-    }
+		return false;
+	}
 
 }

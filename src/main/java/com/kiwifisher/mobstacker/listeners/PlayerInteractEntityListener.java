@@ -73,7 +73,7 @@ public class PlayerInteractEntityListener implements Listener {
 
     /**
      * Handles name tag usage.
-     * 
+     *
      * @param event the PlayerInteractEntityEvent
      * @param hand the ItemStack in the Player's hand
      */
@@ -96,7 +96,7 @@ public class PlayerInteractEntityListener implements Listener {
             event.setCancelled(true);
             return;
         }
- 
+
         // Only handle if custom named mobs do not stack.
         if (plugin.getConfig().getBoolean("stack-custom-named-mobs")) {
             return;
@@ -116,12 +116,13 @@ public class PlayerInteractEntityListener implements Listener {
 
     /**
      * Gets whether an entity can be bred using a material.
-     * 
+     *
      * @param entity the EntityType
      * @param material the Material
      * @return true if the Material can be used to breed the EntityType
      */
     private boolean isBreedingMaterialFor(EntityType entity, Material material) {
+
         if (entity == EntityType.HORSE) {
             return material == Material.GOLDEN_APPLE || material == Material.GOLDEN_CARROT;
         }
@@ -130,7 +131,7 @@ public class PlayerInteractEntityListener implements Listener {
             return material == Material.WHEAT;
         }
         if (entity == EntityType.PIG) {
-            return material == Material.CARROT_ITEM || material == Material.POTATO_ITEM
+            return material == Material.CARROT || material == Material.POTATO
                     || material == Material.BEETROOT;
         }
         if (entity == EntityType.CHICKEN) {
@@ -139,16 +140,16 @@ public class PlayerInteractEntityListener implements Listener {
         if (entity == EntityType.WOLF) {
             return material == Material.COOKED_BEEF || material == Material.COOKED_CHICKEN
                     || material == Material.COOKED_MUTTON || material == Material.COOKED_RABBIT
-                    || material == Material.GRILLED_PORK || material == Material.RAW_BEEF
-                    || material == Material.RAW_CHICKEN || material == Material.RABBIT
-                    || material == Material.PORK || material == Material.ROTTEN_FLESH;
+                    || material == Material.COOKED_PORKCHOP || material == Material.BEEF
+                    || material == Material.CHICKEN || material == Material.RABBIT
+                    || material == Material.PORKCHOP || material == Material.ROTTEN_FLESH;
         }
         if (entity == EntityType.OCELOT) {
-            return material == Material.RAW_FISH;
+            return material == Material.COD || material == Material.SALMON || material == Material.TROPICAL_FISH;
         }
         if (entity == EntityType.RABBIT) {
-            return material == Material.CARROT_ITEM || material == Material.GOLDEN_CARROT
-                    || material == Material.YELLOW_FLOWER;
+            return material == Material.CARROT || material == Material.GOLDEN_CARROT
+                    || material == Material.DANDELION;
         }
 
         // Yet-unknown entity, or cannot be bred (e.g. polar bears).
