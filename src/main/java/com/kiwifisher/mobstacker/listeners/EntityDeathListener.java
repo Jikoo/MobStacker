@@ -63,7 +63,7 @@ public class EntityDeathListener implements Listener {
         // Try to drop proportionate loot.
         Player player = event.getEntity().getKiller();
         int looting = player != null ? player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
-        event.getDrops().addAll(manager.getLoot(entity, stackSize - 1, looting));
+        event.getDrops().addAll(manager.getLoot(entity, player, stackSize - 1, looting));
 
     }
 

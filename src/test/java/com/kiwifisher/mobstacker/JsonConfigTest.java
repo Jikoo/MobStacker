@@ -13,30 +13,15 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
-import com.kiwifisher.mobstacker.loot.api.ILootPool;
 
 import org.junit.Test;
 
 /**
  * Tests ensuring default configurations can be loaded properly.
- * 
+ *
  * @author Jikoo
  */
 public class JsonConfigTest {
-
-    @Test
-    public void testLoot() {
-        Map<String, Map<String, Collection<ILootPool>>> defaults = GenDefaultLootConfig.getConfigValues();
-        Gson gson = MobStacker.getGson();
-        try {
-            Map<String, Map<String, Collection<ILootPool>>> retrieved = gson.fromJson(gson.toJson(defaults),
-                    new TypeToken<Map<String, Map<String, Collection<ILootPool>>>>() {}.getType());
-            compare(defaults, retrieved);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-            fail("Encountered exception interpreting default config.");
-        }
-    }
 
     @Test
     public void testExperience() {

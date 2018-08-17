@@ -26,24 +26,12 @@ import com.kiwifisher.mobstacker.loot.LootManager;
 import com.kiwifisher.mobstacker.loot.api.ICondition;
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
 import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
-import com.kiwifisher.mobstacker.loot.api.IFunction;
-import com.kiwifisher.mobstacker.loot.api.ILootEntry;
-import com.kiwifisher.mobstacker.loot.api.ILootPool;
-import com.kiwifisher.mobstacker.loot.api.IRandomChance;
 import com.kiwifisher.mobstacker.loot.impl.ConditionKilledByPlayer;
 import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult;
 import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesOnFire;
 import com.kiwifisher.mobstacker.loot.impl.ConditionSlimeSize;
 import com.kiwifisher.mobstacker.loot.impl.ExperienceEntry;
 import com.kiwifisher.mobstacker.loot.impl.ExperiencePool;
-import com.kiwifisher.mobstacker.loot.impl.FunctionFurnaceSmelt;
-import com.kiwifisher.mobstacker.loot.impl.FunctionLootingBonus;
-import com.kiwifisher.mobstacker.loot.impl.FunctionMatchSheepWool;
-import com.kiwifisher.mobstacker.loot.impl.FunctionSetData;
-import com.kiwifisher.mobstacker.loot.impl.FunctionSetMeta;
-import com.kiwifisher.mobstacker.loot.impl.LootEntry;
-import com.kiwifisher.mobstacker.loot.impl.LootPool;
-import com.kiwifisher.mobstacker.loot.impl.RandomChance;
 import com.kiwifisher.mobstacker.loot.impl.SlimeExperienceEntry;
 import com.kiwifisher.mobstacker.utils.StackUtils;
 
@@ -65,29 +53,17 @@ public class MobStacker extends JavaPlugin {
 
     /**
      * Creates a new configured Gson instance for usage with MobStacker's serializable loot implementations.
-     * 
+     *
      * @return the created Gson
      */
     public static Gson getGson() {
         return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting()
                 .disableHtmlEscaping()
-                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IRandomChance.class)
-                        .registerSubtype(RandomChance.class))
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ICondition.class)
                         .registerSubtype(ConditionKilledByPlayer.class)
                         .registerSubtype(ConditionPropertiesAdult.class)
                         .registerSubtype(ConditionPropertiesOnFire.class)
                         .registerSubtype(ConditionSlimeSize.class))
-                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IFunction.class)
-                        .registerSubtype(FunctionFurnaceSmelt.class)
-                        .registerSubtype(FunctionLootingBonus.class)
-                        .registerSubtype(FunctionMatchSheepWool.class)
-                        .registerSubtype(FunctionSetData.class)
-                        .registerSubtype(FunctionSetMeta.class))
-                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ILootEntry.class)
-                        .registerSubtype(LootEntry.class))
-                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ILootPool.class)
-                        .registerSubtype(LootPool.class))
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IExperienceEntry.class)
                         .registerSubtype(ExperienceEntry.class)
                         .registerSubtype(SlimeExperienceEntry.class))
@@ -95,7 +71,7 @@ public class MobStacker extends JavaPlugin {
                         .registerSubtype(ExperiencePool.class))
                 .create();
     }
- 
+
     @Override
     public void onEnable() {
         saveDefaultConfig();

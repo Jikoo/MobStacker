@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -17,44 +18,31 @@ import com.google.gson.reflect.TypeToken;
 
 import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
-import com.kiwifisher.mobstacker.loot.api.ILootPool;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.ZombieVillager;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.loot.LootContext;
+import org.bukkit.loot.Lootable;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  * Manages loot and experience for entities.
- * 
+ *
  * @author Jikoo
  */
 public class LootManager {
 
-    private Map<String, Map<String, Collection<ILootPool>>> loot = new HashMap<>();
     private Map<String, Map<String, IExperiencePool>> experience = new HashMap<>();
 
     public LootManager(MobStacker plugin) {
         Gson gson = MobStacker.getGson();
 
-        File file = new File(plugin.getDataFolder(), "loot.json");
-        // Save default loot configuration if not present.
-        // For some reason, Bukkit always logs when not saving due to existence, which is annoying.
-        if (!file.exists()) {
-            plugin.saveResource("loot.json", false);
-        }
-
-        if (file.exists()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                loot = gson.fromJson(reader,
-                        new TypeToken<Map<String, Map<String, Collection<ILootPool>>>>() {}.getType());
-            } catch (IOException | JsonParseException e) {
-                e.printStackTrace();
-            }
-        }
-
-        file = new File(plugin.getDataFolder(), "experience.json");
+        File file = new File(plugin.getDataFolder(), "experience.json");
         // Save default loot configuration if not present.
         if (!file.exists()) {
             plugin.saveResource("experience.json", false);
@@ -70,28 +58,22 @@ public class LootManager {
         }
     }
 
-    public List<ItemStack> getLoot(Entity entity, int numberOfMobs, int looting) {
-        String entityName = getEntityName(entity);
-        String worldName = entity.getWorld().getName().toUpperCase();
-        Map<String, Collection<ILootPool>> worldMappings;
-
-        // Test world-specific loot settings.
-        if (!loot.containsKey(worldName)
-                || !(worldMappings = loot.get(worldName)).containsKey(entityName)) {
-            // Fall through to default settings.
-            worldName = "DEFAULT";
-        }
-
-        if (!loot.containsKey(worldName)
-                || !(worldMappings = loot.get(worldName)).containsKey(entityName)) {
+    public List<ItemStack> getLoot(Entity entity, Player killer, int numberOfMobs, int looting) {
+        if (!(entity instanceof Lootable)) {
             return Collections.emptyList();
         }
-
-        List<ItemStack> drops = new ArrayList<>();
-        for (ILootPool pool : worldMappings.get(entityName)) {
-            pool.roll(drops, entity, numberOfMobs, looting);
+        Lootable lootable = ((Lootable) entity);
+        LootContext.Builder contextBuilder = new LootContext.Builder(entity.getLocation()).lootedEntity(entity).lootingModifier(looting);
+        if (killer != null) {
+            contextBuilder.killer(killer).luck(((float) killer.getAttribute(Attribute.GENERIC_LUCK).getValue()));
         }
-        return drops;
+        LootContext context = contextBuilder.build();
+        List<ItemStack> loot = new ArrayList<>();
+        for (int i = 0; i < numberOfMobs; ++i) {
+            // TODO merge drops
+            loot.addAll(lootable.getLootTable().populateLoot(ThreadLocalRandom.current(), context));
+        }
+        return loot;
     }
 
     public int getExperience(Entity entity, int numberOfMobs) {
@@ -119,24 +101,6 @@ public class LootManager {
         switch (type) {
         case PIG_ZOMBIE:
             return "ZOMBIE_PIGMAN";
-        case ZOMBIE_VILLAGER:
-            if (!(entity instanceof ZombieVillager)) {
-                return type.name();
-            }
-            Profession profession = ((ZombieVillager) entity).getVillagerProfession();
-            if (profession == null) {
-                return type.name();
-            }
-            switch (profession) {
-            case HUSK:
-                return "HUSK";
-            default:
-                return "ZOMBIE_VILLAGER";
-            }
-        case EVOKER:
-            return "EVOCATION_ILLAGER";
-        case VINDICATOR:
-            return "VINDICATION_ILLAGER";
         default:
             return type.name();
         }

@@ -40,11 +40,15 @@ public class GenDefaultExperienceConfig {
         List<IExperienceEntry> entries;
         ExperienceEntry entry;
 
-		// TODO: COD, DOLPHIN, DROWNED, ILLUSIONER, PARROT, PHANTOM, PUFFERFISH, SALMON, TROPICAL_FISH, TURTLE
         pool = new ExperiencePool();
         defaults.put("BAT", pool);
+        defaults.put("COD", pool);
+        defaults.put("DOLPHIN", pool);
         defaults.put("IRON_GOLEM", pool);
+        defaults.put("PUFFERFISH", pool);
+        defaults.put("SALMON", pool);
         defaults.put("SNOW_GOLEM", pool);
+        defaults.put("TROPICAL_FISH", pool);
         defaults.put("VILLAGER", pool);
 
         pool = new ExperiencePool();
@@ -54,7 +58,7 @@ public class GenDefaultExperienceConfig {
         defaults.put("BLAZE", pool);
         defaults.put("GUARDIAN", pool);
         defaults.put("ELDER_GUARDIAN", pool);
-        defaults.put("EVOCATION_ILLAGER", pool);
+        defaults.put("EVOKER", pool);
 
         pool = new ExperiencePool();
         entry = new ExperienceEntry();
@@ -66,15 +70,18 @@ public class GenDefaultExperienceConfig {
         defaults.put("COW", pool);
         defaults.put("DONKEY", pool);
         defaults.put("HORSE", pool);
+        defaults.put("ILLUSIONER", pool);
         defaults.put("LLAMA", pool);
         defaults.put("MULE", pool);
         defaults.put("MUSHROOM_COW", pool);
         defaults.put("OCELOT", pool);
+        defaults.put("PARROT", pool);
         defaults.put("PIG", pool);
         defaults.put("POLAR_BEAR", pool);
         defaults.put("SHEEP", pool);
         defaults.put("SKELETON_HORSE", pool);
         defaults.put("SQUID", pool);
+        defaults.put("TURTLE", pool);
         defaults.put("RABBIT", pool);
         defaults.put("WOLF", pool);
         defaults.put("ZOMBIE_HORSE", pool);
@@ -87,12 +94,13 @@ public class GenDefaultExperienceConfig {
         defaults.put("CREEPER", pool);
         defaults.put("ENDERMAN", pool);
         defaults.put("GHAST", pool);
+        defaults.put("PHANTOM", pool);
         defaults.put("SHULKER", pool);
         defaults.put("SILVERFISH", pool);
         defaults.put("SKELETON", pool);
         defaults.put("SPIDER", pool);
         defaults.put("STRAY", pool);
-        defaults.put("VINDICATION_ILLAGER", pool);
+        defaults.put("VINDICATOR", pool);
         defaults.put("WITCH", pool);
         defaults.put("WITHER_SKELETON", pool);
 
@@ -109,6 +117,7 @@ public class GenDefaultExperienceConfig {
         entry.setConditions(Collections.singletonList(conditionAdult));
         entries.add(entry);
         pool.setEntries(entries);
+        defaults.put("DROWNED", pool);
         defaults.put("HUSK", pool);
         defaults.put("PIG_ZOMBIE", pool);
         defaults.put("ZOMBIE", pool);
