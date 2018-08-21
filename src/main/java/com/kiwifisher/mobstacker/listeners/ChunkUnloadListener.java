@@ -36,14 +36,18 @@ public class ChunkUnloadListener implements Listener {
             // Ensure entity is stacked and has a custom name, otherwise skip.
             if (entity.getCustomName() == null || StackUtils.getStackSize(entity) < 2
                     || !plugin.getStackUtils().matchesStackName(entity.getCustomName())) {
+                plugin.getStackUtils().removeStackMetadata(entity);
                 continue;
             }
 
-            // If stacks aren't supposed to be loaded for the entity's type, un-name.
+            // If stacks aren't supposed to be loaded for the entity's type, wipe stack data.
             if (!loadStacks || !types.contains(entity.getType().toString())) {
                 entity.setCustomName(null);
                 entity.setCustomNameVisible(false);
             }
+
+            // Clean up metadata storage to prevent memory issues.
+            plugin.getStackUtils().removeStackMetadata(entity);
         }
     }
 

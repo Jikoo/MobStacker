@@ -30,6 +30,9 @@ public class EntityDeathListener implements Listener {
          * stacks reaching excessive (and potentially problematic - see SPIGOT-58) depths.
          */
         if (entity.getLastDamageCause() != null && entity.getLastDamageCause().getCause() == DamageCause.VOID) {
+            // Clean up metadata storage.
+            plugin.getStackUtils().removeStackMetadata(entity);
+
             return;
         }
 
@@ -37,6 +40,9 @@ public class EntityDeathListener implements Listener {
 
         // Ensure we have a stack.
         if (stackSize < 2) {
+            // Clean up metadata storage.
+            plugin.getStackUtils().removeStackMetadata(entity);
+
             return;
         }
 
@@ -47,11 +53,17 @@ public class EntityDeathListener implements Listener {
             // Whole stack is not dying, peel off the remainder and return.
             plugin.getStackUtils().peelOffStack(entity);
 
+            // Clean up metadata storage.
+            plugin.getStackUtils().removeStackMetadata(entity);
+
             return;
         }
 
         // Check if we are dropping proportionate loot. If not, return.
         if (!plugin.getConfig().getBoolean("persistent-damage.multiply-loot")) {
+            // Clean up metadata storage.
+            plugin.getStackUtils().removeStackMetadata(entity);
+
             return;
         }
 
@@ -64,6 +76,9 @@ public class EntityDeathListener implements Listener {
         Player player = event.getEntity().getKiller();
         int looting = player != null ? player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
         event.getDrops().addAll(manager.getLoot(entity, player, stackSize - 1, looting));
+
+        // Clean up metadata storage.
+        plugin.getStackUtils().removeStackMetadata(entity);
 
     }
 

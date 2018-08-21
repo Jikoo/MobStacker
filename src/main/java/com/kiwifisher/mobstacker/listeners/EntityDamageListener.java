@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * Listener for EntityDamageEvents. Used to cause certain types of damage to persist into new stacks.
- * 
+ *
  * @author Jikoo
  */
 public class EntityDamageListener implements Listener {
@@ -69,7 +69,7 @@ public class EntityDamageListener implements Listener {
 
         // Ensure weapon used is a sword that is off cooldown and attacker is eligible to sweep.
         if (weapon == null || attackerHuman.hasCooldown(weapon.getType())
-                || !weapon.getType().name().endsWith("_SWORD") || attackerHuman.isOnGround()
+                || !weapon.getType().name().endsWith("_SWORD") || !attackerHuman.isOnGround()
                 || attackerHuman.isBlocking() || attackerHuman.isHandRaised()
                 || attackerHuman instanceof Player && ((Player) attackerHuman).isSprinting()) {
             return;
