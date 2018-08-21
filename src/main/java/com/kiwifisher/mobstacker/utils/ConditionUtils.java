@@ -9,7 +9,7 @@ import org.bukkit.entity.Entity;
 
 /**
  * Utility for testing IConditions.
- * 
+ *
  * @author Jikoo
  */
 public class ConditionUtils {
@@ -17,10 +17,8 @@ public class ConditionUtils {
     private ConditionUtils() {}
 
     public static boolean meetsConditions(Entity entity, IConditional conditional) {
-        return meetsConditions(entity, conditional.getConditions());
-    }
+        Collection<ICondition> conditions = conditional.getConditions();
 
-    public static boolean meetsConditions(Entity entity, Collection<ICondition> conditions) {
         if (conditions == null || conditions.isEmpty()) {
             return true;
         }

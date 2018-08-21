@@ -17,6 +17,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -35,16 +36,20 @@ import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Tameable;
+import org.bukkit.entity.TropicalFish;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import org.bukkit.entity.ZombieVillager;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -267,13 +272,13 @@ public class StackUtils {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.color", true)
+        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
                 && entity1 instanceof Colorable && entity2 instanceof Colorable
                 && ((Colorable) entity1).getColor() != ((Colorable) entity2).getColor()) {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.poweredCreeper", true)
+        if (plugin.getConfig().getBoolean("stack-properties.creeper.powered", true)
                 && entity1 instanceof Creeper && entity2 instanceof Creeper
                 && ((Creeper) entity1).isPowered() != ((Creeper) entity2).isPowered()) {
             return false;
@@ -286,35 +291,65 @@ public class StackUtils {
             return false;
         }
 
+        if (entity2 instanceof AbstractHorse) {
+            AbstractHorse horse2 = (AbstractHorse) entity2;
+
+            // Don't delete saddles, armor, llama decor, or items in chests.
+            for (ItemStack itemStack : horse2.getInventory().getContents()) {
+                if (itemStack != null && itemStack.getType() != Material.AIR) {
+                    return false;
+                }
+            }
+        }
+
         if (entity1 instanceof Horse && entity2 instanceof Horse) {
             Horse horse1 = (Horse) entity1;
             Horse horse2 = (Horse) entity2;
 
-            if (plugin.getConfig().getBoolean("stack-properties.horse.color", true)
+            if (plugin.getConfig().getBoolean("stack-properties.variant", true)
                     && (horse1.getStyle() != horse2.getStyle() || horse1.getColor() != horse2.getColor())) {
                 return false;
             }
+
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.playerCreatedGolem", true)
+        if (entity1 instanceof ChestedHorse && entity2 instanceof ChestedHorse
+                && ((ChestedHorse) entity1).isCarryingChest() != ((ChestedHorse) entity2).isCarryingChest()) {
+            return false;
+        }
+
+        if (plugin.getConfig().getBoolean("stack-properties.golem.playerCreated", true)
                 && entity1 instanceof IronGolem && entity2 instanceof IronGolem
                 &&((IronGolem) entity1).isPlayerCreated() != ((IronGolem) entity2).isPlayerCreated()) {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.ocelot", true)
+        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
                 && entity1 instanceof Ocelot && entity2 instanceof Ocelot
                 && ((Ocelot) entity1).getCatType() != ((Ocelot) entity2).getCatType()) {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.rabbit", true)
+        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
+                && entity1 instanceof Parrot && entity2 instanceof Parrot
+                && ((Parrot) entity1).getVariant() != ((Parrot) entity2).getVariant()) {
+            return false;
+        }
+
+        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
+                && entity1 instanceof Pig && entity2 instanceof Pig
+                && ((Pig) entity2).hasSaddle()) {
+            // Don't stack saddled pigs - saddle is intentionally not set on split.
+            return false;
+        }
+
+        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
                 && entity1 instanceof Rabbit && entity2 instanceof Rabbit
                 && ((Rabbit) entity1).getRabbitType() != ((Rabbit) entity2).getRabbitType()) {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.sheep", true)
+        if (plugin.getConfig().getBoolean("stack-properties.sheep.sheared", true)
                 && entity1 instanceof Sheep && entity2 instanceof Sheep
                 && ((Sheep) entity1).isSheared() != ((Sheep) entity2).isSheared()) {
             return false;
@@ -330,7 +365,19 @@ public class StackUtils {
             }
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.villager", true)
+        if (entity1 instanceof TropicalFish && entity2 instanceof TropicalFish) {
+            TropicalFish fish1 = ((TropicalFish) entity1);
+            TropicalFish fish2 = (TropicalFish) entity2;
+
+            if (plugin.getConfig().getBoolean("stack-properties.variant", true)
+                    && (fish1.getBodyColor() != fish2.getBodyColor() || fish1.getPatternColor() != fish2.getPatternColor()
+                    || fish1.getPattern() != fish2.getPattern())) {
+                return false;
+            }
+
+        }
+
+        if (plugin.getConfig().getBoolean("stack-properties.villager.profession", true)
                 && entity1 instanceof Villager && entity2 instanceof Villager
                 && ((Villager) entity1).getProfession() != ((Villager) entity2).getProfession()) {
             return false;
@@ -343,7 +390,7 @@ public class StackUtils {
                     && wolf1.isAngry() != wolf2.isAngry()) {
                 return false;
             }
-            if (plugin.getConfig().getBoolean("stack-properties.wolf.color", true)
+            if (plugin.getConfig().getBoolean("stack-properties.variant", true)
                     && wolf1.getCollarColor() != wolf2.getCollarColor()) {
                 return false;
             }
@@ -356,7 +403,8 @@ public class StackUtils {
         }
 
         // Separate zombies by type
-        if (entity1 instanceof ZombieVillager && entity2 instanceof ZombieVillager
+        if (plugin.getConfig().getBoolean("stack-properties.villager.profession", true)
+                && entity1 instanceof ZombieVillager && entity2 instanceof ZombieVillager
                 && ((ZombieVillager) entity1).getVillagerProfession() != ((ZombieVillager) entity2).getVillagerProfession()) {
             return false;
         }
@@ -986,6 +1034,17 @@ public class StackUtils {
         }
 
         entity.setMetadata(key, new FixedMetadataValue(plugin, value));
+    }
+
+    /**
+     * Cleans up metadata for a stack.
+     *
+     * @param entity
+     */
+    public void removeStackMetadata(Entity entity) {
+        for (String key : new String[] { "quantity", "stackable", "lastBred", "stackAverageHealth" }) {
+            entity.removeMetadata(key, this.plugin);
+        }
     }
 
 }

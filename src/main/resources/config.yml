@@ -28,21 +28,19 @@ leash-whole-stack: false
 stack-properties:
   AI: true
   age: true
-  color: true
-  poweredCreeper: true
+  variant: true
   maxHealth: true
-  horse:
-    type: true
-    color: true
-  playerCreatedGolem: true
-  ocelot: true
-  rabbit: true
-  sheep: true
   tameable: true
-  villager: true
+  creeper:
+    powered: true
+  golem:
+    playerCreated: true
+  sheep:
+    sheared: true
+  villager:
+    profession: true
   wolf:
     anger: true
-    color: true
 
 # When certain damage types harm a mob, it's logical for the entire stack to take damage.
 # This will allow easier use of grinders, etc. For a list of damage causes, see
@@ -51,9 +49,13 @@ persistent-damage:
   enable: true
   multiply-loot: true
   reasons:
+  - BLOCK_EXPLOSION
   - CONTACT
+  - CRAMMING
+  - CUSTOM
   - DRAGON_BREATH
   - DROWNING
+  - DRYOUT
   - ENTITY_SWEEP_ATTACK
   - FALL
   - FIRE
@@ -81,15 +83,24 @@ load-existing-stacks:
   mob-types:
   - CHICKEN
   - COW
+  - DONKEY
   - HORSE
+  - LLAMA
+  - MULE
+  - MUSHROOM_COW
   - OCELOT
+  - PARROT
   - PIG
+  - POLAR_BEAR
   - RABBIT
+  - SKELETON_HORSE
   - SNOWMAN
   - SHEEP
   - SQUID
+  - TURTLE
   - VILLAGER
   - WOLF
+  - ZOMBIE_HORSE
 
 # If a creeper stack explodes, should the whole stack die?
 exploding-creeper-kills-stack: false
@@ -103,7 +114,7 @@ magnify-stack-explosion:
 stack-mobs-down: true
 
 # What should the max stack size be for certain mobs?
-# Add Mobs as shown below to create a stack limit.
+# Add mobs as shown below to create a stack limit.
 # If a mob isn't listed, the stack size is limted to default.
 # 2,147,483,647 is the maximum possible.
 max-stack-sizes:
@@ -114,61 +125,94 @@ max-stack-sizes:
 blacklist-world:
 - example-world
 
-# Mobs marked with true WILL attempt to stack. Mobs spawned by building (Golems and Wither) are a bit buggy, so it is suggested to leave them false.
+# Mobs marked with true WILL attempt to stack.
 stack-mob-type:
   BAT: true
   BLAZE: true
   CAVE_SPIDER: true
   CHICKEN: true
+  COD: true
   COW: true
   CREEPER: true
+  DROWNED: true
+  DOLPHIN: true
+  DONKEY: false # Possible to copy good horses' stats
+  ELDER_GUARDIAN: true
   ENDERMAN: true
   ENDERMITE: true
+  EVOKER: false # Limited spawns
   GHAST: true
   GIANT: true
   GUARDIAN: true
-  HORSE: true
+  HORSE: false # Possible to copy good horses' stats
+  HUSK: true
+  ILLUSIONER: false # Limited spawns
   IRON_GOLEM: false
+  LLAMA: true
   MAGMA_CUBE: true
+  MULE: false # Possible to copy good horses' stats
   MUSHROOM_COW: true
   OCELOT: true
+  PARROT: true
+  PHANTOM: true
   PIG: true
   PIG_ZOMBIE: true
   POLAR_BEAR: true
+  PUFFERFISH: true
   RABBIT: true
+  SALMON: true
   SHEEP: true
+  SHULKER: false # Limited spawns
   SILVERFISH: true
   SKELETON: true
+  SKELETON_HORSE: true
   SLIME: true
   SNOWMAN: false
   SPIDER: true
   SQUID: true
+  STRAY: true
+  TROPICAL_FISH: true
+  TURTLE: false # Turtle spawn point, "home beach" will be messed up
+  VEX: true
   VILLAGER: true
+  VINDICATOR: false # Limited spawns
   WITCH: true
   WITHER: false
+  WITHER_SKELETON: true
   WOLF: true
   ZOMBIE: true
+  ZOMBIE_HORSE: true
+  ZOMBIE_VILLAGER: true
 
-# Spawn methods marked with true WILL attempt to stack. CUSTOM is mobs spawned by plugins - Including this one. Certain features require CUSTOM to be left true.
-# Plugin will still work if CUSTOM is set to false, jut not collecting stacks when another stack is killed nearby.
-# It is suggested to leave SLIME_SPLIT false due to duplication issues.
+# Spawn methods marked with true WILL attempt to stack.
+# CUSTOM is mobs spawned by plugins, including this one. Certain features require CUSTOM to be left true.
+# The plugin will still work if CUSTOM is set to false, jut not collecting stacks when another stack is killed nearby.
 stack-spawn-reason:
-  SPAWNER_EGG: true
-  SPAWNER: true
-  BREEDING: false
+  BREEDING: true
   BUILD_IRONGOLEM: false
   BUILD_SNOWMAN: false
   BUILD_WITHER: false
-  CHUNK_GEN: false
-  CURED: false
+  CHUNK_GEN: true
+  CURED: true
   CUSTOM: true
+  DEFAULT: true
   DISPENSE_EGG: true
+  DROWNED: true
   EGG: true
-  INFECTION: false
+  ENDER_PEARL: true
+  INFECTION: true
   JOCKEY: false
-  LIGHTNING: false
+  LIGHTNING: true
   MOUNT: false
-  NATURAL: false
-  OCELOT_BABY: false
-  SLIME_SPLIT: true
+  NATURAL: true
   NETHER_PORTAL: true
+  OCELOT_BABY: true
+  REINFORCEMENTS: true
+  SHOULDER_ENTITY: true
+  SILVERFISH_BLOCK: true
+  SLIME_SPLIT: true
+  SPAWNER: true
+  SPAWNER_EGG: true
+  TRAP: false
+  VILLAGE_DEFENSE: true
+  VILLAGE_INVASION: true

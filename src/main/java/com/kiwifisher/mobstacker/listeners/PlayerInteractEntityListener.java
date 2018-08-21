@@ -39,6 +39,8 @@ public class PlayerInteractEntityListener implements Listener {
             handleNameTag(event, hand);
             return;
         }
+        // TODO fish bucket
+        // TODO fish bucket renaming in anvil
 
         Entity entity = event.getRightClicked();
 
@@ -123,7 +125,7 @@ public class PlayerInteractEntityListener implements Listener {
      */
     private boolean isBreedingMaterialFor(EntityType entity, Material material) {
 
-        if (entity == EntityType.HORSE) {
+        if (entity == EntityType.HORSE || entity == EntityType.DONKEY || entity == EntityType.MULE) {
             return material == Material.GOLDEN_APPLE || material == Material.GOLDEN_CARROT;
         }
         if (entity == EntityType.SHEEP || entity == EntityType.COW
@@ -142,14 +144,22 @@ public class PlayerInteractEntityListener implements Listener {
                     || material == Material.COOKED_MUTTON || material == Material.COOKED_RABBIT
                     || material == Material.COOKED_PORKCHOP || material == Material.BEEF
                     || material == Material.CHICKEN || material == Material.RABBIT
-                    || material == Material.PORKCHOP || material == Material.ROTTEN_FLESH;
+                    || material == Material.PORKCHOP || material == Material.MUTTON
+                    || material == Material.ROTTEN_FLESH;
         }
         if (entity == EntityType.OCELOT) {
-            return material == Material.COD || material == Material.SALMON || material == Material.TROPICAL_FISH;
+            return material == Material.COD || material == Material.SALMON || material == Material.TROPICAL_FISH
+                    || material == Material.PUFFERFISH;
         }
         if (entity == EntityType.RABBIT) {
             return material == Material.CARROT || material == Material.GOLDEN_CARROT
                     || material == Material.DANDELION;
+        }
+        if (entity == EntityType.LLAMA) {
+            return material == Material.HAY_BLOCK;
+        }
+        if (entity == EntityType.TURTLE) {
+            return material == Material.SEAGRASS;
         }
 
         // Yet-unknown entity, or cannot be bred (e.g. polar bears).

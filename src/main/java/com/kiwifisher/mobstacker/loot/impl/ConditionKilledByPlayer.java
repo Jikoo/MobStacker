@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 /**
  * Condition for an entity being killed by a Player.
- * 
+ *
  * @author Jikoo
  */
 public class ConditionKilledByPlayer implements ICondition {
@@ -26,8 +26,8 @@ public class ConditionKilledByPlayer implements ICondition {
         return invert;
     }
 
-    public void setInvert(Boolean inverse) {
-        this.invert = inverse;
+    public void setInvert(Boolean invert) {
+        this.invert = invert;
     }
 
     @Override
@@ -35,8 +35,7 @@ public class ConditionKilledByPlayer implements ICondition {
         if (!(entity instanceof LivingEntity)) {
             return false;
         }
-        // instanceof essentially includes a null check, this is safe
-        return ((LivingEntity) entity).getKiller() instanceof Player ? !invert : invert;
+        return (((LivingEntity) entity).getKiller() == null) == invert;
     }
 
     @Override

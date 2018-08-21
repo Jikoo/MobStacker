@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 
 /**
  * ICondition implementation requiring the entity tested to be on (or, configurably, not on) fire.
- * 
+ *
  * @author Jikoo
  */
 public class ConditionPropertiesOnFire implements ICondition {
@@ -30,7 +30,7 @@ public class ConditionPropertiesOnFire implements ICondition {
 
     @Override
     public boolean test(Entity entity) {
-        return entity != null && entity.getFireTicks() > 0 ? burning : !burning;
+        return (entity != null && entity.getFireTicks() > 0) == burning;
     }
 
     @Override

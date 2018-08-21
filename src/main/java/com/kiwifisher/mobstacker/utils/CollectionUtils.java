@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Utility for comparing collection contents.
- * 
+ *
  * @author Jikoo
  */
 public class CollectionUtils {
@@ -15,12 +15,11 @@ public class CollectionUtils {
     private CollectionUtils() {}
 
     public static <T> boolean equal(Collection<T> collection1, Collection<T> collection2) {
-        if (collection1 == null && collection2 == null) {
+        if (collection1 == collection2) {
             return true;
         }
 
-        if (collection1 == null && collection2 != null || collection1 != null && collection2 == null
-                || collection1.size() != collection2.size()) {
+        if (collection1 == null || collection2 == null || collection1.size() != collection2.size()) {
             return false;
         }
 
