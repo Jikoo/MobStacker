@@ -1,20 +1,18 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
 import com.google.gson.annotations.Expose;
-
 import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
 import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
 import com.kiwifisher.mobstacker.utils.CollectionUtils;
 import com.kiwifisher.mobstacker.utils.ConditionUtils;
-
 import org.bukkit.entity.Entity;
+
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * An ExperiencePool containing possible ExperienceEntries for an entity.
- * 
+ *
  * @author Jikoo
  */
 public class ExperiencePool implements IExperiencePool {
@@ -37,7 +35,7 @@ public class ExperiencePool implements IExperiencePool {
             }
             int entryMin = entry.getMinimum(entity);
             min += entryMin;
-            max += Math.min(entryMin, entry.getMaximum(entity));
+            max += Math.max(entryMin, entry.getMaximum(entity));
         }
 
         min *= numberOfMobs;

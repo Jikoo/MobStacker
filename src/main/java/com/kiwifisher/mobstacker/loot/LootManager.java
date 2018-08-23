@@ -1,34 +1,27 @@
 package com.kiwifisher.mobstacker.loot;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
+import com.kiwifisher.mobstacker.MobStacker;
+import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.loot.LootContext;
+import org.bukkit.loot.Lootable;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
-
-import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
-
-import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager.Profession;
-import org.bukkit.entity.ZombieVillager;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.loot.LootContext;
-import org.bukkit.loot.Lootable;
-import org.bukkit.potion.PotionEffectType;
 
 /**
  * Manages loot and experience for entities.
@@ -77,33 +70,26 @@ public class LootManager {
     }
 
     public int getExperience(Entity entity, int numberOfMobs) {
-        String entityName = getEntityName(entity);
-        String worldName = entity.getWorld().getName().toUpperCase();
-        Map<String, IExperiencePool> worldMappings;
-
-        // Test world-specific experience settings.
-        if (!experience.containsKey(worldName)
-                || !(worldMappings = experience.get(worldName)).containsKey(entityName)) {
-            // Fall through to default settings.
-            worldName = "DEFAULT";
-        }
-
-        if (!experience.containsKey(worldName)
-                || !(worldMappings = experience.get(worldName)).containsKey(entityName)) {
+        if (entity == null || numberOfMobs < 1) {
             return 0;
         }
 
-        return worldMappings.get(entityName).getExperience(entity, numberOfMobs);
-    }
+        String entityName = entity.getType().name();
+        String worldName = entity.getWorld().getName().toUpperCase();
+        Map<String, IExperiencePool> worldMappings;
 
-    private String getEntityName(Entity entity) {
-        EntityType type = entity.getType();
-        switch (type) {
-        case PIG_ZOMBIE:
-            return "ZOMBIE_PIGMAN";
-        default:
-            return type.name();
+        // World-specific experience settings.
+        if (!experience.containsKey(worldName)
+                || !(worldMappings = experience.get(worldName)).containsKey(entityName)) {
+            // Fall through to default settings.
+            if (!experience.containsKey("DEFAULT")
+                    || !(worldMappings = experience.get("DEFAULT")).containsKey(entityName)) {
+                return 0;
+            }
         }
+
+
+        return worldMappings.get(entityName).getExperience(entity, numberOfMobs);
     }
 
 }

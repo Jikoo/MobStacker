@@ -131,7 +131,7 @@ stack-mob-type:
   BLAZE: true
   CAVE_SPIDER: true
   CHICKEN: true
-  COD: true
+  COD: false
   COW: true
   CREEPER: true
   DROWNED: true
@@ -148,7 +148,7 @@ stack-mob-type:
   HUSK: true
   ILLUSIONER: false # Limited spawns
   IRON_GOLEM: false
-  LLAMA: true
+  LLAMA: false
   MAGMA_CUBE: true
   MULE: false # Possible to copy good horses' stats
   MUSHROOM_COW: true
@@ -158,9 +158,9 @@ stack-mob-type:
   PIG: true
   PIG_ZOMBIE: true
   POLAR_BEAR: true
-  PUFFERFISH: true
+  PUFFERFISH: false
   RABBIT: true
-  SALMON: true
+  SALMON: false
   SHEEP: true
   SHULKER: false # Limited spawns
   SILVERFISH: true
@@ -171,10 +171,10 @@ stack-mob-type:
   SPIDER: true
   SQUID: true
   STRAY: true
-  TROPICAL_FISH: true
+  TROPICAL_FISH: false
   TURTLE: false # Turtle spawn point, "home beach" will be messed up
   VEX: true
-  VILLAGER: true
+  VILLAGER: false # Reroll mess
   VINDICATOR: false # Limited spawns
   WITCH: true
   WITHER: false

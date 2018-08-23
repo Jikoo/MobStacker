@@ -1,21 +1,8 @@
 package com.kiwifisher.mobstacker.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.kiwifisher.mobstacker.MobStacker;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attributable;
@@ -24,6 +11,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Creeper;
@@ -35,12 +23,14 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Llama;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Sittable;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Tameable;
@@ -56,6 +46,16 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The main guts of this plugin. All the stacking, peeling, searching and renaming is done here.
@@ -380,6 +380,7 @@ public class StackUtils {
         if (plugin.getConfig().getBoolean("stack-properties.villager.profession", true)
                 && entity1 instanceof Villager && entity2 instanceof Villager
                 && ((Villager) entity1).getProfession() != ((Villager) entity2).getProfession()) {
+            // TODO figure out villager specifics goal
             return false;
         }
 
@@ -515,77 +516,19 @@ public class StackUtils {
         copy.setGravity(original.hasGravity());
         copy.setInvulnerable(original.isInvulnerable());
         copy.setLastDamageCause(original.getLastDamageCause());
+        copy.setPortalCooldown(original.getPortalCooldown());
         copy.setSilent(original.isSilent());
         /*
          * Special case: Cannot set ticks lived under 1. Occasionally, an entity will be copied
          * before it has lived a tick.
          */
         copy.setTicksLived(Math.max(1, original.getTicksLived()));
-        // TODO: Configurable velocity percentage multiplier?
         /*
          * Of note: When splitting a stack, the new entity is spawned after the hit knockback takes
          * effect but before the knockback enchantment is applied. The resulting velocity is NOT
          * affected by the knockback enchantment.
          */
         copy.setVelocity(original.getVelocity());
-
-        if (original instanceof Ageable && copy instanceof Ageable) {
-            Ageable originalAgeable = (Ageable) original;
-            Ageable copyAgeable = (Ageable) copy;
-            copyAgeable.setAge(originalAgeable.getAge());
-            copyAgeable.setAgeLock(originalAgeable.getAgeLock());
-            copyAgeable.setBreed(originalAgeable.canBreed());
-        }
-
-        // TODO: Config option? If stack-down, could be abused to duplicate nice horses. Commented out for now.
-//        if (original instanceof Attributable && copy instanceof Attributable) {
-//            Attributable originalAttributable = (Attributable) original;
-//            Attributable copyAttributable = (Attributable) copy;
-//            for (Attribute attribute : Attribute.values()) {
-//                AttributeInstance attributeInstance = originalAttributable.getAttribute(attribute);
-//                if (attributeInstance != null && attributeInstance.getModifiers() != null) {
-//                    for (AttributeModifier modifier : attributeInstance.getModifiers()) {
-//                        AttributeInstance copyInstance = copyAttributable.getAttribute(attribute);
-//                        if (copyInstance.getModifiers().contains(modifier)) {
-//                            continue;
-//                        }
-//                        copyInstance.addModifier(modifier);
-//                    }
-//                }
-//            }
-//        }
-
-        // TODO: Remove if config added for above
-        if (original instanceof Attributable && copy instanceof Attributable) {
-            AttributeInstance originalAttribute = ((Attributable) original).getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            AttributeInstance copyAttribute = ((Attributable) copy).getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            copyAttribute.setBaseValue(originalAttribute.getBaseValue());
-            // Don't bother cloning existing attribute modifiers multiple times, each should be unique.
-            Collection<AttributeModifier> copyModifiers = copyAttribute.getModifiers();
-            for (AttributeModifier modifier : originalAttribute.getModifiers()) {
-                if (!copyModifiers.contains(modifier)) {
-                    copyAttribute.addModifier(modifier);
-                }
-            }
-        }
-
-        if (original instanceof Colorable && copy instanceof Colorable) {
-            ((Colorable) copy).setColor(((Colorable) original).getColor());
-        }
-
-        if (original instanceof Creature && copy instanceof Creature) {
-            ((Creature) copy).setTarget(((Creature) original).getTarget());
-        }
-
-        if (original instanceof Creeper && copy instanceof Creeper) {
-            ((Creeper) copy).setPowered(((Creeper) original).isPowered());
-        }
-
-        if (original instanceof EnderDragon && copy instanceof EnderDragon) {
-            ((EnderDragon) copy).setPhase(((EnderDragon) original).getPhase());
-        }
-
-        // Enderman: held block drops on death, do not set to prevent dupes
 
         if (original instanceof AbstractHorse && copy instanceof AbstractHorse) {
             AbstractHorse originalAbstractHorse = (AbstractHorse) original;
@@ -596,15 +539,71 @@ public class StackUtils {
             copyAbstractHorse.setMaxDomestication(originalAbstractHorse.getMaxDomestication());
         }
 
+        if (original instanceof Ageable && copy instanceof Ageable) {
+            Ageable originalAgeable = (Ageable) original;
+            Ageable copyAgeable = (Ageable) copy;
+            copyAgeable.setAge(originalAgeable.getAge());
+            copyAgeable.setAgeLock(originalAgeable.getAgeLock());
+            copyAgeable.setBreed(originalAgeable.canBreed());
+        }
+
+        // TODO: Config option? If stack-down and horses enabled, could be abused to duplicate nice horses.
+        if (original instanceof Attributable && copy instanceof Attributable) {
+            Attributable originalAttributable = (Attributable) original;
+            Attributable copyAttributable = (Attributable) copy;
+            for (Attribute attribute : Attribute.values()) {
+                AttributeInstance attributeInstance = originalAttributable.getAttribute(attribute);
+                if (attributeInstance != null && attributeInstance.getModifiers() != null) {
+                    for (AttributeModifier modifier : attributeInstance.getModifiers()) {
+                        AttributeInstance copyInstance = copyAttributable.getAttribute(attribute);
+                        if (copyInstance.getModifiers().contains(modifier)) {
+                            continue;
+                        }
+                        try {
+                            copyInstance.addModifier(modifier);
+                        } catch (IllegalArgumentException e) {
+                            // Shouldn't be possible,
+                        }
+                    }
+                }
+            }
+        }
+
+        if (original instanceof Bat && copy instanceof Bat) {
+            ((Bat) copy).setAwake(((Bat) original).isAwake());
+        }
+
+        if (original instanceof Colorable && copy instanceof Colorable) {
+            ((Colorable) copy).setColor(((Colorable) original).getColor());
+        }
+
+        if (original instanceof ChestedHorse && copy instanceof ChestedHorse) {
+            ((ChestedHorse) copy).setCarryingChest(((ChestedHorse) original).isCarryingChest());
+        }
+
+        if (original instanceof Creature && copy instanceof Creature) {
+            ((Creature) copy).setTarget(((Creature) original).getTarget());
+        }
+
+        if (original instanceof Creeper && copy instanceof Creeper) {
+            Creeper originalCreeper = (Creeper) original;
+            Creeper copyCreeper = (Creeper) copy;
+            copyCreeper.setExplosionRadius(originalCreeper.getExplosionRadius());
+            copyCreeper.setMaxFuseTicks(originalCreeper.getMaxFuseTicks());
+            copyCreeper.setPowered(originalCreeper.isPowered());
+        }
+
+        if (original instanceof EnderDragon && copy instanceof EnderDragon) {
+            ((EnderDragon) copy).setPhase(((EnderDragon) original).getPhase());
+        }
+
+        // Enderman: held block drops on death, do not set to prevent dupes
+
         if (original instanceof Horse && copy instanceof Horse) {
             Horse originalHorse = (Horse) original;
             Horse copyHorse = (Horse) copy;
             copyHorse.setColor(originalHorse.getColor());
             copyHorse.setStyle(originalHorse.getStyle());
-        }
-
-        if (original instanceof ChestedHorse && copy instanceof ChestedHorse) {
-            ((ChestedHorse) copy).setCarryingChest(((ChestedHorse) original).isCarryingChest());
         }
 
         if (original instanceof Llama && copy instanceof Llama) {
@@ -634,11 +633,16 @@ public class StackUtils {
             copyLiving.setRemoveWhenFarAway(originalLiving.getRemoveWhenFarAway());
         }
 
+        if (original instanceof Mob && copy instanceof Mob) {
+            ((Mob) copy).setTarget(((Mob) original).getTarget());
+        }
+
         if (original instanceof Ocelot && copy instanceof Ocelot) {
-            Ocelot originalOcelot = (Ocelot) original;
-            Ocelot copyOcelot = (Ocelot) copy;
-            copyOcelot.setCatType(originalOcelot.getCatType());
-            copyOcelot.setSitting(originalOcelot.isSitting());
+            ((Ocelot) copy).setCatType(((Ocelot) original).getCatType());
+        }
+
+        if (original instanceof Parrot && copy instanceof Parrot) {
+            ((Parrot) copy).setVariant(((Parrot) original).getVariant());
         }
 
         // Pig: Saddle drops on death, do not set to prevent dupes
@@ -653,6 +657,10 @@ public class StackUtils {
 
         if (original instanceof Sheep && copy instanceof Sheep) {
             ((Sheep) copy).setSheared(((Sheep) original).isSheared());
+        }
+
+        if (original instanceof Sittable && copy instanceof Sittable) {
+            ((Sittable) copy).setSitting(((Sittable) original).isSitting());
         }
 
         if (original instanceof Slime && copy instanceof Slime) {
@@ -670,12 +678,21 @@ public class StackUtils {
             copyTameable.setTamed(originalTameable.isTamed());
         }
 
+        if (original instanceof TropicalFish && copy instanceof TropicalFish) {
+            TropicalFish originalFish = (TropicalFish) original;
+            TropicalFish copyFish = (TropicalFish) copy;
+            copyFish.setBodyColor(originalFish.getBodyColor());
+            copyFish.setPattern(originalFish.getPattern());
+            copyFish.setPatternColor(originalFish.getPatternColor());
+        }
+
         if (original instanceof Villager && copy instanceof Villager) {
             Villager originalVillager = (Villager) original;
             Villager copyVillager = (Villager) copy;
             copyVillager.setProfession(originalVillager.getProfession());
             copyVillager.setRecipes(originalVillager.getRecipes());
             copyVillager.setRiches(originalVillager.getRiches());
+            // TODO figure out villager specifics goal
         }
 
         if (original instanceof Wolf && copy instanceof Wolf) {
@@ -683,7 +700,6 @@ public class StackUtils {
             Wolf copyWolf = (Wolf) copy;
             copyWolf.setAngry(originalWolf.isAngry());
             copyWolf.setCollarColor(originalWolf.getCollarColor());
-            copyWolf.setSitting(originalWolf.isSitting());
         }
 
         if (original instanceof Zombie && copy instanceof Zombie) {
@@ -867,11 +883,7 @@ public class StackUtils {
 
         // Do not allow entities bred within the last 15 seconds to stack at all
         meta = getValue(entity, "lastBred");
-        if (meta != null && meta.asLong() > System.currentTimeMillis() - 15000) {
-            return false;
-        }
-
-        return true;
+        return meta == null || meta.asLong() <= System.currentTimeMillis() - 15000;
     }
 
     private boolean isConfigStackable(Entity entity) {
@@ -1039,7 +1051,7 @@ public class StackUtils {
     /**
      * Cleans up metadata for a stack.
      *
-     * @param entity
+     * @param entity the Entity to clean up for
      */
     public void removeStackMetadata(Entity entity) {
         for (String key : new String[] { "quantity", "stackable", "lastBred", "stackAverageHealth" }) {

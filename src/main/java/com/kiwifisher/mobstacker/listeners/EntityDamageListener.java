@@ -1,10 +1,7 @@
 package com.kiwifisher.mobstacker.listeners;
 
-import java.util.List;
-
 import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.utils.StackUtils;
-
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -17,6 +14,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 /**
  * Listener for EntityDamageEvents. Used to cause certain types of damage to persist into new stacks.
@@ -77,8 +76,7 @@ public class EntityDamageListener implements Listener {
 
         // Just use doubles to prevent rounding issues, lots of casting looks messy.
         double sweepLevel = weapon.getEnchantmentLevel(Enchantment.SWEEPING_EDGE);
-        double damage = (attackerHuman.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue()
-                * sweepLevel) / (sweepLevel + 1D) + 1D;
+        double damage = sweepLevel < 1 ? 1 : 1 + attackerHuman.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue() * (sweepLevel / (sweepLevel + 1));
 
         plugin.getStackUtils().damageAverageHealth(entity, damage);
     }
