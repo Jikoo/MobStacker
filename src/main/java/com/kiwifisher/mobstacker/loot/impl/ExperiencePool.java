@@ -43,7 +43,7 @@ public class ExperiencePool implements IExperiencePool {
 
         // Check if RNG is required at all.
         if (min >= max) {
-            return Math.min(0, min);
+            return Math.max(0, min);
         }
 
         return ThreadLocalRandom.current().nextInt(min, max);

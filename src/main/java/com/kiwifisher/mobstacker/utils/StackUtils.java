@@ -473,6 +473,9 @@ public class StackUtils {
         // If the entity has health, set its health to the stack's average.
         if (newEntity instanceof Damageable) {
             double averageHealth = getAverageHealth(entity, false);
+            if (averageHealth < 1) {
+                averageHealth = 1;
+            }
             ((Damageable) newEntity).setHealth(averageHealth);
         }
 
