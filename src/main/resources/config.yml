@@ -66,6 +66,9 @@ persistent-damage:
   - SUFFOCATION
   - SUICIDE
   - VOID
+  restack-reasons:
+  - CRAMMING
+  - FALL
 
 # Should stacked chickens drop stacked eggs?
 # Note: Due to a couple Bukkit issues and restrictions, chickens spawning cannot be directly detected.
