@@ -34,6 +34,8 @@ public class PlayerInteractEntityListener implements Listener {
             hand = event.getPlayer().getInventory().getItemInOffHand();
         }
 
+        // TODO wolf/other dyeing
+
         // Handle naming of entities.
         if (hand.getType() == Material.NAME_TAG) {
             handleNameTag(event, hand);
@@ -44,8 +46,8 @@ public class PlayerInteractEntityListener implements Listener {
 
         Entity entity = event.getRightClicked();
 
-        // Ensure entity is a stacked animal.
-        if (!(entity instanceof Animals) || StackUtils.getStackSize(entity) < 2) {
+        // Ensure entity is a stacked adult animal.
+        if (!(entity instanceof Animals) || !((Animals) entity).isAdult() || StackUtils.getStackSize(entity) < 2) {
             return;
         }
 
@@ -62,6 +64,8 @@ public class PlayerInteractEntityListener implements Listener {
         // Peel off the remainder of the stack and set entity bred.
         plugin.getStackUtils().peelOffStack(entity);
         plugin.getStackUtils().setBred(entity);
+        // Knock entity to allow players to continue breeding.
+        entity.setVelocity(event.getPlayer().getLocation().getDirection().normalize().setY(0.2));
 
         // Attempt to re-stack once after the initial breed timer (15 seconds, 300 ticks).
         new BukkitRunnable() {
