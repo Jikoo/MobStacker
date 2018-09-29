@@ -48,7 +48,7 @@ public class EntityDeathListener implements Listener {
 
         // Check if the whole stack is supposed to die.
         if (!plugin.getConfig().getBoolean("persistent-damage.enable")
-                || plugin.getStackUtils().getAverageHealth(entity, false) >= 1) {
+                || plugin.getStackUtils().getAverageHealth(entity, false) > 0) {
 
             // Whole stack is not dying, peel off the remainder and return.
             plugin.getStackUtils().peelOffStack(entity);
@@ -70,7 +70,9 @@ public class EntityDeathListener implements Listener {
         LootManager manager = plugin.getLootManager();
 
         // Set proportionate experience.
-        event.setDroppedExp(event.getDroppedExp() + manager.getExperience(entity, stackSize - 1));
+        if (event.getEntity().getKiller() != null) {
+            event.setDroppedExp(event.getDroppedExp() + manager.getExperience(entity, stackSize - 1));
+        }
 
         // Try to drop proportionate loot.
         Player player = event.getEntity().getKiller();

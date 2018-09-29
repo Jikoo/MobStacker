@@ -134,7 +134,7 @@ stack-mob-type:
   BLAZE: true
   CAVE_SPIDER: true
   CHICKEN: true
-  COD: false
+  COD: false # Fish are buggy and not fully supported
   COW: true
   CREEPER: true
   DROWNED: true
@@ -157,13 +157,13 @@ stack-mob-type:
   MUSHROOM_COW: true
   OCELOT: true
   PARROT: true
-  PHANTOM: true
+  PHANTOM: false
   PIG: true
   PIG_ZOMBIE: true
   POLAR_BEAR: true
-  PUFFERFISH: false
+  PUFFERFISH: false # Fish are buggy and not fully supported
   RABBIT: true
-  SALMON: false
+  SALMON: false # Fish are buggy and not fully supported
   SHEEP: true
   SHULKER: false # Limited spawns
   SILVERFISH: true
@@ -174,9 +174,9 @@ stack-mob-type:
   SPIDER: true
   SQUID: true
   STRAY: true
-  TROPICAL_FISH: false
+  TROPICAL_FISH: false # Fish are buggy and not fully supported
   TURTLE: false # Turtle spawn point, "home beach" will be messed up
-  VEX: true
+  VEX: false
   VILLAGER: false # Reroll mess
   VINDICATOR: false # Limited spawns
   WITCH: true
