@@ -229,6 +229,7 @@ stack-spawn-reason:
   NETHER_PORTAL: true
   OCELOT_BABY: true
   REINFORCEMENTS: true
+  SHEARED: true
   SHOULDER_ENTITY: true
   SILVERFISH_BLOCK: true
   SLIME_SPLIT: true
