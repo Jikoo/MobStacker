@@ -25,11 +25,12 @@ public class EntityDeathListener implements Listener {
 
         LivingEntity entity = event.getEntity();
 
+        DamageCause lastDamage = entity.getLastDamageCause() != null ? entity.getLastDamageCause().getCause() : null;
         /*
          * If void is the cause of death, always let the entity just die. This prevents falling
          * stacks reaching excessive (and potentially problematic - see SPIGOT-58) depths.
          */
-        if (entity.getLastDamageCause() != null && entity.getLastDamageCause().getCause() == DamageCause.VOID) {
+        if (lastDamage == DamageCause.VOID) {
             // Clean up metadata storage.
             plugin.getStackUtils().removeStackMetadata(entity);
 
@@ -60,24 +61,27 @@ public class EntityDeathListener implements Listener {
         }
 
         // Check if we are dropping proportionate loot. If not, return.
-        if (!plugin.getConfig().getBoolean("persistent-damage.multiply-loot")) {
+        if (!plugin.getConfig().getBoolean("persistent-damage.loot.enable") || lastDamage == null
+                || !plugin.getConfig().getStringList("persistent-damage.loot.ignore-reasons").contains(lastDamage.name())) {
             // Clean up metadata storage.
             plugin.getStackUtils().removeStackMetadata(entity);
 
             return;
         }
 
+        stackSize = Math.min(stackSize - 1, plugin.getConfig().getInt("persistent-damage.loot.max-multiplier"));
+
         LootManager manager = plugin.getLootManager();
 
         // Set proportionate experience.
         if (event.getEntity().getKiller() != null) {
-            event.setDroppedExp(event.getDroppedExp() + manager.getExperience(entity, stackSize - 1));
+            event.setDroppedExp(event.getDroppedExp() + manager.getExperience(entity, stackSize));
         }
 
         // Try to drop proportionate loot.
         Player player = event.getEntity().getKiller();
         int looting = player != null ? player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
-        event.getDrops().addAll(manager.getLoot(entity, player, stackSize - 1, looting));
+        event.getDrops().addAll(manager.getLoot(entity, player, stackSize, looting));
 
         // Clean up metadata storage.
         plugin.getStackUtils().removeStackMetadata(entity);

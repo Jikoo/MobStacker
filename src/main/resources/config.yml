@@ -45,9 +45,9 @@ stack-properties:
 # When certain damage types harm a mob, it's logical for the entire stack to take damage.
 # This will allow easier use of grinders, etc. For a list of damage causes, see
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
+# 
 persistent-damage:
   enable: true
-  multiply-loot: true
   reasons:
   - BLOCK_EXPLOSION
   - CONTACT
@@ -66,12 +66,30 @@ persistent-damage:
   - SUFFOCATION
   - SUICIDE
   - VOID
-  restack-reasons:
-  - CRAMMING
-  - FALL
+  loot:
+    enable: true
+    max-multiplier: 500
+    ignore-reasons:
+    - CRAMMING
+    - DROWNING
+    - DRYOUT
+    - FIRE
+    - LAVA
+    - MELTING
+    - STARVATION
+    - SUICIDE
+    - VOID
+
+# When certain damage types harm a mob, search for nearby entities to stack to.
+# When used in conjunction with persistent damage, this can greatly increase the
+# effectiveness of MobStacker with many mob grinders.
+restack-on-damage:
+- CRAMMING
+- ENTITY_SWEEP_ATTACK
+- FALL
 
 # Should stacked chickens drop stacked eggs?
-# Note: Due to a couple Bukkit issues and restrictions, chickens spawning cannot be directly detected.
+# Note: Due to a couple Bukkit issues and restrictions, chickens spawning eggs cannot be directly detected.
 # It would technically be possible via very careful positioning to duplicate eggs.
 # In addition, to prevent issues resulting in a loop, all eggs will be placed in one stack,
 # so a maximum higher than 16 will result in overstacked eggs being spawned.

@@ -359,8 +359,8 @@ public class StackUtils {
                 && entity1 instanceof Tameable && entity2 instanceof Tameable) {
             Tameable tame1 = (Tameable) entity1;
             Tameable tame2 = (Tameable) entity2;
-            if (tame1.isTamed() != tame2.isTamed()
-                    || tame1.isTamed() && !tame1.getOwner().equals(tame2.getOwner())) {
+            if (tame1.isTamed() != tame2.isTamed() || tame1.isTamed() && (tame1.getOwner() == tame2.getOwner()
+                    || tame1.getOwner() != null && !tame1.getOwner().equals(tame2.getOwner()))) {
                 return false;
             }
         }

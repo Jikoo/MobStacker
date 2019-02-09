@@ -34,15 +34,15 @@ public class EntityDamageListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
 
         Entity entity = event.getEntity();
+        List<String> damageReasons = plugin.getConfig().getStringList("restack-on-damage");
+
+        if (damageReasons.contains(event.getCause().name())) {
+            plugin.getStackUtils().attemptToStack(event.getEntity(), 1);
+        }
 
         // Ensure whole stack damaging is enabled and the entity is a stack.
         if (!plugin.getConfig().getBoolean("persistent-damage.enable") || StackUtils.getStackSize(entity) < 2) {
             return;
-        }
-
-        List<String> damageReasons = plugin.getConfig().getStringList("persistent-damage.restack-reasons");
-        if (damageReasons.contains(event.getCause().name())) {
-            plugin.getStackUtils().attemptToStack(event.getEntity(), 1);
         }
 
         damageReasons = plugin.getConfig().getStringList("persistent-damage.reasons");
