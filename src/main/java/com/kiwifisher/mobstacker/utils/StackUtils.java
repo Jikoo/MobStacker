@@ -72,7 +72,10 @@ public class StackUtils {
     }
 
     public void loadConfig() {
-        String naming = plugin.getConfig().getString("stack-naming", "&e&l{QTY}X &6&l{TYPE}");
+        String naming = plugin.getConfig().getString("stack-naming");
+        if (naming == null) {
+            naming = "&e&l{QTY}X &6&l{TYPE}";
+        }
 
         // Translate chat colors and remove all quote start/ends to prevent issues.
         naming = ChatColor.translateAlternateColorCodes('&', naming).replace("\\Q", "")
@@ -769,7 +772,7 @@ public class StackUtils {
      * @param entity the Entity
      * @param newQuantity the new quantity
      */
-    private void setStackSize(Entity entity, int newQuantity) {
+    public void setStackSize(Entity entity, int newQuantity) {
 
         // Sanity
         newQuantity = Math.max(1, newQuantity);

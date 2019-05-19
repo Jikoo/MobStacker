@@ -16,10 +16,15 @@ public class CreatureSpawnListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
 
         final LivingEntity spawnedCreature = event.getEntity();
+
+        if (event.isCancelled()) {
+            plugin.getStackUtils().removeStackMetadata(spawnedCreature);
+            return;
+        }
 
         // Check if the spawned entity is stackable.
         if (!plugin.getStackUtils().isStackable(spawnedCreature)) {

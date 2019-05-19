@@ -7,10 +7,13 @@ import com.kiwifisher.mobstacker.utils.StackUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityDeathListener implements Listener {
 
@@ -69,24 +72,32 @@ public class EntityDeathListener implements Listener {
             return;
         }
 
-        stackSize = Math.min(stackSize - 1, plugin.getConfig().getInt("persistent-damage.loot.max-multiplier"));
+        int entitiesLooted = Math.min(stackSize - 1, plugin.getConfig().getInt("persistent-damage.loot.max-multiplier"));
+
+        if (entity instanceof Slime) {
+            Slime splitting = (Slime) entity;
+            if (splitting.getSize() > 1) {
+                splitting.getWorld().spawn(splitting.getLocation(), splitting.getClass(), slime -> {
+                    slime.setSize(splitting.getSize() / 2);
+                    plugin.getStackUtils().setStackSize(slime, ThreadLocalRandom.current().nextInt(entitiesLooted * 2, entitiesLooted * 4));
+                });
+            }
+        }
 
         LootManager manager = plugin.getLootManager();
 
         // Set proportionate experience.
         if (event.getEntity().getKiller() != null) {
-            event.setDroppedExp(event.getDroppedExp() + manager.getExperience(entity, stackSize));
+            event.setDroppedExp(event.getDroppedExp() + manager.getExperience(entity, entitiesLooted));
         }
 
         // Try to drop proportionate loot.
         Player player = event.getEntity().getKiller();
         int looting = player != null ? player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
-        event.getDrops().addAll(manager.getLoot(entity, player, stackSize, looting));
+        event.getDrops().addAll(manager.getLoot(entity, player, entitiesLooted, looting));
 
         // Clean up metadata storage.
         plugin.getStackUtils().removeStackMetadata(entity);
-
-        // TODO: Slime split
 
     }
 
