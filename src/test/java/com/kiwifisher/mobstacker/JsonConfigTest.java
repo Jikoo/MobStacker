@@ -1,20 +1,20 @@
 package com.kiwifisher.mobstacker;
 
-import static org.junit.Assert.fail;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import com.kiwifisher.mobstacker.loot.api.ExperiencePool;
+import org.bukkit.entity.EntityType;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-
-import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
-
-import org.junit.Test;
+import static org.junit.Assert.fail;
 
 /**
  * Tests ensuring default configurations can be loaded properly.
@@ -25,12 +25,28 @@ public class JsonConfigTest {
 
     @Test
     public void testExperience() {
-        Map<String, Map<String, IExperiencePool>> defaults = GenDefaultExperienceConfig.getConfigValues();
+        Map<String, Map<String, ExperiencePool>> defaults = GenDefaultExperienceConfig.getConfigValues();
         Gson gson = MobStacker.getGson();
         try {
-            Map<String, Map<String, IExperiencePool>> retrieved = gson.fromJson(gson.toJson(defaults),
-                    new TypeToken<Map<String, Map<String, IExperiencePool>>>() {}.getType());
+            Map<String, Map<String, ExperiencePool>> retrieved = gson.fromJson(gson.toJson(defaults),
+                    new TypeToken<Map<String, Map<String, ExperiencePool>>>() {}.getType());
             compare(defaults, retrieved);
+            Map<String, ExperiencePool> defaultWorld = retrieved.get("DEFAULT");
+            if (defaultWorld == null) {
+                fail("Unable to load defaults.");
+            }
+            EnumSet<EntityType> missing = EnumSet.noneOf(EntityType.class);
+            for (EntityType type : EntityType.values()) {
+                if (!type.isAlive() || type == EntityType.ARMOR_STAND || type == EntityType.PLAYER) {
+                    continue;
+                }
+                if (!defaultWorld.containsKey(type.getKey().toString())) {
+                    missing.add(type);
+                }
+            }
+            if (!missing.isEmpty()) {
+                fail("Missing EntityTypes: " + missing.toString());
+            }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
             fail("Encountered exception interpreting default config.");

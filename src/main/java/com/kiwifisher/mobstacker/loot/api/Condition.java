@@ -7,7 +7,7 @@ import org.bukkit.entity.Entity;
  * 
  * @author Jikoo
  */
-public interface ICondition {
+public interface Condition {
 
     public abstract boolean test(Entity entity);
 

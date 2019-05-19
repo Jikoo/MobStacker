@@ -2,16 +2,16 @@ package com.kiwifisher.mobstacker.loot.impl;
 
 import com.google.gson.annotations.Expose;
 
-import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.kiwifisher.mobstacker.loot.api.Condition;
 
 import org.bukkit.entity.Entity;
 
 /**
- * ICondition implementation requiring the entity tested to be on (or, configurably, not on) fire.
+ * Condition implementation requiring the entity tested to be on (or, configurably, not on) fire.
  *
  * @author Jikoo
  */
-public class ConditionPropertiesOnFire implements ICondition {
+public class ConditionPropertiesOnFire implements Condition {
 
     @Expose
     private boolean burning;

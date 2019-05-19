@@ -7,7 +7,7 @@ import org.bukkit.entity.Entity;
  * 
  * @author Jikoo
  */
-public interface IExperienceEntry extends IConditional {
+public interface ExperienceEntry extends Conditional {
 
     public int getMinimum(Entity entity);
 

@@ -86,6 +86,8 @@ public class EntityDeathListener implements Listener {
         // Clean up metadata storage.
         plugin.getStackUtils().removeStackMetadata(entity);
 
+        // TODO: Slime split
+
     }
 
 }

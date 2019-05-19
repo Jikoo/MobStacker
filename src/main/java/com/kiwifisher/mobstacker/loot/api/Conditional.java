@@ -7,8 +7,8 @@ import java.util.List;
  * 
  * @author Jikoo
  */
-public interface IConditional {
+public interface Conditional {
 
-    public List<ICondition> getConditions();
+    public List<Condition> getConditions();
 
 }

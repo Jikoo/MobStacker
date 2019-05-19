@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-import com.kiwifisher.mobstacker.loot.api.ICondition;
-import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
+import com.kiwifisher.mobstacker.loot.api.Condition;
+import com.kiwifisher.mobstacker.loot.api.ExperienceEntry;
 import com.kiwifisher.mobstacker.utils.CollectionUtils;
 
 import org.bukkit.entity.Entity;
@@ -15,24 +15,24 @@ import org.bukkit.entity.Entity;
  * 
  * @author Jikoo
  */
-public class ExperienceEntry implements IExperienceEntry {
+public class BaseExperienceEntry implements ExperienceEntry {
 
     @Expose
     private int minimum, maximum;
     @Expose
-    private List<ICondition> conditions;
+    private List<Condition> conditions;
 
-    public ExperienceEntry() {
+    public BaseExperienceEntry() {
         this.minimum = 0;
         this.maximum = 0;
     }
 
     @Override
-    public List<ICondition> getConditions() {
+    public List<Condition> getConditions() {
         return this.conditions;
     }
 
-    public void setConditions(List<ICondition> conditions) {
+    public void setConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
 
@@ -68,7 +68,7 @@ public class ExperienceEntry implements IExperienceEntry {
             return false;
         }
 
-        ExperienceEntry other = (ExperienceEntry) obj;
+        BaseExperienceEntry other = (BaseExperienceEntry) obj;
 
         return this.minimum == other.minimum && this.maximum == other.maximum
                 && CollectionUtils.equal(this.conditions, other.conditions);

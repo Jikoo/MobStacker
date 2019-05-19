@@ -102,14 +102,17 @@ multiply-eggs:
 load-existing-stacks:
   enabled: true
   mob-types:
+  - CAT
   - CHICKEN
   - COW
   - DONKEY
+  - FOX
   - HORSE
   - LLAMA
   - MULE
   - MUSHROOM_COW
   - OCELOT
+  - PANDA
   - PARROT
   - PIG
   - POLAR_BEAR
@@ -118,6 +121,7 @@ load-existing-stacks:
   - SNOWMAN
   - SHEEP
   - SQUID
+  - TRADER_LLAMA
   - TURTLE
   - VILLAGER
   - WOLF
@@ -150,6 +154,7 @@ blacklist-world:
 stack-mob-type:
   BAT: true
   BLAZE: true
+  CAT: false
   CAVE_SPIDER: true
   CHICKEN: true
   COD: false # Fish are buggy and not fully supported
@@ -162,6 +167,7 @@ stack-mob-type:
   ENDERMAN: true
   ENDERMITE: true
   EVOKER: false # Limited spawns
+  FOX: false # TODO when API is fleshed out
   GHAST: true
   GIANT: true
   GUARDIAN: true
@@ -173,14 +179,17 @@ stack-mob-type:
   MAGMA_CUBE: true
   MULE: false # Possible to copy good horses' stats
   MUSHROOM_COW: true
-  OCELOT: true
+  OCELOT: false
+  PANDA: false # TODO when API is fleshed out
   PARROT: true
   PHANTOM: false
   PIG: true
   PIG_ZOMBIE: true
-  POLAR_BEAR: true
+  PILLAGER: false
+  POLAR_BEAR: false
   PUFFERFISH: false # Fish are buggy and not fully supported
   RABBIT: true
+  RAVAGER: false
   SALMON: false # Fish are buggy and not fully supported
   SHEEP: true
   SHULKER: false # Limited spawns
@@ -190,17 +199,19 @@ stack-mob-type:
   SLIME: true
   SNOWMAN: false
   SPIDER: true
-  SQUID: true
+  SQUID: false
   STRAY: true
+  TRADER_LLAMA: false
   TROPICAL_FISH: false # Fish are buggy and not fully supported
   TURTLE: false # Turtle spawn point, "home beach" will be messed up
   VEX: false
   VILLAGER: false # Reroll mess
   VINDICATOR: false # Limited spawns
+  WANDERING_TRADER: false
   WITCH: true
   WITHER: false
   WITHER_SKELETON: true
-  WOLF: true
+  WOLF: false
   ZOMBIE: true
   ZOMBIE_HORSE: true
   ZOMBIE_VILLAGER: true

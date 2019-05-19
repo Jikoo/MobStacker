@@ -7,7 +7,7 @@ import org.bukkit.entity.Entity;
  * 
  * @author Jikoo
  */
-public interface IExperiencePool {
+public interface ExperiencePool {
 
     public int getExperience(Entity entity, int numberOfMobs);
 

@@ -2,18 +2,17 @@ package com.kiwifisher.mobstacker.loot.impl;
 
 import com.google.gson.annotations.Expose;
 
-import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.kiwifisher.mobstacker.loot.api.Condition;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 /**
  * Condition for an entity being killed by a Player.
  *
  * @author Jikoo
  */
-public class ConditionKilledByPlayer implements ICondition {
+public class ConditionKilledByPlayer implements Condition {
 
     @Expose
     private boolean invert;

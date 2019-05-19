@@ -2,7 +2,7 @@ package com.kiwifisher.mobstacker.loot.impl;
 
 import com.google.gson.annotations.Expose;
 
-import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.kiwifisher.mobstacker.loot.api.Condition;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Slime;
  * 
  * @author Jikoo
  */
-public class ConditionSlimeSize implements ICondition {
+public class ConditionSlimeSize implements Condition {
 
     @Expose
     private int minimum, maximum;

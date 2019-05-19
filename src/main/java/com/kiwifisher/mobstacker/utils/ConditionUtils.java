@@ -1,11 +1,10 @@
 package com.kiwifisher.mobstacker.utils;
 
-import java.util.Collection;
-
-import com.kiwifisher.mobstacker.loot.api.ICondition;
-import com.kiwifisher.mobstacker.loot.api.IConditional;
-
+import com.kiwifisher.mobstacker.loot.api.Condition;
+import com.kiwifisher.mobstacker.loot.api.Conditional;
 import org.bukkit.entity.Entity;
+
+import java.util.Collection;
 
 /**
  * Utility for testing IConditions.
@@ -16,14 +15,14 @@ public class ConditionUtils {
 
     private ConditionUtils() {}
 
-    public static boolean meetsConditions(Entity entity, IConditional conditional) {
-        Collection<ICondition> conditions = conditional.getConditions();
+    public static boolean meetsConditions(Entity entity, Conditional conditional) {
+        Collection<Condition> conditions = conditional.getConditions();
 
         if (conditions == null || conditions.isEmpty()) {
             return true;
         }
 
-        for (ICondition condition : conditions) {
+        for (Condition condition : conditions) {
             if (!condition.test(entity)) {
                 return false;
             }

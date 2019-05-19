@@ -1,13 +1,8 @@
 package com.kiwifisher.mobstacker;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
-
 import com.kiwifisher.mobstacker.commands.MobStackerCommands;
 import com.kiwifisher.mobstacker.listeners.ChunkLoadListener;
 import com.kiwifisher.mobstacker.listeners.ChunkUnloadListener;
@@ -23,24 +18,27 @@ import com.kiwifisher.mobstacker.listeners.PlayerShearEntityListener;
 import com.kiwifisher.mobstacker.listeners.SheepDyeListener;
 import com.kiwifisher.mobstacker.listeners.SheepRegrowWoolListener;
 import com.kiwifisher.mobstacker.loot.LootManager;
-import com.kiwifisher.mobstacker.loot.api.ICondition;
-import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
-import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
+import com.kiwifisher.mobstacker.loot.api.Condition;
+import com.kiwifisher.mobstacker.loot.api.ExperienceEntry;
+import com.kiwifisher.mobstacker.loot.api.ExperiencePool;
 import com.kiwifisher.mobstacker.loot.impl.ConditionKilledByPlayer;
 import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesAdult;
 import com.kiwifisher.mobstacker.loot.impl.ConditionPropertiesOnFire;
 import com.kiwifisher.mobstacker.loot.impl.ConditionSlimeSize;
-import com.kiwifisher.mobstacker.loot.impl.ExperienceEntry;
-import com.kiwifisher.mobstacker.loot.impl.ExperiencePool;
+import com.kiwifisher.mobstacker.loot.impl.BaseExperienceEntry;
+import com.kiwifisher.mobstacker.loot.impl.BaseExperiencePool;
 import com.kiwifisher.mobstacker.loot.impl.SlimeExperienceEntry;
 import com.kiwifisher.mobstacker.utils.StackUtils;
-
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MobStacker extends JavaPlugin {
 
@@ -59,16 +57,16 @@ public class MobStacker extends JavaPlugin {
     public static Gson getGson() {
         return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting()
                 .disableHtmlEscaping()
-                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ICondition.class)
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Condition.class)
                         .registerSubtype(ConditionKilledByPlayer.class)
                         .registerSubtype(ConditionPropertiesAdult.class)
                         .registerSubtype(ConditionPropertiesOnFire.class)
                         .registerSubtype(ConditionSlimeSize.class))
-                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IExperienceEntry.class)
-                        .registerSubtype(ExperienceEntry.class)
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ExperienceEntry.class)
+                        .registerSubtype(BaseExperienceEntry.class)
                         .registerSubtype(SlimeExperienceEntry.class))
-                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(IExperiencePool.class)
-                        .registerSubtype(ExperiencePool.class))
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(ExperiencePool.class)
+                        .registerSubtype(BaseExperiencePool.class))
                 .create();
     }
 
@@ -141,10 +139,6 @@ public class MobStacker extends JavaPlugin {
             // Reload StackUtils
             this.stackUtils.loadConfig();
         }
-    }
-
-    public void log(String string) {
-        this.getLogger().info(string);
     }
 
     public boolean isStacking() {

@@ -1,28 +1,30 @@
 {
   "DEFAULT": {
-    "SILVERFISH": {
-      "type": "ExperiencePool",
+    "minecraft:pillager": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 5,
           "maximum": 0
         }
       ]
     },
-    "MAGMA_CUBE": {
-      "type": "ExperiencePool",
+    "minecraft:giant": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "SlimeExperienceEntry"
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
         }
       ]
     },
-    "MULE": {
-      "type": "ExperiencePool",
+    "minecraft:trader_llama": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 1,
           "maximum": 3,
           "conditions": [
@@ -34,152 +36,21 @@
         }
       ]
     },
-    "HUSK": {
-      "type": "ExperiencePool",
+    "minecraft:guardian": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        },
-        {
-          "type": "ExperienceEntry",
-          "minimum": 7,
-          "maximum": 0,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": false
-            }
-          ]
-        }
-      ]
-    },
-    "SHEEP": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "VEX": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 3,
-          "maximum": 0
-        }
-      ]
-    },
-    "VINDICATOR": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        }
-      ]
-    },
-    "VILLAGER": {
-      "type": "ExperiencePool"
-    },
-    "POLAR_BEAR": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "TURTLE": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "CAVE_SPIDER": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        }
-      ]
-    },
-    "SLIME": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "SlimeExperienceEntry"
-        }
-      ]
-    },
-    "DROWNED": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        },
-        {
-          "type": "ExperienceEntry",
-          "minimum": 7,
-          "maximum": 0,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": false
-            }
-          ]
-        }
-      ]
-    },
-    "EVOKER": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 10,
           "maximum": 0
         }
       ]
     },
-    "SQUID": {
-      "type": "ExperiencePool",
+    "minecraft:parrot": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 1,
           "maximum": 3,
           "conditions": [
@@ -191,234 +62,21 @@
         }
       ]
     },
-    "ELDER_GUARDIAN": {
-      "type": "ExperiencePool",
+    "minecraft:wither": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
-          "minimum": 10,
-          "maximum": 0
-        }
-      ]
-    },
-    "HORSE": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "PARROT": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "ENDERMITE": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 3,
-          "maximum": 0
-        }
-      ]
-    },
-    "STRAY": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        }
-      ]
-    },
-    "SALMON": {
-      "type": "ExperiencePool"
-    },
-    "ZOMBIE": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        },
-        {
-          "type": "ExperienceEntry",
-          "minimum": 7,
-          "maximum": 0,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": false
-            }
-          ]
-        }
-      ]
-    },
-    "RABBIT": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "DONKEY": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "OCELOT": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "ENDERMAN": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        }
-      ]
-    },
-    "LLAMA": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "ENDER_DRAGON": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 500,
-          "maximum": 0
-        }
-      ]
-    },
-    "WITCH": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        }
-      ]
-    },
-    "TROPICAL_FISH": {
-      "type": "ExperiencePool"
-    },
-    "SPIDER": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        }
-      ]
-    },
-    "SKELETON": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        }
-      ]
-    },
-    "WITHER_SKELETON": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        }
-      ]
-    },
-    "WITHER": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 50,
           "maximum": 0
         }
       ]
     },
-    "MUSHROOM_COW": {
-      "type": "ExperiencePool",
+    "minecraft:horse": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 1,
           "maximum": 3,
           "conditions": [
@@ -430,118 +88,63 @@
         }
       ]
     },
-    "CREEPER": {
-      "type": "ExperiencePool",
+    "minecraft:polar_bear": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:bat": {
+      "type": "BaseExperiencePool"
+    },
+    "minecraft:wandering_trader": {
+      "type": "BaseExperiencePool"
+    },
+    "minecraft:phantom": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
           "minimum": 5,
           "maximum": 0
         }
       ]
     },
-    "CHICKEN": {
-      "type": "ExperiencePool",
+    "minecraft:witch": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "ILLUSIONER": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "COD": {
-      "type": "ExperiencePool"
-    },
-    "ZOMBIE_HORSE": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "SNOW_GOLEM": {
-      "type": "ExperiencePool"
-    },
-    "PUFFERFISH": {
-      "type": "ExperiencePool"
-    },
-    "SHULKER": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 5,
           "maximum": 0
         }
       ]
     },
-    "GUARDIAN": {
-      "type": "ExperiencePool",
+    "minecraft:wither_skeleton": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
-          "minimum": 10,
-          "maximum": 0
-        }
-      ]
-    },
-    "PHANTOM": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 5,
           "maximum": 0
         }
       ]
     },
-    "BLAZE": {
-      "type": "ExperiencePool",
+    "minecraft:llama": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
-          "minimum": 10,
-          "maximum": 0
-        }
-      ]
-    },
-    "SKELETON_HORSE": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 1,
           "maximum": 3,
           "conditions": [
@@ -553,11 +156,11 @@
         }
       ]
     },
-    "COW": {
-      "type": "ExperiencePool",
+    "minecraft:pig": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 1,
           "maximum": 3,
           "conditions": [
@@ -569,21 +172,14 @@
         }
       ]
     },
-    "GHAST": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
-          "minimum": 5,
-          "maximum": 0
-        }
-      ]
+    "minecraft:iron_golem": {
+      "type": "BaseExperiencePool"
     },
-    "PIG": {
-      "type": "ExperiencePool",
+    "minecraft:turtle": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 1,
           "maximum": 3,
           "conditions": [
@@ -595,47 +191,608 @@
         }
       ]
     },
-    "BAT": {
-      "type": "ExperiencePool"
-    },
-    "DOLPHIN": {
-      "type": "ExperiencePool"
-    },
-    "WOLF": {
-      "type": "ExperiencePool",
+    "minecraft:husk": {
+      "type": "BaseExperiencePool",
       "entries": [
         {
-          "type": "ExperienceEntry",
-          "minimum": 1,
-          "maximum": 3,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": true
-            }
-          ]
-        }
-      ]
-    },
-    "IRON_GOLEM": {
-      "type": "ExperiencePool"
-    },
-    "PIG_ZOMBIE": {
-      "type": "ExperiencePool",
-      "entries": [
-        {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 5,
           "maximum": 0
         },
         {
-          "type": "ExperienceEntry",
+          "type": "BaseExperienceEntry",
           "minimum": 7,
           "maximum": 0,
           "conditions": [
             {
               "type": "ConditionPropertiesAdult",
               "adult": false
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:sheep": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:ender_dragon": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 500,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:cave_spider": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:enderman": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:dolphin": {
+      "type": "BaseExperiencePool"
+    },
+    "minecraft:vex": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 3,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:blaze": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 10,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:cod": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:skeleton": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:elder_guardian": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 10,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:donkey": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:zombie_pigman": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        },
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 7,
+          "maximum": 0,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": false
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:ravager": {
+      "type": "BaseExperiencePool"
+    },
+    "minecraft:squid": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:mule": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:skeleton_horse": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:ghast": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:cow": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:zombie_horse": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:vindicator": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:magma_cube": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "SlimeExperienceEntry"
+        }
+      ]
+    },
+    "minecraft:spider": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:creeper": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:evoker": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 10,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:slime": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "SlimeExperienceEntry"
+        }
+      ]
+    },
+    "minecraft:cat": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:pufferfish": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:illusioner": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:salmon": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:fox": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 2,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:tropical_fish": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:snow_golem": {
+      "type": "BaseExperiencePool"
+    },
+    "minecraft:shulker": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:mooshroom": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:villager": {
+      "type": "BaseExperiencePool"
+    },
+    "minecraft:ocelot": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:silverfish": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:stray": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:endermite": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 3,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:chicken": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:zombie": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        },
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 7,
+          "maximum": 0,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": false
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:drowned": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        },
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 7,
+          "maximum": 0,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": false
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:wolf": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:panda": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:zombie_villager": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        },
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 7,
+          "maximum": 0,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": false
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:rabbit": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
             }
           ]
         }

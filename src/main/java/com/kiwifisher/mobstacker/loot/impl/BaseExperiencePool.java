@@ -1,8 +1,8 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
 import com.google.gson.annotations.Expose;
-import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
-import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
+import com.kiwifisher.mobstacker.loot.api.ExperienceEntry;
+import com.kiwifisher.mobstacker.loot.api.ExperiencePool;
 import com.kiwifisher.mobstacker.utils.CollectionUtils;
 import com.kiwifisher.mobstacker.utils.ConditionUtils;
 import org.bukkit.entity.Entity;
@@ -11,14 +11,14 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * An ExperiencePool containing possible ExperienceEntries for an entity.
+ * An BaseExperiencePool containing possible ExperienceEntries for an entity.
  *
  * @author Jikoo
  */
-public class ExperiencePool implements IExperiencePool {
+public class BaseExperiencePool implements ExperiencePool {
 
     @Expose
-    private List<IExperienceEntry> entries;
+    private List<ExperienceEntry> entries;
 
     @Override
     public int getExperience(Entity entity, int numberOfMobs) {
@@ -29,7 +29,7 @@ public class ExperiencePool implements IExperiencePool {
         int min = 0, max = 0;
 
         // Add all valid entries to min/max.
-        for (IExperienceEntry entry : entries) {
+        for (ExperienceEntry entry : entries) {
             if (!ConditionUtils.meetsConditions(entity, entry)) {
                 continue;
             }
@@ -49,18 +49,18 @@ public class ExperiencePool implements IExperiencePool {
         return ThreadLocalRandom.current().nextInt(min, max);
     }
 
-    public List<IExperienceEntry> getEntries() {
+    public List<ExperienceEntry> getEntries() {
         return entries;
     }
 
-    public void setEntries(List<IExperienceEntry> entries) {
+    public void setEntries(List<ExperienceEntry> entries) {
         this.entries = entries;
     }
 
     @Override
     public boolean equals(Object obj) {
         return obj != null && this.getClass().equals(obj.getClass())
-                && CollectionUtils.equal(this.entries, ((ExperiencePool) obj).entries);
+                && CollectionUtils.equal(this.entries, ((BaseExperiencePool) obj).entries);
     }
 
     @Override

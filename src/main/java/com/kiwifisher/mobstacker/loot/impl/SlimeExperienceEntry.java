@@ -1,32 +1,30 @@
 package com.kiwifisher.mobstacker.loot.impl;
 
-import java.util.List;
-
 import com.google.gson.annotations.Expose;
-
-import com.kiwifisher.mobstacker.loot.api.ICondition;
-import com.kiwifisher.mobstacker.loot.api.IExperienceEntry;
+import com.kiwifisher.mobstacker.loot.api.Condition;
+import com.kiwifisher.mobstacker.loot.api.ExperienceEntry;
 import com.kiwifisher.mobstacker.utils.CollectionUtils;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
 
+import java.util.List;
+
 /**
- * IExperienceEntry implementation returning amounts based on the size of the slime.
+ * ExperienceEntry implementation returning amounts based on the size of the slime.
  * 
  * @author Jikoo
  */
-public class SlimeExperienceEntry implements IExperienceEntry {
+public class SlimeExperienceEntry implements ExperienceEntry {
 
     @Expose
-    private List<ICondition> conditions;
+    private List<Condition> conditions;
 
     @Override
-    public List<ICondition> getConditions() {
+    public List<Condition> getConditions() {
         return this.conditions;
     }
 
-    public void setConditions(List<ICondition> conditions) {
+    public void setConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
 

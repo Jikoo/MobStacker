@@ -1,8 +1,7 @@
 package com.kiwifisher.mobstacker.utils;
 
+import com.github.jikoo.util.Pair;
 import com.kiwifisher.mobstacker.MobStacker;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attributable;
@@ -183,7 +182,7 @@ public class StackUtils {
         int newStackSize = getStackSize(mergeTo) + additionalStacks;
 
         if (!canStack(mergeTo, removed, maxStackSize, newStackSize)) {
-            return new ImmutablePair<>(entity1, false);
+            return new Pair<>(entity1, false);
         }
 
         // Get the current average health of the added entity for later use.
@@ -205,7 +204,7 @@ public class StackUtils {
         // Remove merged entity
         removed.remove();
 
-        return new ImmutablePair<>(mergeTo, true);
+        return new Pair<>(mergeTo, true);
 
     }
 
@@ -694,7 +693,8 @@ public class StackUtils {
             Villager copyVillager = (Villager) copy;
             copyVillager.setProfession(originalVillager.getProfession());
             copyVillager.setRecipes(originalVillager.getRecipes());
-            copyVillager.setRiches(originalVillager.getRiches());
+            copyVillager.setVillagerExperience(originalVillager.getVillagerExperience());
+            copyVillager.setVillagerType(originalVillager.getVillagerType());
             // TODO figure out villager specifics goal
         }
 

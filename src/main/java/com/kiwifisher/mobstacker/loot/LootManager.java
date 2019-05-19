@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.loot.api.IExperiencePool;
+import com.kiwifisher.mobstacker.loot.api.ExperiencePool;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class LootManager {
 
-    private Map<String, Map<String, IExperiencePool>> experience = new HashMap<>();
+    private Map<String, Map<String, ExperiencePool>> experience = new HashMap<>();
 
     public LootManager(MobStacker plugin) {
         Gson gson = MobStacker.getGson();
@@ -44,7 +44,7 @@ public class LootManager {
         if (file.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 experience = gson.fromJson(reader,
-                        new TypeToken<Map<String, Map<String, IExperiencePool>>>() {}.getType());
+                        new TypeToken<Map<String, Map<String, ExperiencePool>>>() {}.getType());
             } catch (IOException | JsonParseException e) {
                 e.printStackTrace();
             }
@@ -56,7 +56,7 @@ public class LootManager {
             return Collections.emptyList();
         }
         Lootable lootable = ((Lootable) entity);
-        LootContext.Builder contextBuilder = new LootContext.Builder(entity.getLocation()).lootedEntity(entity).lootingModifier(looting);
+        LootContext.Builder contextBuilder = new LootContext.Builder(entity.getLocation()).lootingModifier(looting);
         if (killer != null) {
             contextBuilder.killer(killer).luck(((float) killer.getAttribute(Attribute.GENERIC_LUCK).getValue()));
         }
@@ -74,9 +74,9 @@ public class LootManager {
             return 0;
         }
 
-        String entityName = entity.getType().name();
+        String entityName = entity.getType().getKey().toString();
         String worldName = entity.getWorld().getName().toUpperCase();
-        Map<String, IExperiencePool> worldMappings;
+        Map<String, ExperiencePool> worldMappings;
 
         // World-specific experience settings.
         if (!experience.containsKey(worldName)

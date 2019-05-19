@@ -2,7 +2,7 @@ package com.kiwifisher.mobstacker.loot.impl;
 
 import com.google.gson.annotations.Expose;
 
-import com.kiwifisher.mobstacker.loot.api.ICondition;
+import com.kiwifisher.mobstacker.loot.api.Condition;
 
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Entity;
  * 
  * @author Jikoo
  */
-public class ConditionPropertiesAdult implements ICondition {
+public class ConditionPropertiesAdult implements Condition {
 
     @Expose
     private boolean adult;
