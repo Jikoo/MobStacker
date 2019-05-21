@@ -6,10 +6,13 @@ import com.google.gson.reflect.TypeToken;
 import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.loot.api.ExperiencePool;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootContext;
+import org.bukkit.loot.LootTable;
 import org.bukkit.loot.Lootable;
 
 import java.io.BufferedReader;
@@ -51,20 +54,31 @@ public class LootManager {
         }
     }
 
-    public List<ItemStack> getLoot(Entity entity, Player killer, int numberOfMobs, int looting) {
+    public List<ItemStack> getLoot(LivingEntity entity, int numberOfMobs) {
         if (!(entity instanceof Lootable)) {
             return Collections.emptyList();
         }
         Lootable lootable = ((Lootable) entity);
-        LootContext.Builder contextBuilder = new LootContext.Builder(entity.getLocation()).lootingModifier(looting);
-        if (killer != null) {
-            contextBuilder.killer(killer).luck(((float) killer.getAttribute(Attribute.GENERIC_LUCK).getValue()));
+        LootTable lootTable = lootable.getLootTable();
+        if (lootTable == null) {
+            return Collections.emptyList();
+        }
+        LootContext.Builder contextBuilder = new LootContext.Builder(entity.getLocation())
+//                .lootedEntity(entity).lootingModifier(looting) // Appears to be a Spigot issue with loot
+                ;
+        Player killer = entity.getKiller();
+        if (killer != null && false) { // Appears to be a Spigot issue with loot
+            contextBuilder.killer(killer);
+            AttributeInstance attributeLuck = killer.getAttribute(Attribute.GENERIC_LUCK);
+            if (attributeLuck != null) {
+                contextBuilder.luck(((float) attributeLuck.getValue()));
+            }
         }
         LootContext context = contextBuilder.build();
         List<ItemStack> loot = new ArrayList<>();
         for (int i = 0; i < numberOfMobs; ++i) {
             // TODO merge drops
-            loot.addAll(lootable.getLootTable().populateLoot(ThreadLocalRandom.current(), context));
+            loot.addAll(lootTable.populateLoot(ThreadLocalRandom.current(), context));
         }
         return loot;
     }

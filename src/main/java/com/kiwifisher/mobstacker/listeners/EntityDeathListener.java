@@ -3,17 +3,13 @@ package com.kiwifisher.mobstacker.listeners;
 import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.loot.LootManager;
 import com.kiwifisher.mobstacker.utils.StackUtils;
-
-import org.bukkit.enchantments.Enchantment;
+import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityDeathListener implements Listener {
 
@@ -65,7 +61,7 @@ public class EntityDeathListener implements Listener {
 
         // Check if we are dropping proportionate loot. If not, return.
         if (!plugin.getConfig().getBoolean("persistent-damage.loot.enable") || lastDamage == null
-                || !plugin.getConfig().getStringList("persistent-damage.loot.ignore-reasons").contains(lastDamage.name())) {
+                || plugin.getConfig().getStringList("persistent-damage.loot.ignore-reasons").contains(lastDamage.name())) {
             // Clean up metadata storage.
             plugin.getStackUtils().removeStackMetadata(entity);
 
@@ -92,9 +88,7 @@ public class EntityDeathListener implements Listener {
         }
 
         // Try to drop proportionate loot.
-        Player player = event.getEntity().getKiller();
-        int looting = player != null ? player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
-        event.getDrops().addAll(manager.getLoot(entity, player, entitiesLooted, looting));
+        event.getDrops().addAll(manager.getLoot(entity, entitiesLooted));
 
         // Clean up metadata storage.
         plugin.getStackUtils().removeStackMetadata(entity);
