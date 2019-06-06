@@ -2,6 +2,15 @@ package com.kiwifisher.mobstacker.utils;
 
 import com.github.jikoo.util.Pair;
 import com.kiwifisher.mobstacker.MobStacker;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attributable;
@@ -11,6 +20,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Bat;
+import org.bukkit.entity.Cat;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Creeper;
@@ -23,7 +33,6 @@ import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.Mob;
-import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
@@ -45,16 +54,6 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * The main guts of this plugin. All the stacking, peeling, searching and renaming is done here.
@@ -287,10 +286,12 @@ public class StackUtils {
         }
 
         if (plugin.getConfig().getBoolean("stack-properties.maxHealth", true)
-                && entity1 instanceof Attributable && entity2 instanceof Attributable
-                && ((Attributable) entity1).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()
-                != ((Attributable) entity2).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-            return false;
+                && entity1 instanceof Attributable && entity2 instanceof Attributable) {
+            AttributeInstance maxHealth1 = ((Attributable) entity1).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            AttributeInstance maxHealth2 = ((Attributable) entity2).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            if (maxHealth1 != null && maxHealth2 != null && maxHealth1.getValue() != maxHealth2.getValue()) {
+                return false;
+            }
         }
 
         if (entity2 instanceof AbstractHorse) {
@@ -327,8 +328,8 @@ public class StackUtils {
         }
 
         if (plugin.getConfig().getBoolean("stack-properties.variant", true)
-                && entity1 instanceof Ocelot && entity2 instanceof Ocelot
-                && ((Ocelot) entity1).getCatType() != ((Ocelot) entity2).getCatType()) {
+                && entity1 instanceof Cat && entity2 instanceof Cat
+                && ((Cat) entity1).getCatType() != ((Cat) entity2).getCatType()) {
             return false;
         }
 
@@ -558,10 +559,10 @@ public class StackUtils {
             Attributable copyAttributable = (Attributable) copy;
             for (Attribute attribute : Attribute.values()) {
                 AttributeInstance attributeInstance = originalAttributable.getAttribute(attribute);
-                if (attributeInstance != null && attributeInstance.getModifiers() != null) {
+                if (attributeInstance != null) {
                     for (AttributeModifier modifier : attributeInstance.getModifiers()) {
                         AttributeInstance copyInstance = copyAttributable.getAttribute(attribute);
-                        if (copyInstance.getModifiers().contains(modifier)) {
+                        if (copyInstance == null || copyInstance.getModifiers().contains(modifier)) {
                             continue;
                         }
                         try {
@@ -642,8 +643,8 @@ public class StackUtils {
             ((Mob) copy).setTarget(((Mob) original).getTarget());
         }
 
-        if (original instanceof Ocelot && copy instanceof Ocelot) {
-            ((Ocelot) copy).setCatType(((Ocelot) original).getCatType());
+        if (original instanceof Cat && copy instanceof Cat) {
+            ((Cat) copy).setCatType(((Cat) original).getCatType());
         }
 
         if (original instanceof Parrot && copy instanceof Parrot) {
@@ -959,6 +960,9 @@ public class StackUtils {
 
         Damageable damageable = (Damageable) entity;
         AttributeInstance attribute = ((Attributable) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (attribute == null) {
+            return 0;
+        }
 
         // Are we supposed to include current health in calculation?
         if (!recalculate) {
@@ -1010,7 +1014,8 @@ public class StackUtils {
         averageHealth += addedSize * addedHealth;
         averageHealth /= originalStackSize + addedHealth;
 
-        averageHealth = Math.min(((Attributable) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), averageHealth);
+        AttributeInstance attribute = ((Attributable) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        averageHealth = attribute != null ? Math.min(attribute.getValue(), averageHealth) : averageHealth;
 
         setMetadata(entity, "stackAverageHealth", averageHealth);
     }
