@@ -1,11 +1,10 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.utils.StackUtils;
-
 import org.bukkit.Material;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
@@ -37,10 +36,10 @@ public class ItemSpawnListener implements Listener {
         }
 
         for (Entity entity : event.getEntity().getNearbyEntities(0.00001, 0.00001, 0.00001)) {
-            if (entity.getType() != EntityType.CHICKEN) {
+            if (!(entity instanceof Chicken)) {
                 continue;
             }
-            stack.setAmount(Math.max(1, Math.min(plugin.getConfig().getInt("multiply-eggs.max"), StackUtils.getStackSize(entity))));
+            stack.setAmount(Math.max(1, Math.min(plugin.getConfig().getInt("multiply-eggs.max"), plugin.getStackUtils().getStackSize((LivingEntity) entity))));
             event.getEntity().setItemStack(stack);
             return;
         }

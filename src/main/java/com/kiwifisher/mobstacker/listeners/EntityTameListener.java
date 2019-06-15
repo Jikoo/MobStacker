@@ -1,8 +1,6 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.utils.StackUtils;
-
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,7 +21,7 @@ public class EntityTameListener implements Listener {
         LivingEntity entity = event.getEntity();
 
         // Ensure we have a stack.
-        if (StackUtils.getStackSize(entity) < 2) {
+        if (plugin.getStackUtils().getStackSize(entity) < 2) {
             return;
         }
 

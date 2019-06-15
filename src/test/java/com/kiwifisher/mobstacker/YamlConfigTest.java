@@ -1,17 +1,15 @@
 package com.kiwifisher.mobstacker;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Animals;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.junit.Test;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.fail;
 
@@ -55,23 +53,6 @@ public class YamlConfigTest {
 
 		if (missing.size() > 0) {
 			fail("Missing damage causes: " + missing);
-		}
-	}
-
-	@Test
-	public void testAnimalTypes() {
-		YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new File("src/main/resources/config.yml"));
-		List<String> missing = new ArrayList<>();
-		List<String> types = defaultConfig.getStringList("load-existing-stacks.mob-types");
-		for (EntityType type : EntityType.values()) {
-			if (type.getEntityClass() != null && Animals.class.isAssignableFrom(type.getEntityClass())
-					&& !types.contains(type.name())) {
-				missing.add(type.name());
-			}
-		}
-
-		if (missing.size() > 0) {
-			fail("Missing animal types: " + missing);
 		}
 	}
 

@@ -5,15 +5,13 @@ import com.kiwifisher.mobstacker.MobStacker;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attributable;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
@@ -24,7 +22,6 @@ import org.bukkit.entity.Cat;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
@@ -49,11 +46,13 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.entity.ZombieVillager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The main guts of this plugin. All the stacking, peeling, searching and renaming is done here.
@@ -61,6 +60,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class StackUtils {
 
     private final MobStacker plugin;
+    private final NamespacedKey stackSize, canStack, stackAverageHealth, stackBreedTime;
 
     private Pattern namePattern;
 
@@ -68,6 +68,10 @@ public class StackUtils {
         this.plugin = plugin;
 
         this.loadConfig();
+        stackSize = new NamespacedKey(plugin, "stackSize");
+        canStack = new NamespacedKey(plugin, "canStack");
+        stackAverageHealth = new NamespacedKey(plugin, "stackAverageHealth");
+        stackBreedTime = new NamespacedKey(plugin, "stackBreedTime");
     }
 
     public void loadConfig() {
@@ -88,22 +92,23 @@ public class StackUtils {
         namePattern = Pattern.compile("\\Q" + naming + "\\E");
     }
 
-    public void attemptToStack(final Entity stack, final int attempts) {
+    public void attemptToStack(final LivingEntity stack, final int attempts) {
 
         if (!plugin.isStacking() || !isStackable(stack)) {
             return;
         }
 
-        // Set max stack size. Specific entity type overrides
+        // Get max stack size. Specific entity type overrides
         final int maxStackSize = plugin.getMaxStackSize(stack.getType());
 
         if (maxStackSize < 2) {
+            setStackable(stack, false);
             return;
         }
 
         new BukkitRunnable() {
 
-            Entity entity = stack;
+            LivingEntity entity = stack;
             int count = 0;
 
             @Override
@@ -122,9 +127,12 @@ public class StackUtils {
                         plugin.getConfig().getInt("stack-range.x"),
                         plugin.getConfig().getInt("stack-range.y"),
                         plugin.getConfig().getInt("stack-range.z"))) {
+                    if (!(nearbyEntity instanceof LivingEntity)) {
+                        continue;
+                    }
 
                     // Attempt to stack
-                    Pair<Entity, Boolean> pair = stackEntities(entity, nearbyEntity, maxStackSize);
+                    Pair<LivingEntity, Boolean> pair = stackEntities(entity, (LivingEntity) nearbyEntity, maxStackSize);
 
                     // If the mobs stack and we've reached max stack size, cancel and return.
                     if (pair.getRight()) {
@@ -169,10 +177,10 @@ public class StackUtils {
      * @param maxStackSize the maximum allowed stack size
      * @return true if the stacks were merged successfully.
      */
-    public Pair<Entity, Boolean> stackEntities(Entity entity1, Entity entity2, int maxStackSize) {
+    public Pair<LivingEntity, Boolean> stackEntities(LivingEntity entity1, LivingEntity entity2, int maxStackSize) {
 
-        Entity mergeTo = entity1;
-        Entity removed = entity2;
+        LivingEntity mergeTo = entity1;
+        LivingEntity removed = entity2;
         // If entities are supposed to stack down, ensure mergeTo is the lower one.
         if (entity1.getLocation().getBlockY() > entity2.getLocation().getBlockY()
                 && plugin.getConfig().getBoolean("stack-mobs-down")) {
@@ -217,7 +225,7 @@ public class StackUtils {
      * @param entity2 the second entity
      * @return true if the mobs can stack
      */
-    private boolean canStack(Entity entity1, Entity entity2, int maxStackSize, int newStackSize) {
+    private boolean canStack(LivingEntity entity1, LivingEntity entity2, int maxStackSize, int newStackSize) {
 
         // Ensure entities are alive, of the same type, stackable, and won't exceed max stack size.
         if (entity1.equals(entity2) || entity1.isDead() || entity2.isDead()
@@ -226,45 +234,37 @@ public class StackUtils {
             return false;
         }
 
-        MetadataValue meta = getValue(entity1, "lastBred");
-        long lastBred1 = meta != null ? meta.asLong() : 0;
-        meta = getValue(entity2, "lastBred");
-        long lastBred2 = meta != null ? meta.asLong() : 0;
+        long lastBred1 = entity1.getPersistentDataContainer().getOrDefault(stackBreedTime, PersistentDataType.LONG, 0L);
+        long lastBred2 = entity2.getPersistentDataContainer().getOrDefault(stackBreedTime, PersistentDataType.LONG, 0L);
         // Breeding status takes 5 minutes to reset.
         long irrelevantAfter = System.currentTimeMillis() - 300000L;
 
         /*
-         * Assuming entity1 is the entity being stacked to: If entity2 was bred later, it has a
-         * longer time until it can next breed and should not stack. However, if it was bred earlier
-         * than 5 minutes ago, it doesn't matter - the breeding timer resets then.
+         * If entity2 was bred later, it has a longer time until it can next breed and should not stack.
+         * However, if it was bred longer than 5 minutes ago, it doesn't matter - the breeding timer resets then.
          */
         if (lastBred1 < lastBred2 && lastBred2 > irrelevantAfter) {
             return false;
         }
 
-        if (entity1 instanceof LivingEntity && entity2 instanceof LivingEntity) {
-            LivingEntity living1 = (LivingEntity) entity1;
-            LivingEntity living2 = (LivingEntity) entity2;
+        // Prevent accidental despawns
+        if (entity1.getRemoveWhenFarAway() != entity2.getRemoveWhenFarAway()) {
+            return false;
+        }
 
-            // Prevent accidental despawns
-            if (living1.getRemoveWhenFarAway() != living2.getRemoveWhenFarAway()) {
+        // No-AI property
+        if (plugin.getConfig().getBoolean("stack-properties.AI", true)
+                && entity1.hasAI() != entity2.hasAI()) {
+            return false;
+        }
+
+        // Leashed mobs
+        if (!plugin.getConfig().getBoolean("stack-leashed-mobs", false)) {
+            if (entity1.isLeashed() || entity2.isLeashed()) {
                 return false;
             }
-
-            // No-AI property
-            if (plugin.getConfig().getBoolean("stack-properties.AI", true)
-                    && living1.hasAI() != living2.hasAI()) {
-                return false;
-            }
-
-            // Leashed mobs
-            if (!plugin.getConfig().getBoolean("stack-leashed-mobs", false)) {
-                if (living1.isLeashed() || living2.isLeashed()) {
-                    return false;
-                }
-            } else if (living1.isLeashed() != living2.isLeashed()) {
-                return false;
-            }
+        } else if (entity1.isLeashed() != entity1.isLeashed()) {
+            return false;
         }
 
         if (plugin.getConfig().getBoolean("stack-properties.age", true)
@@ -285,10 +285,9 @@ public class StackUtils {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.maxHealth", true)
-                && entity1 instanceof Attributable && entity2 instanceof Attributable) {
-            AttributeInstance maxHealth1 = ((Attributable) entity1).getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            AttributeInstance maxHealth2 = ((Attributable) entity2).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (plugin.getConfig().getBoolean("stack-properties.maxHealth", true)) {
+            AttributeInstance maxHealth1 = entity1.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            AttributeInstance maxHealth2 = entity2.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             if (maxHealth1 != null && maxHealth2 != null && maxHealth1.getValue() != maxHealth2.getValue()) {
                 return false;
             }
@@ -299,7 +298,7 @@ public class StackUtils {
 
             // Don't delete saddles, armor, llama decor, or items in chests.
             for (ItemStack itemStack : horse2.getInventory().getContents()) {
-                if (itemStack != null && itemStack.getType() != Material.AIR) {
+                if (itemStack.getType() != Material.AIR) {
                     return false;
                 }
             }
@@ -406,7 +405,8 @@ public class StackUtils {
             return false;
         }
 
-        // Separate zombies by type
+        // Separate zombie villagers by type
+        //noinspection ConstantConditions // Explicitly handled the same way for clarity
         if (plugin.getConfig().getBoolean("stack-properties.villager.profession", true)
                 && entity1 instanceof ZombieVillager && entity2 instanceof ZombieVillager
                 && ((ZombieVillager) entity1).getVillagerProfession() != ((ZombieVillager) entity2).getVillagerProfession()) {
@@ -423,7 +423,7 @@ public class StackUtils {
      * @param entity The stack to peel off of
      * @return the new stack
      */
-    public Entity peelOffStack(Entity entity) {
+    public LivingEntity peelOffStack(LivingEntity entity) {
        return peelOff(entity, true);
     }
 
@@ -433,17 +433,17 @@ public class StackUtils {
      * @param entity The stack to peel off of
      * @return the new entity
      */
-    public Entity peelOffSingle(Entity entity) {
+    public LivingEntity peelOffSingle(LivingEntity entity) {
         return peelOff(entity, false);
     }
 
-    private Entity peelOff(Entity entity, boolean stack) {
+    private LivingEntity peelOff(LivingEntity entity, boolean stack) {
 
         // Get the new stack size post-peel.
         int newQuantity = getStackSize(entity) - 1;
 
         // If stacking is disabled, remove the stack data.
-        if (!plugin.isStacking() || !isConfigStackable(entity)) {
+        if (!plugin.isStacking() || !isStackable(entity)) {
             stack = false;
             newQuantity = 0;
         }
@@ -463,7 +463,7 @@ public class StackUtils {
         }
 
         // Spawn the new entity in.
-        Entity newEntity = entity.getWorld().spawn(entity.getLocation(), entity.getClass());
+        LivingEntity newEntity = entity.getWorld().spawn(entity.getLocation(), entity.getClass());
 
         // Copy properties to the new entity.
         try {
@@ -473,14 +473,12 @@ public class StackUtils {
             e.printStackTrace();
         }
 
-        // If the entity has health, set its health to the stack's average.
-        if (newEntity instanceof Damageable) {
-            double averageHealth = getAverageHealth(entity, false);
-            if (averageHealth < 1) {
-                averageHealth = 1;
-            }
-            ((Damageable) newEntity).setHealth(averageHealth);
+        // Set entity health to the stack's average.
+        double averageHealth = getAverageHealth(entity, false);
+        if (averageHealth < 1) {
+            averageHealth = 1;
         }
+        newEntity.setHealth(averageHealth);
 
         if (stack) {
             // Set the new stack to the remaining amount.
@@ -509,7 +507,7 @@ public class StackUtils {
      * @param copy the Entity to copy properties to
      * @throws Exception when some un-handled weird special case comes into play
      */
-    private void copyEntityProperties(Entity original, Entity copy) throws Exception {
+    private void copyEntityProperties(LivingEntity original, LivingEntity copy) throws Exception {
 
         if (original == copy || original.equals(copy)
                 || original.getUniqueId().equals(copy.getUniqueId())) {
@@ -535,6 +533,37 @@ public class StackUtils {
          * affected by the knockback enchantment.
          */
         copy.setVelocity(original.getVelocity());
+        copy.setAI(original.hasAI());
+        copy.setCanPickupItems(original.getCanPickupItems());
+        copy.setCollidable(original.isCollidable());
+        copy.setGliding(original.isGliding());
+        copy.setLastDamage(original.getLastDamage());
+        Entity leashHolder = original.getLeashHolder();
+        original.setLeashHolder(null);
+        copy.setLeashHolder(leashHolder);
+        copy.setMaximumAir(original.getMaximumAir());
+        copy.setMaximumNoDamageTicks(original.getMaximumNoDamageTicks());
+        copy.setNoDamageTicks(original.getNoDamageTicks());
+        copy.setRemainingAir(original.getRemainingAir());
+        copy.setRemoveWhenFarAway(original.getRemoveWhenFarAway());
+
+        // TODO: Config option? If stack-down and horses enabled, could be abused to duplicate nice horses.
+        for (Attribute attribute : Attribute.values()) {
+            AttributeInstance attributeInstance = original.getAttribute(attribute);
+            if (attributeInstance != null) {
+                for (AttributeModifier modifier : attributeInstance.getModifiers()) {
+                    AttributeInstance copyInstance = copy.getAttribute(attribute);
+                    if (copyInstance == null || copyInstance.getModifiers().contains(modifier)) {
+                        continue;
+                    }
+                    try {
+                        copyInstance.addModifier(modifier);
+                    } catch (IllegalArgumentException e) {
+                        // Shouldn't be possible,
+                    }
+                }
+            }
+        }
 
         if (original instanceof AbstractHorse && copy instanceof AbstractHorse) {
             AbstractHorse originalAbstractHorse = (AbstractHorse) original;
@@ -551,28 +580,6 @@ public class StackUtils {
             copyAgeable.setAge(originalAgeable.getAge());
             copyAgeable.setAgeLock(originalAgeable.getAgeLock());
             copyAgeable.setBreed(originalAgeable.canBreed());
-        }
-
-        // TODO: Config option? If stack-down and horses enabled, could be abused to duplicate nice horses.
-        if (original instanceof Attributable && copy instanceof Attributable) {
-            Attributable originalAttributable = (Attributable) original;
-            Attributable copyAttributable = (Attributable) copy;
-            for (Attribute attribute : Attribute.values()) {
-                AttributeInstance attributeInstance = originalAttributable.getAttribute(attribute);
-                if (attributeInstance != null) {
-                    for (AttributeModifier modifier : attributeInstance.getModifiers()) {
-                        AttributeInstance copyInstance = copyAttributable.getAttribute(attribute);
-                        if (copyInstance == null || copyInstance.getModifiers().contains(modifier)) {
-                            continue;
-                        }
-                        try {
-                            copyInstance.addModifier(modifier);
-                        } catch (IllegalArgumentException e) {
-                            // Shouldn't be possible,
-                        }
-                    }
-                }
-            }
         }
 
         if (original instanceof Bat && copy instanceof Bat) {
@@ -620,23 +627,8 @@ public class StackUtils {
             ((IronGolem) copy).setPlayerCreated(((IronGolem) original).isPlayerCreated());
         }
 
-        if (original instanceof LivingEntity && copy instanceof LivingEntity) {
-            LivingEntity originalLiving = (LivingEntity) original;
-            LivingEntity copyLiving = (LivingEntity) copy;
-            for (PotionEffect effect : originalLiving.getActivePotionEffects()) {
-                copyLiving.addPotionEffect(effect);
-            }
-            copyLiving.setAI(originalLiving.hasAI());
-            copyLiving.setCanPickupItems(originalLiving.getCanPickupItems());
-            copyLiving.setCollidable(originalLiving.isCollidable());
-            copyLiving.setGliding(originalLiving.isGliding());
-            copyLiving.setLastDamage(originalLiving.getLastDamage());
-            // TODO: re-leash without causing leash dupe bugs?
-            copyLiving.setMaximumAir(originalLiving.getMaximumAir());
-            copyLiving.setMaximumNoDamageTicks(originalLiving.getMaximumNoDamageTicks());
-            copyLiving.setNoDamageTicks(originalLiving.getNoDamageTicks());
-            copyLiving.setRemainingAir(originalLiving.getRemainingAir());
-            copyLiving.setRemoveWhenFarAway(originalLiving.getRemoveWhenFarAway());
+        for (PotionEffect effect : original.getActivePotionEffects()) {
+            copy.addPotionEffect(effect);
         }
 
         if (original instanceof Mob && copy instanceof Mob) {
@@ -755,31 +747,30 @@ public class StackUtils {
      * @param entity the entity
      * @return the number of mobs
      */
-    public static int getStackSize(Entity entity) {
+    public int getStackSize(LivingEntity entity) {
 
-        MetadataValue meta = getValue(entity, "quantity");
-
-        if (meta == null) {
+        Integer quantity = entity.getPersistentDataContainer().get(stackSize, PersistentDataType.INTEGER);
+        if (quantity == null) {
             return 1;
         }
 
-        // Sanity, return at least 1.
-        return Math.max(1, meta.asInt());
+        // Sanitize stack size to a minimum of 1 and a max of max stack size.
+        return Math.max(1, Math.min(plugin.getMaxStackSize(entity.getType()), quantity));
     }
 
     /**
      * Sets an entity's stack size and updates its name.
      *
-     * @param entity the Entity
+     * @param entity the entity stack
      * @param newQuantity the new quantity
      */
-    public void setStackSize(Entity entity, int newQuantity) {
+    public void setStackSize(@NotNull LivingEntity entity, int newQuantity) {
 
         // Sanity
-        newQuantity = Math.max(1, newQuantity);
+        newQuantity = Math.max(1, Math.min(plugin.getMaxStackSize(entity.getType()), newQuantity));
 
-        // Set metadata
-        setMetadata(entity, "quantity", newQuantity);
+        // Set data
+        entity.getPersistentDataContainer().set(stackSize, PersistentDataType.INTEGER, newQuantity);
 
         // Rename to match new quantity
         nameStack(entity, newQuantity);
@@ -788,10 +779,10 @@ public class StackUtils {
     /**
      * Sets a stack's name.
      *
-     * @param entity the Entity
+     * @param entity the entity stack to name
      * @param quantity the amount in the stack
      */
-    private void nameStack(Entity entity, int quantity) {
+    private void nameStack(@NotNull LivingEntity entity, int quantity) {
 
         String configNaming = plugin.getConfig().getString("stack-naming");
 
@@ -826,27 +817,25 @@ public class StackUtils {
      * @param name the String to check
      * @return true if the naming pattern matches or the name provided is null
      */
-    public boolean matchesStackName(String name) {
+    public boolean matchesStackName(@Nullable String name) {
         if (name == null) {
             return true;
         }
 
         // Ensure we have a match with the name pattern. Remove all quote start/ends to prevent issues.
-        Matcher matcher = namePattern.matcher(name.replace("\\Q", "").replace("\\E", ""));
-
-        return matcher.matches();
+        return namePattern.matcher(name.replace("\\Q", "").replace("\\E", "")).matches();
     }
 
     /**
      * Sets stack data for an entity based on its name.
      *
-     * @param entity the Entity
+     * @param entity the entity
      */
-    public void loadFromName(Entity entity) {
+    public void loadFromName(@NotNull LivingEntity entity) {
         String name = entity.getCustomName();
 
         // Check if name is set and naming pattern contains quantity tag
-        if (name == null || !plugin.getConfig().getString("stack-naming").contains("{QTY}")) {
+        if (name == null || !namePattern.pattern().contains("{QTY}")) {
             return;
         }
 
@@ -873,28 +862,14 @@ public class StackUtils {
     /**
      * Gets whether an entity is stackable.
      *
-     * @param entity the Entity
+     * @param entity the entity
      * @return true if the Entity is stackable
      */
-    public boolean isStackable(Entity entity) {
+    public boolean isStackable(@NotNull LivingEntity entity) {
         // HumanEntities are not allowed to stack, period.
-        return !(entity instanceof HumanEntity) && isMetaStackable(entity) && isConfigStackable(entity);
-    }
-
-    private boolean isMetaStackable(Entity entity) {
-
-        MetadataValue meta = getValue(entity, "stackable");
-        if (meta != null && meta.asBoolean()) {
-            return false;
-        }
-
-        // Do not allow entities bred within the last 15 seconds to stack at all
-        meta = getValue(entity, "lastBred");
-        return meta == null || meta.asLong() <= System.currentTimeMillis() - 15000;
-    }
-
-    private boolean isConfigStackable(Entity entity) {
-        return plugin.getConfig().getBoolean("stack-mob-type." + entity.getType().name(), false)
+        return !(entity instanceof HumanEntity)
+                && entity.getPersistentDataContainer().getOrDefault(canStack, PersistentDataType.BYTE, (byte) 0) == 0
+                && plugin.getConfig().getBoolean("stack-mob-type." + entity.getType().name(), false)
                 && !plugin.getConfig().getStringList("blacklist-world").contains(entity.getWorld().getName().toLowerCase())
                 && (plugin.getConfig().getBoolean("stack-custom-named-mobs") || matchesStackName(entity.getCustomName()));
     }
@@ -903,74 +878,55 @@ public class StackUtils {
      * Alters whether an entity is stackable. Note that this will not allow for stacks exceeding the
      * configured limit.
      *
-     * @param entity the Entity
+     * @param entity the entity
      * @param stackable if the Entity is stackable
      */
-    public void setStackable(Entity entity, boolean stackable) {
-        setMetadata(entity, "stackable", stackable);
+    public void setStackable(@NotNull LivingEntity entity, boolean stackable) {
+        entity.getPersistentDataContainer().set(canStack, PersistentDataType.BYTE, (byte) (stackable ? 0 : 1));
     }
 
     /**
-     * Sets an entity recently bred.
+     * Sets an stack recently bred.
      *
-     * @param entity the Entity
+     * @param entity the entity stack
      */
-    public void setBred(Entity entity) {
-        setMetadata(entity, "lastBred", System.currentTimeMillis());
+    public void setBred(@NotNull LivingEntity entity) {
+        entity.getPersistentDataContainer().set(stackBreedTime, PersistentDataType.LONG, System.currentTimeMillis());
     }
 
     /**
-     * Gets an entity's breedability.
+     * Gets a stack's breedability.
      *
-     * @param entity the Entity
+     * @param entity the entity stack
      */
-    public boolean canBreed(Entity entity) {
-        MetadataValue meta = getValue(entity, "lastBred");
-        return meta == null || meta.asLong() < System.currentTimeMillis() - 300000L;
+    public boolean canBreed(@NotNull LivingEntity entity) {
+        return entity.getPersistentDataContainer().getOrDefault(stackBreedTime, PersistentDataType.LONG, 0L)
+                < System.currentTimeMillis() - 300000L;
     }
 
     /**
      * Gets the average health of a stacked entity.
      *
-     * @param entity the Entity
+     * @param entity the entity stack
      * @param recalculate true if the value is to be recalculated including the base entity's health
      * @return the average health
      */
-    public double getAverageHealth(Entity entity, boolean recalculate) {
+    public double getAverageHealth(@NotNull LivingEntity entity, boolean recalculate) {
 
-        /*
-         * Default to 0 health for anything that isn't actually damageable.
-         * This prevents large stacks living excessively long, provided the plugin is configured to kill them.
-         */
-        if (!(entity instanceof Damageable)) {
-            return 0;
-        }
-
-        MetadataValue meta = getValue(entity, "stackAverageHealth");
-
-        // Check if metadata is set.
-        if (meta != null && !recalculate) {
-            return meta.asDouble();
-        }
-
-        // Ensure that the entity is a Damageable Attributable.
-        if (!(entity instanceof Attributable)) {
-            return 0;
-        }
-
-        Damageable damageable = (Damageable) entity;
-        AttributeInstance attribute = ((Attributable) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if (attribute == null) {
-            return 0;
+            return entity.getPersistentDataContainer().getOrDefault(stackAverageHealth,
+                    PersistentDataType.DOUBLE, 0D);
         }
 
         // Are we supposed to include current health in calculation?
         if (!recalculate) {
-            return attribute.getValue();
+            return entity.getPersistentDataContainer().getOrDefault(stackAverageHealth,
+                    PersistentDataType.DOUBLE, attribute.getValue());
         }
 
         int stackSize = getStackSize(entity);
-        double currentHealth = damageable.getHealth();
+        double currentHealth = entity.getHealth();
 
         // If the stack is larger than 1, average total maximum health in.
         if (stackSize > 1) {
@@ -985,11 +941,12 @@ public class StackUtils {
     /**
      * Reduces the average health of a stack by the specified amount.
      *
-     * @param entity the stacked Entity
+     * @param entity the entity stack
      * @param amount the amount to reduce health by
      */
-    public void damageAverageHealth(Entity entity, Double amount) {
-        setMetadata(entity, "stackAverageHealth", getAverageHealth(entity, false) - amount);
+    public void damageAverageHealth(@NotNull LivingEntity entity, double amount) {
+        entity.getPersistentDataContainer().set(stackAverageHealth, PersistentDataType.DOUBLE,
+                getAverageHealth(entity, false) - amount);
     }
 
     /**
@@ -997,15 +954,15 @@ public class StackUtils {
      * </p>
      * This method assumes that the stack size has already been increased by the relevant amount.
      *
-     * @param entity the Entity
+     * @param entity the entity stack
      * @param addedSize the amount of entities added
      * @param addedHealth the average health of the added entities
      */
-    private void increaseAverageHealth(Entity entity, int addedSize, double addedHealth) {
+    private void increaseAverageHealth(@NotNull LivingEntity entity, int addedSize, double addedHealth) {
         double averageHealth = getAverageHealth(entity, false);
 
         // Entity is undamageable or dead.
-        if (averageHealth <= 0 || !(entity instanceof Attributable)) {
+        if (averageHealth <= 0) {
             return;
         }
 
@@ -1014,59 +971,20 @@ public class StackUtils {
         averageHealth += addedSize * addedHealth;
         averageHealth /= originalStackSize + addedHealth;
 
-        AttributeInstance attribute = ((Attributable) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         averageHealth = attribute != null ? Math.min(attribute.getValue(), averageHealth) : averageHealth;
 
-        setMetadata(entity, "stackAverageHealth", averageHealth);
+        entity.getPersistentDataContainer().set(stackAverageHealth, PersistentDataType.DOUBLE, averageHealth);
     }
 
     /**
-     * Helper method for retrieving the first available MetadataValue.
+     * Cleans up data for a stack.
      *
-     * @param entity the Entity to retrieve metadata for
-     * @param key the metadata key
-     * @return the first MetadataValue, or null if none is found.
+     * @param entity the entity stack
      */
-    private static MetadataValue getValue(Entity entity, String key) {
-        if (!entity.hasMetadata(key)) {
-            return null;
-        }
-
-        List<MetadataValue> meta = entity.getMetadata(key);
-
-        if (meta.isEmpty()) {
-            return null;
-        }
-
-        return meta.get(0);
-    }
-
-    /**
-     * Helper method for replacing existing metadata with our own for simplicity.
-     *
-     * @param entity the Entity to set metadata for
-     * @param key the metadata identifier
-     * @param value the metadata value
-     */
-    private void setMetadata(Entity entity, String key, Object value) {
-        if (entity.hasMetadata(key)) {
-            // Remove existing meta
-            for (Iterator<MetadataValue> iterator = entity.getMetadata(key).iterator(); iterator.hasNext();) {
-                entity.removeMetadata(key, iterator.next().getOwningPlugin());
-            }
-        }
-
-        entity.setMetadata(key, new FixedMetadataValue(plugin, value));
-    }
-
-    /**
-     * Cleans up metadata for a stack.
-     *
-     * @param entity the Entity to clean up for
-     */
-    public void removeStackMetadata(Entity entity) {
-        for (String key : new String[] { "quantity", "stackable", "lastBred", "stackAverageHealth" }) {
-            entity.removeMetadata(key, this.plugin);
+    public void removeStackData(@NotNull LivingEntity entity) {
+        for (NamespacedKey key : new NamespacedKey[] { stackSize, canStack, stackAverageHealth, stackBreedTime }) {
+            entity.getPersistentDataContainer().remove(key);
         }
     }
 

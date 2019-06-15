@@ -2,7 +2,6 @@ package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.loot.LootManager;
-import com.kiwifisher.mobstacker.utils.StackUtils;
 import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Slime;
@@ -30,19 +29,13 @@ public class EntityDeathListener implements Listener {
          * stacks reaching excessive (and potentially problematic - see SPIGOT-58) depths.
          */
         if (lastDamage == DamageCause.VOID) {
-            // Clean up metadata storage.
-            plugin.getStackUtils().removeStackMetadata(entity);
-
             return;
         }
 
-        int stackSize = StackUtils.getStackSize(entity);
+        int stackSize = plugin.getStackUtils().getStackSize(entity);
 
         // Ensure we have a stack.
         if (stackSize < 2) {
-            // Clean up metadata storage.
-            plugin.getStackUtils().removeStackMetadata(entity);
-
             return;
         }
 
@@ -52,19 +45,12 @@ public class EntityDeathListener implements Listener {
 
             // Whole stack is not dying, peel off the remainder and return.
             plugin.getStackUtils().peelOffStack(entity);
-
-            // Clean up metadata storage.
-            plugin.getStackUtils().removeStackMetadata(entity);
-
             return;
         }
 
-        // Check if we are dropping proportionate loot. If not, return.
+        // Check if we are dropping proportionate loot.
         if (!plugin.getConfig().getBoolean("persistent-damage.loot.enable") || lastDamage == null
                 || plugin.getConfig().getStringList("persistent-damage.loot.ignore-reasons").contains(lastDamage.name())) {
-            // Clean up metadata storage.
-            plugin.getStackUtils().removeStackMetadata(entity);
-
             return;
         }
 
@@ -89,9 +75,6 @@ public class EntityDeathListener implements Listener {
 
         // Try to drop proportionate loot.
         event.getDrops().addAll(manager.getLoot(entity, entitiesLooted));
-
-        // Clean up metadata storage.
-        plugin.getStackUtils().removeStackMetadata(entity);
 
     }
 

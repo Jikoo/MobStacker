@@ -1,19 +1,15 @@
 package com.kiwifisher.mobstacker.listeners;
 
-import java.util.List;
-
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.utils.StackUtils;
-
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
- * Listener for ChunkUnloadEvents. Used to remove names of stacked mobs that won't be loaded back
- * when chunks load.
+ * Listener for ChunkUnloadEvents. Used to remove data from stacked mobs that will not be reloaded.
  *
  * @author Jikoo
  */
@@ -27,27 +23,25 @@ public class ChunkUnloadListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChunkUnload(ChunkUnloadEvent event) {
-        // Loading existing stacks requires the {QTY} tag in naming convention.
-        boolean loadStacks = plugin.getConfig().getBoolean("load-existing-stacks.enabled")
-                && plugin.getConfig().getString("stack-naming").contains("{QTY}");
-        List<String> types = plugin.getConfig().getStringList("load-existing-stacks.mob-types");
+        // If stacks are supposed to be loaded, don't wipe stack data.
+        if (plugin.getConfig().getBoolean("load-existing-stacks")) {
+            return;
+        }
 
         for (Entity entity : event.getChunk().getEntities()) {
-            // Ensure entity is stacked and has a custom name, otherwise skip.
-            if (entity.getCustomName() == null || StackUtils.getStackSize(entity) < 2
-                    || !plugin.getStackUtils().matchesStackName(entity.getCustomName())) {
-                plugin.getStackUtils().removeStackMetadata(entity);
+            if (!(entity instanceof LivingEntity)) {
                 continue;
             }
 
-            // If stacks aren't supposed to be loaded for the entity's type, wipe stack data.
-            if (!loadStacks || !types.contains(entity.getType().toString())) {
+            LivingEntity livingEntity = (LivingEntity) entity;
+
+            // If entity is stacked, remove stack data.
+            if (plugin.getStackUtils().getStackSize(livingEntity) > 1) {
                 entity.setCustomName(null);
                 entity.setCustomNameVisible(false);
+                plugin.getStackUtils().removeStackData(livingEntity);
             }
 
-            // Clean up metadata storage to prevent memory issues.
-            plugin.getStackUtils().removeStackMetadata(entity);
         }
     }
 

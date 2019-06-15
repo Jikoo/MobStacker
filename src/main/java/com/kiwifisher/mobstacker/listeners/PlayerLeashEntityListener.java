@@ -1,9 +1,7 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.utils.StackUtils;
-
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -20,12 +18,15 @@ public class PlayerLeashEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerLeashEntity(PlayerLeashEntityEvent event) {
+        // Ensure stacks cannot be leashed.
+        if (!plugin.getConfig().getBoolean("leash-whole-stack") || !(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
 
-        Entity entity = event.getEntity();
+        LivingEntity entity = (LivingEntity) event.getEntity();
 
-        // If the entity is a stack and leashing whole stacks is not permitted, peel off the rest.
-        if (StackUtils.getStackSize(entity) > 1
-                && !plugin.getConfig().getBoolean("leash-whole-stack")) {
+        // If the entity is a stack, peel off the rest.
+        if (plugin.getStackUtils().getStackSize(entity) > 1) {
             plugin.getStackUtils().peelOffStack(entity);
         }
 
@@ -33,11 +34,10 @@ public class PlayerLeashEntityListener implements Listener {
 
     @EventHandler
     public void playerUnleashEvent(PlayerUnleashEntityEvent event) {
-
-        Entity entity = event.getEntity();
-
-        plugin.getStackUtils().attemptToStack(entity, 1);
-
+        // Attempt to re-stack unleashed entities.
+        if (event.getEntity() instanceof LivingEntity) {
+            plugin.getStackUtils().attemptToStack((LivingEntity) event.getEntity(), 1);
+        }
     }
 
 }

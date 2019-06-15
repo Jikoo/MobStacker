@@ -1,8 +1,6 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.utils.StackUtils;
-
 import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +20,7 @@ public class SheepDyeListener implements Listener {
 
         Sheep sheep = event.getEntity();
 
-        if (StackUtils.getStackSize(sheep) > 1) {
+        if (plugin.getStackUtils().getStackSize(sheep) > 1) {
             // Peel off the dyed sheep.
             plugin.getStackUtils().peelOffStack(sheep);
         } else {

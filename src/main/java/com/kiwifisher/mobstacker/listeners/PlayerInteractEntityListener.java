@@ -1,12 +1,10 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.utils.StackUtils;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -44,12 +42,12 @@ public class PlayerInteractEntityListener implements Listener {
         // TODO fish bucket
         // TODO fish bucket renaming in anvil
 
-        Entity entity = event.getRightClicked();
-
         // Ensure entity is a stacked adult animal.
-        if (!(entity instanceof Animals) || !((Animals) entity).isAdult() || StackUtils.getStackSize(entity) < 2) {
+        if (!(event.getRightClicked() instanceof Animals) || !((Animals) event.getRightClicked()).isAdult()) {
             return;
         }
+
+        LivingEntity entity = (LivingEntity) event.getRightClicked();
 
         // Ensure player owns the animal if it is tameable
         if (entity instanceof Tameable && !event.getPlayer().equals(((Tameable) entity).getOwner())) {
@@ -65,7 +63,7 @@ public class PlayerInteractEntityListener implements Listener {
         plugin.getStackUtils().peelOffStack(entity);
         plugin.getStackUtils().setBred(entity);
         // Knock entity to allow players to continue breeding.
-        entity.setVelocity(event.getPlayer().getLocation().getDirection().normalize().setY(0.2));
+        entity.setVelocity(event.getPlayer().getLocation().getDirection().setY(0).normalize().setY(0.2));
 
         // Attempt to re-stack once after the initial breed timer (15 seconds, 300 ticks).
         new BukkitRunnable() {
@@ -84,15 +82,16 @@ public class PlayerInteractEntityListener implements Listener {
      * @param hand the ItemStack in the Player's hand
      */
     private void handleNameTag(PlayerInteractEntityEvent event, ItemStack hand) {
+
         // Ensure tag has meta.
-        if (!hand.hasItemMeta()) {
+        if (!hand.hasItemMeta() || !(event.getRightClicked() instanceof LivingEntity)) {
             return;
         }
 
         ItemMeta meta = hand.getItemMeta();
 
         // Ensure tag has a name set.
-        if (!meta.hasDisplayName()) {
+        if (meta == null || !meta.hasDisplayName()) {
             return;
         }
 
@@ -108,10 +107,10 @@ public class PlayerInteractEntityListener implements Listener {
             return;
         }
 
-        Entity renamed = event.getRightClicked();
+        LivingEntity renamed = (LivingEntity) event.getRightClicked();
 
         // Ensure the entity is a stack.
-        if (StackUtils.getStackSize(renamed) < 2) {
+        if (plugin.getStackUtils().getStackSize(renamed) < 2) {
             return;
         }
 

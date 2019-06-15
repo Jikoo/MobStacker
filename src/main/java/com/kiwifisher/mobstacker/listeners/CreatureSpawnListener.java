@@ -22,13 +22,13 @@ public class CreatureSpawnListener implements Listener {
         final LivingEntity spawnedCreature = event.getEntity();
 
         if (event.isCancelled()) {
-            plugin.getStackUtils().removeStackMetadata(spawnedCreature);
             return;
         }
 
-        // Check if the spawned entity is stackable.
-        if (!plugin.getStackUtils().isStackable(spawnedCreature)) {
-            return;
+        // Spigot support: Nerf spawned creatures in a way that we can easily make persist.
+        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER
+                && plugin.nerfSpawnerMobs(spawnedCreature.getWorld())) {
+            spawnedCreature.setAI(false);
         }
 
         // If the spawned entity has been spawned for a reason configured not to stack, flag it.
@@ -37,10 +37,9 @@ public class CreatureSpawnListener implements Listener {
             return;
         }
 
-        // Spigot support: Nerf spawned creatures in a way that we can easily make persist.
-        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER
-                && plugin.nerfSpawnerMobs(spawnedCreature.getWorld())) {
-            spawnedCreature.setAI(false);
+        // Check if the spawned entity is stackable.
+        if (!plugin.getStackUtils().isStackable(spawnedCreature)) {
+            return;
         }
 
         // Attempt to stack.

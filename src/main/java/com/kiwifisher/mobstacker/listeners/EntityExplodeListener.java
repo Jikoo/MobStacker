@@ -1,10 +1,7 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.utils.StackUtils;
-
 import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,8 +18,13 @@ public class EntityExplodeListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
 
-        Entity entity = event.getEntity();
-        int quantity = StackUtils.getStackSize(entity);
+        if (!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
+
+        LivingEntity entity = (LivingEntity) event.getEntity();
+
+        int quantity = plugin.getStackUtils().getStackSize(entity);
 
         // Only bother with entities that are actually stacked.
         if (quantity < 2) {
@@ -35,9 +37,7 @@ public class EntityExplodeListener implements Listener {
             entity = plugin.getStackUtils().peelOffStack(entity);
 
             // Set 1 tick of no damage to prevent resulting explosion harming the new stack.
-            if (entity instanceof LivingEntity) {
-                ((LivingEntity) entity).setNoDamageTicks(1);
-            }
+            entity.setNoDamageTicks(1);
 
             return;
 
@@ -61,7 +61,7 @@ public class EntityExplodeListener implements Listener {
             entity.remove();
 
             // Create the explosion.
-            event.getLocation().getWorld().createExplosion(event.getLocation(), power);
+            entity.getWorld().createExplosion(event.getLocation(), power);
 
         }
 

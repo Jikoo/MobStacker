@@ -123,7 +123,7 @@ public class MobStacker extends JavaPlugin {
 
         for (World world : getServer().getWorlds()) {
             for (LivingEntity entity : world.getLivingEntities()) {
-                if (StackUtils.getStackSize(entity) > 1) {
+                if (getStackUtils().getStackSize(entity) > 1) {
                     entity.remove();
                 }
             }

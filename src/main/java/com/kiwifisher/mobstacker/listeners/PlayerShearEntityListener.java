@@ -1,9 +1,7 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.utils.StackUtils;
-
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,10 +17,13 @@ public class PlayerShearEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
 
-        Entity entity = event.getEntity();
+        LivingEntity entity = (LivingEntity) event.getEntity();
 
-        if (StackUtils.getStackSize(entity) > 1) {
+        if (plugin.getStackUtils().getStackSize(entity) > 1) {
             // Peel off the sheared entity.
             plugin.getStackUtils().peelOffStack(entity);
         }

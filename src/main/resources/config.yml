@@ -98,34 +98,7 @@ multiply-eggs:
   max: 16
 
 # Should previously stacked mobs be loaded back when chunks load?
-# This requires your stack-naming option to contain the {QTY} tag.
-load-existing-stacks:
-  enabled: true
-  mob-types:
-  - CAT
-  - CHICKEN
-  - COW
-  - DONKEY
-  - FOX
-  - HORSE
-  - LLAMA
-  - MULE
-  - MUSHROOM_COW
-  - OCELOT
-  - PANDA
-  - PARROT
-  - PIG
-  - POLAR_BEAR
-  - RABBIT
-  - SKELETON_HORSE
-  - SNOWMAN
-  - SHEEP
-  - SQUID
-  - TRADER_LLAMA
-  - TURTLE
-  - VILLAGER
-  - WOLF
-  - ZOMBIE_HORSE
+load-existing-stacks: true
 
 # If a creeper stack explodes, should the whole stack die?
 exploding-creeper-kills-stack: false

@@ -1,11 +1,13 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
-import com.kiwifisher.mobstacker.utils.StackUtils;
+import java.util.List;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,8 +16,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 /**
  * Listener for EntityDamageEvents. Used to cause certain types of damage to persist into new stacks.
@@ -33,15 +33,20 @@ public class EntityDamageListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
 
-        Entity entity = event.getEntity();
+        if (!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
+
+        LivingEntity entity = (LivingEntity) event.getEntity();
         List<String> damageReasons = plugin.getConfig().getStringList("restack-on-damage");
 
         if (damageReasons.contains(event.getCause().name())) {
-            plugin.getStackUtils().attemptToStack(event.getEntity(), 1);
+            plugin.getStackUtils().attemptToStack(entity, 1);
         }
 
         // Ensure whole stack damaging is enabled and the entity is a stack.
-        if (!plugin.getConfig().getBoolean("persistent-damage.enable") || StackUtils.getStackSize(entity) < 2) {
+        if (!plugin.getConfig().getBoolean("persistent-damage.enable")
+                || plugin.getStackUtils().getStackSize(entity) < 2) {
             return;
         }
 
@@ -69,19 +74,24 @@ public class EntityDamageListener implements Listener {
 
         HumanEntity attackerHuman = (HumanEntity) attackerEntity;
 
-        ItemStack weapon = attackerHuman.getEquipment().getItemInMainHand();
-
-        // Ensure weapon used is a sword that is off cooldown and attacker is eligible to sweep.
-        if (weapon == null || attackerHuman.hasCooldown(weapon.getType())
-                || !weapon.getType().name().endsWith("_SWORD") || !attackerHuman.isOnGround()
-                || attackerHuman.isBlocking() || attackerHuman.isHandRaised()
-                || attackerHuman instanceof Player && ((Player) attackerHuman).isSprinting()) {
+        if (!attackerHuman.isOnGround() || attackerHuman.isBlocking() || attackerHuman.isHandRaised()
+                || attackerHuman instanceof Player && ((Player) attackerHuman).isSprinting()
+                || attackerHuman.getEquipment() == null) {
             return;
         }
 
+        ItemStack weapon = attackerHuman.getEquipment().getItemInMainHand();
+
+        // Ensure weapon used is a sword that is off cooldown and attacker is eligible to sweep.
+        if (attackerHuman.hasCooldown(weapon.getType()) || !weapon.getType().name().endsWith("_SWORD")) {
+            return;
+        }
+
+        AttributeInstance attackDamage = attackerHuman.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
         // Just use doubles to prevent rounding issues, lots of casting looks messy.
         double sweepLevel = weapon.getEnchantmentLevel(Enchantment.SWEEPING_EDGE);
-        double damage = sweepLevel < 1 ? 1 : 1 + attackerHuman.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue() * (sweepLevel / (sweepLevel + 1));
+        double damage = sweepLevel < 1
+                ? 1 : 1 + (attackDamage != null ? attackDamage.getValue() : 0) * (sweepLevel / (sweepLevel + 1));
 
         plugin.getStackUtils().damageAverageHealth(entity, damage);
     }
