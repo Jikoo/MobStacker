@@ -538,9 +538,11 @@ public class StackUtils {
         copy.setCollidable(original.isCollidable());
         copy.setGliding(original.isGliding());
         copy.setLastDamage(original.getLastDamage());
-        Entity leashHolder = original.getLeashHolder();
-        original.setLeashHolder(null);
-        copy.setLeashHolder(leashHolder);
+        if (original.isLeashed()) {
+            Entity leashHolder = original.getLeashHolder();
+            original.setLeashHolder(null);
+            copy.setLeashHolder(leashHolder);
+        }
         copy.setMaximumAir(original.getMaximumAir());
         copy.setMaximumNoDamageTicks(original.getMaximumNoDamageTicks());
         copy.setNoDamageTicks(original.getNoDamageTicks());
