@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -58,14 +59,30 @@ public class EntityDamageListener implements Listener {
             return;
         }
 
-        // Special case: A sweep attack returns DamageCause.ENTITY_ATTACK for the primary entity involved.
-        if (event.getCause() != DamageCause.ENTITY_ATTACK
-                || !(event instanceof EntityDamageByEntityEvent)
-                || !damageReasons.contains("ENTITY_SWEEP_ATTACK")) {
+        if (!(event instanceof EntityDamageByEntityEvent)) {
             return;
         }
 
         Entity attackerEntity = ((EntityDamageByEntityEvent) event).getDamager();
+
+        // Special case: piercing arrow
+        if (attackerEntity instanceof AbstractArrow && damageReasons.contains("ARROW_PIERCE")) {
+            AbstractArrow arrow = (AbstractArrow) attackerEntity;
+            if (arrow.getPierceLevel() == 0) {
+                return;
+            }
+
+            double averageDamage = event.getDamage() * arrow.getPierceLevel() / plugin.getStackUtils().getStackSize(entity);
+            plugin.getStackUtils().damageAverageHealth(entity, averageDamage);
+            arrow.setPierceLevel(0);
+            return;
+        }
+
+        // Special case: A sweep attack returns DamageCause.ENTITY_ATTACK for the primary entity involved.
+        if (event.getCause() != DamageCause.ENTITY_ATTACK
+                || !damageReasons.contains("ENTITY_SWEEP_ATTACK")) {
+            return;
+        }
 
         // Ensure attacker is at least a HumanEntity.
         if (!(attackerEntity instanceof HumanEntity)) {

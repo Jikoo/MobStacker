@@ -49,6 +49,7 @@ stack-properties:
 persistent-damage:
   enable: true
   reasons:
+  - ARROW_PIERCE
   - BLOCK_EXPLOSION
   - CONTACT
   - CRAMMING
@@ -205,6 +206,7 @@ stack-spawn-reason:
   DROWNED: true
   EGG: true
   ENDER_PEARL: true
+  EXPLOSION: false
   INFECTION: true
   JOCKEY: false
   LIGHTNING: true
@@ -212,6 +214,8 @@ stack-spawn-reason:
   NATURAL: true
   NETHER_PORTAL: true
   OCELOT_BABY: true
+  PATROL: false
+  RAID: false
   REINFORCEMENTS: true
   SHEARED: true
   SHOULDER_ENTITY: true

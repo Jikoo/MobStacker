@@ -50,7 +50,8 @@ public class PlayerInteractEntityListener implements Listener {
         LivingEntity entity = (LivingEntity) event.getRightClicked();
 
         // Ensure player owns the animal if it is tameable
-        if (entity instanceof Tameable && !event.getPlayer().equals(((Tameable) entity).getOwner())) {
+        if (plugin.getStackUtils().getStackSize(entity) < 2
+                || entity instanceof Tameable && !event.getPlayer().equals(((Tameable) entity).getOwner())) {
             return;
         }
 
