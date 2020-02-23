@@ -7,6 +7,7 @@ import com.kiwifisher.mobstacker.commands.MobStackerCommands;
 import com.kiwifisher.mobstacker.listeners.ChunkLoadListener;
 import com.kiwifisher.mobstacker.listeners.ChunkUnloadListener;
 import com.kiwifisher.mobstacker.listeners.CreatureSpawnListener;
+import com.kiwifisher.mobstacker.listeners.EntityChangeBlockListener;
 import com.kiwifisher.mobstacker.listeners.EntityDamageListener;
 import com.kiwifisher.mobstacker.listeners.EntityDeathListener;
 import com.kiwifisher.mobstacker.listeners.EntityExplodeListener;
@@ -80,6 +81,7 @@ public class MobStacker extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new ChunkLoadListener(this), this);
         this.getServer().getPluginManager().registerEvents(new ChunkUnloadListener(this), this);
         this.getServer().getPluginManager().registerEvents(new CreatureSpawnListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new EntityChangeBlockListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityExplodeListener(this), this);

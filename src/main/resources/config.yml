@@ -126,6 +126,7 @@ blacklist-world:
 
 # Mobs marked with true WILL attempt to stack.
 stack-mob-type:
+  BEE: false
   BAT: true
   BLAZE: true
   CAT: false
@@ -194,6 +195,7 @@ stack-mob-type:
 # CUSTOM is mobs spawned by plugins, including this one. Certain features require CUSTOM to be left true.
 # The plugin will still work if CUSTOM is set to false, jut not collecting stacks when another stack is killed nearby.
 stack-spawn-reason:
+  BEEHIVE: false
   BREEDING: true
   BUILD_IRONGOLEM: false
   BUILD_SNOWMAN: false

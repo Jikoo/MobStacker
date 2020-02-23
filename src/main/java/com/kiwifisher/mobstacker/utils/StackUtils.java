@@ -18,6 +18,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Bat;
+import org.bukkit.entity.Bee;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Creature;
@@ -239,6 +240,9 @@ public class StackUtils {
         // Breeding status takes 5 minutes to reset.
         long irrelevantAfter = System.currentTimeMillis() - 300000L;
 
+        // TODO ensure items are not deleted (i.e. zombie picks up player gear, zombie is merged onto a stack)
+        // May require additional tags applied on entity item pick up
+
         /*
          * If entity2 was bred later, it has a longer time until it can next breed and should not stack.
          * However, if it was bred longer than 5 minutes ago, it doesn't matter - the breeding timer resets then.
@@ -270,6 +274,10 @@ public class StackUtils {
         if (plugin.getConfig().getBoolean("stack-properties.age", true)
                 && entity1 instanceof Ageable && entity2 instanceof Ageable
                 && ((Ageable) entity1).isAdult() != ((Ageable) entity2).isAdult()) {
+            return false;
+        }
+
+        if (entity1 instanceof Bee && entity2 instanceof Bee && ((Bee) entity1).hasNectar() != ((Bee) entity2).hasNectar()) {
             return false;
         }
 
@@ -586,6 +594,17 @@ public class StackUtils {
 
         if (original instanceof Bat && copy instanceof Bat) {
             ((Bat) copy).setAwake(((Bat) original).isAwake());
+        }
+
+        if (original instanceof Bee && copy instanceof Bee) {
+            Bee originalitbee = (Bee) original;
+            Bee copbee = (Bee) copy;
+            copbee.setAnger(originalitbee.getAnger());
+            copbee.setCannotEnterHiveTicks(originalitbee.getCannotEnterHiveTicks());
+            copbee.setFlower(originalitbee.getFlower());
+            copbee.setHasNectar(originalitbee.hasNectar());
+            // Do not copy sting state - kills entire stacks
+            copbee.setHive(originalitbee.getHive());
         }
 
         if (original instanceof Colorable && copy instanceof Colorable) {

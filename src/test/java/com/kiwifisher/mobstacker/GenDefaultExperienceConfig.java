@@ -64,6 +64,7 @@ public class GenDefaultExperienceConfig {
         entry.setMaximum(3);
         entry.setConditions(Collections.singletonList(new ConditionPropertiesAdult()));
         pool.setEntries(Collections.singletonList(entry));
+        defaults.put("minecraft:bee", pool);
         defaults.put("minecraft:cat", pool);
         defaults.put("minecraft:chicken", pool);
         defaults.put("minecraft:cod", pool);
@@ -149,7 +150,7 @@ public class GenDefaultExperienceConfig {
         entry.setMaximum(2);
         entry.setConditions(Collections.singletonList(new ConditionPropertiesAdult()));
         pool.setEntries(Collections.singletonList(entry));
-        defaults.put("minecraft:fox", pool);// TODO confirm 1-2 not typo of 1-3 like all other animals
+        defaults.put("minecraft:fox", pool);
 
         pool = new BaseExperiencePool();
         entry = new BaseExperienceEntry();
