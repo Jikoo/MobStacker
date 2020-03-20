@@ -240,16 +240,16 @@ public class StackUtils {
         // Breeding status takes 5 minutes to reset.
         long irrelevantAfter = System.currentTimeMillis() - 300000L;
 
-        // TODO ensure items are not deleted (i.e. zombie picks up player gear, zombie is merged onto a stack)
-        // May require additional tags applied on entity item pick up
-
         /*
-         * If entity2 was bred later, it has a longer time until it can next breed and should not stack.
-         * However, if it was bred longer than 5 minutes ago, it doesn't matter - the breeding timer resets then.
+         * If entities have been bred recently, only more recently bred entity is allowed to be stacked onto.
          */
-        if (lastBred1 < lastBred2 && lastBred2 > irrelevantAfter) {
+        if (lastBred1 > irrelevantAfter && lastBred2 < irrelevantAfter
+                || lastBred1 <= irrelevantAfter && lastBred2 > irrelevantAfter) {
             return false;
         }
+
+        // TODO ensure items are not deleted (i.e. zombie picks up player gear, zombie is merged onto a stack)
+        // May require additional tags applied on entity item pick up
 
         // Prevent accidental despawns
         if (entity1.getRemoveWhenFarAway() != entity2.getRemoveWhenFarAway()) {
@@ -498,10 +498,6 @@ public class StackUtils {
             // Set the old stack's new size.
             setStackSize(entity, newQuantity);
         }
-
-        // Attempt to restack once.
-        attemptToStack(entity, 1);
-        attemptToStack(newEntity, 1);
 
         return newEntity;
 

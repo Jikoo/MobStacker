@@ -1,6 +1,7 @@
 package com.kiwifisher.mobstacker.listeners;
 
 import com.kiwifisher.mobstacker.MobStacker;
+import com.kiwifisher.mobstacker.utils.StackUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.EntityType;
@@ -49,20 +50,22 @@ public class PlayerInteractEntityListener implements Listener {
 
         LivingEntity entity = (LivingEntity) event.getRightClicked();
 
+        StackUtils stackUtils = plugin.getStackUtils();
         // Ensure player owns the animal if it is tameable
-        if (plugin.getStackUtils().getStackSize(entity) < 2
+        if (stackUtils.getStackSize(entity) < 2
                 || entity instanceof Tameable && !event.getPlayer().equals(((Tameable) entity).getOwner())) {
             return;
         }
 
         // Ensure entity is ready to breed and item in hand is food.
-        if (!plugin.getStackUtils().canBreed(entity) || !isBreedingMaterialFor(entity.getType(), hand.getType())) {
+        if (!stackUtils.canBreed(entity) || !isBreedingMaterialFor(entity.getType(), hand.getType())) {
             return;
         }
 
         // Peel off the remainder of the stack and set entity bred.
-        plugin.getStackUtils().peelOffStack(entity);
-        plugin.getStackUtils().setBred(entity);
+        stackUtils.peelOffStack(entity);
+        stackUtils.setBred(entity);
+        stackUtils.setStackable(entity, false);
         // Knock entity to allow players to continue breeding.
         entity.setVelocity(event.getPlayer().getLocation().getDirection().setY(0).normalize().setY(0.2));
 
@@ -70,7 +73,8 @@ public class PlayerInteractEntityListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                plugin.getStackUtils().attemptToStack(entity, 1);
+                stackUtils.setStackable(entity, true);
+                stackUtils.attemptToStack(entity, 1);
             }
         }.runTaskLater(plugin, 301L);
 

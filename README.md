@@ -1,5 +1,5 @@
 # About
-MobStacker is a Bukkit/Spigot plugin for 1.14+ that stacks mobs in a highly efficient way to decrease server and FPS lag.
+MobStacker is a Bukkit/Spigot plugin for 1.15+ that stacks mobs in a highly efficient way to decrease server and FPS lag.
 
 ## Features
 * Clusters of configurable mobs are removed and replaced with a single named entity
