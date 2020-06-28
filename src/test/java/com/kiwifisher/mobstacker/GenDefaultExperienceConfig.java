@@ -44,9 +44,8 @@ public class GenDefaultExperienceConfig {
         defaults.put("minecraft:bat", pool);
         defaults.put("minecraft:dolphin", pool);
         defaults.put("minecraft:iron_golem", pool);
-        defaults.put("minecraft:ravager", pool); // TODO double check, wiki shows no exp drop
         defaults.put("minecraft:snow_golem", pool);
-        defaults.put("minecraft:villager", pool);;
+        defaults.put("minecraft:villager", pool);
         defaults.put("minecraft:wandering_trader", pool);
 
         pool = new BaseExperiencePool();
@@ -100,6 +99,7 @@ public class GenDefaultExperienceConfig {
         defaults.put("minecraft:enderman", pool);
         defaults.put("minecraft:ghast", pool);
         defaults.put("minecraft:giant", pool);
+        defaults.put("minecraft:hoglin", pool);
         defaults.put("minecraft:illusioner", pool);
         defaults.put("minecraft:phantom", pool);
         defaults.put("minecraft:pillager", pool);
@@ -111,6 +111,7 @@ public class GenDefaultExperienceConfig {
         defaults.put("minecraft:vindicator", pool);
         defaults.put("minecraft:witch", pool);
         defaults.put("minecraft:wither_skeleton", pool);
+        defaults.put("minecraft:zoglin", pool);
 
         pool = new BaseExperiencePool();
         entries = new ArrayList<>();
@@ -128,8 +129,8 @@ public class GenDefaultExperienceConfig {
         defaults.put("minecraft:drowned", pool);
         defaults.put("minecraft:husk", pool);
         defaults.put("minecraft:zombie", pool);
-        defaults.put("minecraft:zombie_pigman", pool);
         defaults.put("minecraft:zombie_villager", pool);
+        defaults.put("minecraft:zombified_piglin", pool);
 
         pool = new BaseExperiencePool();
         entry = new BaseExperienceEntry();
@@ -151,17 +152,37 @@ public class GenDefaultExperienceConfig {
         entry.setConditions(Collections.singletonList(new ConditionPropertiesAdult()));
         pool.setEntries(Collections.singletonList(entry));
         defaults.put("minecraft:fox", pool);
+        defaults.put("minecraft:strider", pool);
+
+        pool = new BaseExperiencePool();
+        entries = new ArrayList<>();
+        entry = new BaseExperienceEntry();
+        entry.setMinimum(1);
+        entries.add(entry);
+        // Baby piglins drop 1 exp. Adults drop 5, so add 4 if adult.
+        entry = new BaseExperienceEntry();
+        entry.setMinimum(4);
+        entry.setConditions(Collections.singletonList(new ConditionPropertiesAdult()));
+        entries.add(entry);
+        pool.setEntries(entries);
+        defaults.put("minecraft:piglin", pool);
+
+        pool = new BaseExperiencePool();
+        entry = new BaseExperienceEntry();
+        entry.setMinimum(20);
+        pool.setEntries(Collections.singletonList(entry));
+        defaults.put("minecraft:ravager", pool);
+
+        pool = new BaseExperiencePool();
+        pool.setEntries(Collections.singletonList(new SlimeExperienceEntry()));
+        defaults.put("minecraft:slime", pool);
+        defaults.put("minecraft:magma_cube", pool);
 
         pool = new BaseExperiencePool();
         entry = new BaseExperienceEntry();
         entry.setMinimum(50);
         pool.setEntries(Collections.singletonList(entry));
         defaults.put("minecraft:wither", pool);
-
-        pool = new BaseExperiencePool();
-        pool.setEntries(Collections.singletonList(new SlimeExperienceEntry()));
-        defaults.put("minecraft:slime", pool);
-        defaults.put("minecraft:magma_cube", pool);
 
         Map<String, Map<String, ExperiencePool>> mappings = new HashMap<>();
         mappings.put("DEFAULT", defaults);

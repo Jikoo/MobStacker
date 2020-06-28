@@ -31,16 +31,10 @@ stack-properties:
   variant: true
   maxHealth: true
   tameable: true
-  creeper:
-    powered: true
-  golem:
-    playerCreated: true
-  sheep:
-    sheared: true
-  villager:
-    profession: true
-  wolf:
-    anger: true
+  creeper.powered: true
+  golem.playerCreated: true
+  sheep.sheared: true
+  wolf.anger: true
 
 # When certain damage types harm a mob, it's logical for the entire stack to take damage.
 # This will allow easier use of grinders, etc. For a list of damage causes, see
@@ -146,6 +140,7 @@ stack-mob-type:
   GHAST: true
   GIANT: true
   GUARDIAN: true
+  HOGLIN: true
   HORSE: false # Possible to copy good horses' stats
   HUSK: true
   ILLUSIONER: false # Limited spawns
@@ -159,7 +154,7 @@ stack-mob-type:
   PARROT: true
   PHANTOM: false
   PIG: true
-  PIG_ZOMBIE: true
+  PIGLIN: true
   PILLAGER: false
   POLAR_BEAR: false
   PUFFERFISH: false # Fish are buggy and not fully supported
@@ -176,20 +171,23 @@ stack-mob-type:
   SPIDER: true
   SQUID: false
   STRAY: true
+  STRIDER: false # Striders missing saddle API
   TRADER_LLAMA: false
   TROPICAL_FISH: false # Fish are buggy and not fully supported
   TURTLE: false # Turtle spawn point, "home beach" will be messed up
   VEX: false
-  VILLAGER: false # Reroll mess
+  VILLAGER: true
   VINDICATOR: false # Limited spawns
   WANDERING_TRADER: false
   WITCH: true
   WITHER: false
   WITHER_SKELETON: true
   WOLF: false
+  ZOGLIN: true
   ZOMBIE: true
   ZOMBIE_HORSE: true
   ZOMBIE_VILLAGER: true
+  ZOMBIFIED_PIGLIN: true
 
 # Spawn methods marked with true WILL attempt to stack.
 # CUSTOM is mobs spawned by plugins, including this one. Certain features require CUSTOM to be left true.

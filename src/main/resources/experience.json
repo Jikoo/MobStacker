@@ -20,6 +20,26 @@
         }
       ]
     },
+    "minecraft:zoglin": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
+    "minecraft:hoglin": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        }
+      ]
+    },
     "minecraft:trader_llama": {
       "type": "BaseExperiencePool",
       "entries": [
@@ -27,6 +47,22 @@
           "type": "BaseExperienceEntry",
           "minimum": 1,
           "maximum": 3,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
+    "minecraft:strider": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 2,
           "conditions": [
             {
               "type": "ConditionPropertiesAdult",
@@ -117,6 +153,27 @@
           "type": "BaseExperienceEntry",
           "minimum": 5,
           "maximum": 0
+        }
+      ]
+    },
+    "minecraft:zombified_piglin": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 5,
+          "maximum": 0
+        },
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 7,
+          "maximum": 0,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": false
+            }
+          ]
         }
       ]
     },
@@ -248,6 +305,27 @@
         }
       ]
     },
+    "minecraft:piglin": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 1,
+          "maximum": 0
+        },
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 4,
+          "maximum": 0,
+          "conditions": [
+            {
+              "type": "ConditionPropertiesAdult",
+              "adult": true
+            }
+          ]
+        }
+      ]
+    },
     "minecraft:enderman": {
       "type": "BaseExperiencePool",
       "entries": [
@@ -333,29 +411,15 @@
         }
       ]
     },
-    "minecraft:zombie_pigman": {
+    "minecraft:ravager": {
       "type": "BaseExperiencePool",
       "entries": [
         {
           "type": "BaseExperienceEntry",
-          "minimum": 5,
+          "minimum": 20,
           "maximum": 0
-        },
-        {
-          "type": "BaseExperienceEntry",
-          "minimum": 7,
-          "maximum": 0,
-          "conditions": [
-            {
-              "type": "ConditionPropertiesAdult",
-              "adult": false
-            }
-          ]
         }
       ]
-    },
-    "minecraft:ravager": {
-      "type": "BaseExperiencePool"
     },
     "minecraft:squid": {
       "type": "BaseExperiencePool",

@@ -34,6 +34,7 @@ import org.bukkit.entity.Mob;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Piglin;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Sittable;
@@ -43,8 +44,8 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.entity.TropicalFish;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zoglin;
 import org.bukkit.entity.Zombie;
-import org.bukkit.entity.ZombieVillager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
 import org.bukkit.metadata.MetadataValue;
@@ -306,21 +307,17 @@ public class StackUtils {
 
             // Don't delete saddles, armor, llama decor, or items in chests.
             for (ItemStack itemStack : horse2.getInventory().getContents()) {
-                if (itemStack.getType() != Material.AIR) {
+                //noinspection ConstantConditions - Array is not null, but elements may be.
+                if (itemStack != null && itemStack.getType() != Material.AIR) {
                     return false;
                 }
             }
         }
 
-        if (entity1 instanceof Horse && entity2 instanceof Horse) {
-            Horse horse1 = (Horse) entity1;
-            Horse horse2 = (Horse) entity2;
-
-            if (plugin.getConfig().getBoolean("stack-properties.variant", true)
-                    && (horse1.getStyle() != horse2.getStyle() || horse1.getColor() != horse2.getColor())) {
-                return false;
-            }
-
+        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
+                && entity1 instanceof Horse && entity2 instanceof Horse
+                && (((Horse) entity1).getStyle() != ((Horse) entity2).getStyle() || ((Horse) entity1).getColor() != ((Horse) entity2).getColor())) {
+            return false;
         }
 
         if (entity1 instanceof ChestedHorse && entity2 instanceof ChestedHorse
@@ -346,9 +343,7 @@ public class StackUtils {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
-                && entity1 instanceof Pig && entity2 instanceof Pig
-                && ((Pig) entity2).hasSaddle()) {
+        if (entity1 instanceof Pig && entity2 instanceof Pig && ((Pig) entity2).hasSaddle()) {
             // Don't stack saddled pigs - saddle is intentionally not set on split.
             return false;
         }
@@ -364,6 +359,14 @@ public class StackUtils {
                 && ((Sheep) entity1).isSheared() != ((Sheep) entity2).isSheared()) {
             return false;
         }
+
+        // Separate slimes by size
+        if (entity1 instanceof Slime && entity2 instanceof Slime
+                && ((Slime) entity1).getSize() != ((Slime) entity2).getSize()) {
+            return false;
+        }
+
+        // TODO No API for Strider saddles yet
 
         if (plugin.getConfig().getBoolean("stack-properties.tameable", true)
                 && entity1 instanceof Tameable && entity2 instanceof Tameable) {
@@ -387,10 +390,14 @@ public class StackUtils {
 
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.villager.profession", true)
-                && entity1 instanceof Villager && entity2 instanceof Villager
-                && ((Villager) entity1).getProfession() != ((Villager) entity2).getProfession()) {
-            // TODO figure out villager specifics goal
+        if (plugin.getConfig().getBoolean("stack-properties.age", true)
+                && entity1 instanceof Piglin && entity2 instanceof Piglin
+                && ((Piglin) entity1).isBaby() != ((Piglin) entity2).isBaby()) {
+            return false;
+        }
+
+        if (entity1 instanceof Villager && entity2 instanceof Villager
+                && ((Villager) entity2).getVillagerLevel() > 1) {
             return false;
         }
 
@@ -407,17 +414,8 @@ public class StackUtils {
             }
         }
 
-        // Separate slimes by size
-        if (entity1 instanceof Slime && entity2 instanceof Slime
-                && ((Slime) entity1).getSize() != ((Slime) entity2).getSize()) {
-            return false;
-        }
-
-        // Separate zombie villagers by type
-        //noinspection ConstantConditions // Explicitly handled the same way for clarity
-        if (plugin.getConfig().getBoolean("stack-properties.villager.profession", true)
-                && entity1 instanceof ZombieVillager && entity2 instanceof ZombieVillager
-                && ((ZombieVillager) entity1).getVillagerProfession() != ((ZombieVillager) entity2).getVillagerProfession()) {
+        //noinspection RedundantIfStatement
+        if (entity1 instanceof Zoglin && entity2 instanceof Zoglin && ((Zoglin) entity1).isBaby() != ((Zoglin) entity2).isBaby()) {
             return false;
         }
 
@@ -511,6 +509,7 @@ public class StackUtils {
      * @param copy the Entity to copy properties to
      * @throws Exception when some un-handled weird special case comes into play
      */
+    @SuppressWarnings("RedundantThrows") // Occasionally an unforseen change or special case will cause an illegal state
     private void copyEntityProperties(LivingEntity original, LivingEntity copy) throws Exception {
 
         if (original == copy || original.equals(copy)
@@ -549,27 +548,9 @@ public class StackUtils {
         }
         copy.setMaximumAir(original.getMaximumAir());
         copy.setMaximumNoDamageTicks(original.getMaximumNoDamageTicks());
-        copy.setNoDamageTicks(original.getNoDamageTicks());
+        copy.setNoDamageTicks(0);
         copy.setRemainingAir(original.getRemainingAir());
         copy.setRemoveWhenFarAway(original.getRemoveWhenFarAway());
-
-        // TODO: Config option? If stack-down and horses enabled, could be abused to duplicate nice horses.
-        for (Attribute attribute : Attribute.values()) {
-            AttributeInstance attributeInstance = original.getAttribute(attribute);
-            if (attributeInstance != null) {
-                for (AttributeModifier modifier : attributeInstance.getModifiers()) {
-                    AttributeInstance copyInstance = copy.getAttribute(attribute);
-                    if (copyInstance == null || copyInstance.getModifiers().contains(modifier)) {
-                        continue;
-                    }
-                    try {
-                        copyInstance.addModifier(modifier);
-                    } catch (IllegalArgumentException e) {
-                        // Shouldn't be possible,
-                    }
-                }
-            }
-        }
 
         if (original instanceof AbstractHorse && copy instanceof AbstractHorse) {
             AbstractHorse originalAbstractHorse = (AbstractHorse) original;
@@ -662,6 +643,10 @@ public class StackUtils {
 
         // Pig: Saddle drops on death, do not set to prevent dupes
 
+        if (original instanceof Piglin && copy instanceof Piglin) {
+            ((Piglin) copy).setBaby(((Piglin) original).isBaby());
+        }
+
         if (original instanceof PigZombie && copy instanceof PigZombie) {
             ((PigZombie) copy).setAnger(((PigZombie) original).getAnger());
         }
@@ -702,13 +687,11 @@ public class StackUtils {
         }
 
         if (original instanceof Villager && copy instanceof Villager) {
-            Villager originalVillager = (Villager) original;
             Villager copyVillager = (Villager) copy;
-            copyVillager.setProfession(originalVillager.getProfession());
-            copyVillager.setRecipes(originalVillager.getRecipes());
-            copyVillager.setVillagerExperience(originalVillager.getVillagerExperience());
-            copyVillager.setVillagerType(originalVillager.getVillagerType());
-            // TODO figure out villager specifics goal
+            copyVillager.setVillagerLevel(0);
+            if (copyVillager.getProfession() != Villager.Profession.NITWIT) {
+                copyVillager.setProfession(Villager.Profession.NONE);
+            }
         }
 
         if (original instanceof Wolf && copy instanceof Wolf) {
@@ -722,8 +705,8 @@ public class StackUtils {
             ((Zombie) copy).setBaby(((Zombie) original).isBaby());
         }
 
-        if (original instanceof ZombieVillager && copy instanceof ZombieVillager) {
-            ((ZombieVillager) copy).setVillagerProfession(((ZombieVillager) original).getVillagerProfession());
+        if (original instanceof Zoglin && copy instanceof Zoglin) {
+            ((Zoglin) copy).setBaby(((Zoglin) original).isBaby());
         }
 
         /*
@@ -755,6 +738,25 @@ public class StackUtils {
                 | IllegalArgumentException | InvocationTargetException | NoSuchFieldException
                 | ClassCastException e) {
             // Eat exception, internal changes
+        }
+
+        // TODO: Config option? If stack-down and horses enabled, could be abused to duplicate nice horses.
+        // Copy attributes last - they are the most error-prone.
+        for (Attribute attribute : Attribute.values()) {
+            AttributeInstance attributeInstance = original.getAttribute(attribute);
+            if (attributeInstance != null) {
+                for (AttributeModifier modifier : attributeInstance.getModifiers()) {
+                    AttributeInstance copyInstance = copy.getAttribute(attribute);
+                    if (copyInstance == null || copyInstance.getModifiers().contains(modifier)) {
+                        continue;
+                    }
+                    try {
+                        copyInstance.addModifier(modifier);
+                    } catch (IllegalArgumentException e) {
+                        // Shouldn't be possible,
+                    }
+                }
+            }
         }
     }
 
