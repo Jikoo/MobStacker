@@ -539,6 +539,16 @@
         }
       ]
     },
+    "minecraft:piglin_brute": {
+      "type": "BaseExperiencePool",
+      "entries": [
+        {
+          "type": "BaseExperienceEntry",
+          "minimum": 20,
+          "maximum": 0
+        }
+      ]
+    },
     "minecraft:creeper": {
       "type": "BaseExperiencePool",
       "entries": [

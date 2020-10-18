@@ -3,6 +3,7 @@ package com.kiwifisher.mobstacker.listeners;
 import com.kiwifisher.mobstacker.MobStacker;
 import com.kiwifisher.mobstacker.utils.StackUtils;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -134,18 +135,18 @@ public class PlayerInteractEntityListener implements Listener {
     private boolean isBreedingMaterialFor(EntityType entity, Material material) {
 
         if (entity == EntityType.HORSE || entity == EntityType.DONKEY || entity == EntityType.MULE) {
-            return material == Material.GOLDEN_APPLE || material == Material.GOLDEN_CARROT;
+            return material == Material.GOLDEN_APPLE || material == Material.GOLDEN_CARROT
+                    || material == Material.ENCHANTED_GOLDEN_APPLE;
         }
-        if (entity == EntityType.SHEEP || entity == EntityType.COW
-                || entity == EntityType.MUSHROOM_COW) {
+        if (entity == EntityType.SHEEP || entity == EntityType.COW || entity == EntityType.MUSHROOM_COW) {
             return material == Material.WHEAT;
         }
         if (entity == EntityType.PIG) {
-            return material == Material.CARROT || material == Material.POTATO
-                    || material == Material.BEETROOT;
+            return material == Material.CARROT || material == Material.POTATO || material == Material.BEETROOT;
         }
         if (entity == EntityType.CHICKEN) {
-            return material.name().endsWith("SEEDS");
+            return material == Material.WHEAT_SEEDS || material == Material.BEETROOT_SEEDS
+                    || material == Material.PUMPKIN_SEEDS || material == Material.MELON_SEEDS;
         }
         if (entity == EntityType.WOLF) {
             return material == Material.COOKED_BEEF || material == Material.COOKED_CHICKEN
@@ -155,19 +156,32 @@ public class PlayerInteractEntityListener implements Listener {
                     || material == Material.PORKCHOP || material == Material.MUTTON
                     || material == Material.ROTTEN_FLESH;
         }
-        if (entity == EntityType.OCELOT) {
-            return material == Material.COD || material == Material.SALMON || material == Material.TROPICAL_FISH
-                    || material == Material.PUFFERFISH;
+        if (entity == EntityType.OCELOT || entity == EntityType.CAT) {
+            return material == Material.COD || material == Material.SALMON;
         }
         if (entity == EntityType.RABBIT) {
-            return material == Material.CARROT || material == Material.GOLDEN_CARROT
-                    || material == Material.DANDELION;
+            return material == Material.CARROT || material == Material.GOLDEN_CARROT || material == Material.DANDELION;
         }
-        if (entity == EntityType.LLAMA) {
+        if (entity == EntityType.LLAMA || entity == EntityType.TRADER_LLAMA) {
             return material == Material.HAY_BLOCK;
         }
         if (entity == EntityType.TURTLE) {
             return material == Material.SEAGRASS;
+        }
+        if (entity == EntityType.PANDA) {
+            return material == Material.BAMBOO;
+        }
+        if (entity == EntityType.FOX) {
+            return material == Material.SWEET_BERRIES;
+        }
+        if (entity == EntityType.BEE) {
+            return Tag.FLOWERS.isTagged(material);
+        }
+        if (entity == EntityType.HOGLIN) {
+            return material == Material.CRIMSON_FUNGUS;
+        }
+        if (entity == EntityType.STRIDER) {
+            return material == Material.WARPED_FUNGUS;
         }
 
         // Yet-unknown entity, or cannot be bred (e.g. polar bears).

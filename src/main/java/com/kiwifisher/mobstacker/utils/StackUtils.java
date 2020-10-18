@@ -19,33 +19,35 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Bee;
+import org.bukkit.entity.Breedable;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Fox;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.Mob;
+import org.bukkit.entity.Panda;
 import org.bukkit.entity.Parrot;
-import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Piglin;
+import org.bukkit.entity.PiglinAbstract;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Sittable;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Snowman;
+import org.bukkit.entity.Steerable;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.TropicalFish;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Zoglin;
-import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
 import org.bukkit.metadata.MetadataValue;
@@ -282,8 +284,9 @@ public class StackUtils {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
-                && entity1 instanceof Colorable && entity2 instanceof Colorable
+        boolean checkVariants = plugin.getConfig().getBoolean("stack-properties.variant", true);
+
+        if (checkVariants && entity1 instanceof Colorable && entity2 instanceof Colorable
                 && ((Colorable) entity1).getColor() != ((Colorable) entity2).getColor()) {
             return false;
         }
@@ -314,8 +317,7 @@ public class StackUtils {
             }
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
-                && entity1 instanceof Horse && entity2 instanceof Horse
+        if (checkVariants && entity1 instanceof Horse && entity2 instanceof Horse
                 && (((Horse) entity1).getStyle() != ((Horse) entity2).getStyle() || ((Horse) entity1).getColor() != ((Horse) entity2).getColor())) {
             return false;
         }
@@ -331,25 +333,37 @@ public class StackUtils {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
-                && entity1 instanceof Cat && entity2 instanceof Cat
+        if (checkVariants && entity1 instanceof Cat && entity2 instanceof Cat
                 && ((Cat) entity1).getCatType() != ((Cat) entity2).getCatType()) {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
-                && entity1 instanceof Parrot && entity2 instanceof Parrot
+        if (checkVariants && entity1 instanceof Fox && entity2 instanceof Fox
+                && ((Fox) entity1).getFoxType() != ((Fox) entity2).getFoxType()) {
+            return false;
+        }
+
+        if (checkVariants && entity1 instanceof Panda && entity2 instanceof Panda
+                && ((Panda) entity1).getMainGene() != ((Panda) entity2).getMainGene()) {
+            return false;
+        }
+
+        if (checkVariants && entity1 instanceof Parrot && entity2 instanceof Parrot
                 && ((Parrot) entity1).getVariant() != ((Parrot) entity2).getVariant()) {
             return false;
         }
 
-        if (entity1 instanceof Pig && entity2 instanceof Pig && ((Pig) entity2).hasSaddle()) {
-            // Don't stack saddled pigs - saddle is intentionally not set on split.
+        if (entity1 instanceof PiglinAbstract && entity2 instanceof PiglinAbstract
+                && ((PiglinAbstract) entity1).isImmuneToZombification() != ((PiglinAbstract) entity2).isImmuneToZombification()) {
             return false;
         }
 
-        if (plugin.getConfig().getBoolean("stack-properties.variant", true)
-                && entity1 instanceof Rabbit && entity2 instanceof Rabbit
+        if (entity1 instanceof Piglin && entity2 instanceof Piglin
+                && ((Piglin) entity1).isAbleToHunt() != ((Piglin) entity2).isAbleToHunt()) {
+            return false;
+        }
+
+        if (checkVariants && entity1 instanceof Rabbit && entity2 instanceof Rabbit
                 && ((Rabbit) entity1).getRabbitType() != ((Rabbit) entity2).getRabbitType()) {
             return false;
         }
@@ -366,7 +380,10 @@ public class StackUtils {
             return false;
         }
 
-        // TODO No API for Strider saddles yet
+        if (entity1 instanceof Steerable && entity2 instanceof Steerable && ((Steerable) entity2).hasSaddle()) {
+            // Don't stack saddled pigs or striders - saddle is intentionally not set on split.
+            return false;
+        }
 
         if (plugin.getConfig().getBoolean("stack-properties.tameable", true)
                 && entity1 instanceof Tameable && entity2 instanceof Tameable) {
@@ -382,18 +399,11 @@ public class StackUtils {
             TropicalFish fish1 = ((TropicalFish) entity1);
             TropicalFish fish2 = (TropicalFish) entity2;
 
-            if (plugin.getConfig().getBoolean("stack-properties.variant", true)
-                    && (fish1.getBodyColor() != fish2.getBodyColor() || fish1.getPatternColor() != fish2.getPatternColor()
+            if (checkVariants && (fish1.getBodyColor() != fish2.getBodyColor() || fish1.getPatternColor() != fish2.getPatternColor()
                     || fish1.getPattern() != fish2.getPattern())) {
                 return false;
             }
 
-        }
-
-        if (plugin.getConfig().getBoolean("stack-properties.age", true)
-                && entity1 instanceof Piglin && entity2 instanceof Piglin
-                && ((Piglin) entity1).isBaby() != ((Piglin) entity2).isBaby()) {
-            return false;
         }
 
         if (entity1 instanceof Villager && entity2 instanceof Villager
@@ -408,15 +418,12 @@ public class StackUtils {
                     && wolf1.isAngry() != wolf2.isAngry()) {
                 return false;
             }
-            if (plugin.getConfig().getBoolean("stack-properties.variant", true)
+            // Suppress inspection for easy reordering
+            //noinspection RedundantIfStatement
+            if (checkVariants
                     && wolf1.getCollarColor() != wolf2.getCollarColor()) {
                 return false;
             }
-        }
-
-        //noinspection RedundantIfStatement
-        if (entity1 instanceof Zoglin && entity2 instanceof Zoglin && ((Zoglin) entity1).isBaby() != ((Zoglin) entity2).isBaby()) {
-            return false;
         }
 
         return true;
@@ -562,11 +569,7 @@ public class StackUtils {
         }
 
         if (original instanceof Ageable && copy instanceof Ageable) {
-            Ageable originalAgeable = (Ageable) original;
-            Ageable copyAgeable = (Ageable) copy;
-            copyAgeable.setAge(originalAgeable.getAge());
-            copyAgeable.setAgeLock(originalAgeable.getAgeLock());
-            copyAgeable.setBreed(originalAgeable.canBreed());
+            ((Ageable) copy).setAge(((Ageable) original).getAge());
         }
 
         if (original instanceof Bat && copy instanceof Bat) {
@@ -582,6 +585,18 @@ public class StackUtils {
             copbee.setHasNectar(originalitbee.hasNectar());
             // Do not copy sting state - kills entire stacks
             copbee.setHive(originalitbee.getHive());
+        }
+
+        if (original instanceof Breedable && copy instanceof Breedable) {
+            Breedable originalBreedable = (Breedable) original;
+            Breedable copyBreedable = (Breedable) copy;
+            copyBreedable.setAgeLock(originalBreedable.getAgeLock());
+            copyBreedable.setBreed(originalBreedable.canBreed());
+
+        }
+
+        if (original instanceof Cat && copy instanceof Cat) {
+            ((Cat) copy).setCatType(((Cat) original).getCatType());
         }
 
         if (original instanceof Colorable && copy instanceof Colorable) {
@@ -610,6 +625,10 @@ public class StackUtils {
 
         // Enderman: held block drops on death, do not set to prevent dupes
 
+        if (original instanceof Fox && copy instanceof Fox) {
+            ((Fox) copy).setFoxType(((Fox) original).getFoxType());
+        }
+
         if (original instanceof Horse && copy instanceof Horse) {
             Horse originalHorse = (Horse) original;
             Horse copyHorse = (Horse) copy;
@@ -633,18 +652,23 @@ public class StackUtils {
             ((Mob) copy).setTarget(((Mob) original).getTarget());
         }
 
-        if (original instanceof Cat && copy instanceof Cat) {
-            ((Cat) copy).setCatType(((Cat) original).getCatType());
+        if (original instanceof Panda && copy instanceof Panda) {
+            ((Panda) copy).setMainGene(((Panda) original).getMainGene());
         }
 
         if (original instanceof Parrot && copy instanceof Parrot) {
             ((Parrot) copy).setVariant(((Parrot) original).getVariant());
         }
 
-        // Pig: Saddle drops on death, do not set to prevent dupes
+        if (original instanceof PiglinAbstract && copy instanceof PiglinAbstract) {
+            PiglinAbstract originalPiglin = (PiglinAbstract) original;
+            PiglinAbstract copyPiglin = (PiglinAbstract) copy;
+            copyPiglin.setConversionTime(originalPiglin.getConversionTime());
+            copyPiglin.setImmuneToZombification(originalPiglin.isImmuneToZombification());
+        }
 
         if (original instanceof Piglin && copy instanceof Piglin) {
-            ((Piglin) copy).setBaby(((Piglin) original).isBaby());
+            ((Piglin) copy).setIsAbleToHunt(((Piglin) original).isAbleToHunt());
         }
 
         if (original instanceof PigZombie && copy instanceof PigZombie) {
@@ -670,6 +694,8 @@ public class StackUtils {
         if (original instanceof Snowman && copy instanceof Snowman) {
             ((Snowman) copy).setDerp(((Snowman) original).isDerp());
         }
+
+        // Steerable: Saddle drops on death, do not set to prevent dupes
 
         if (original instanceof Tameable && copy instanceof Tameable) {
             Tameable originalTameable = (Tameable) original;
@@ -699,14 +725,6 @@ public class StackUtils {
             Wolf copyWolf = (Wolf) copy;
             copyWolf.setAngry(originalWolf.isAngry());
             copyWolf.setCollarColor(originalWolf.getCollarColor());
-        }
-
-        if (original instanceof Zombie && copy instanceof Zombie) {
-            ((Zombie) copy).setBaby(((Zombie) original).isBaby());
-        }
-
-        if (original instanceof Zoglin && copy instanceof Zoglin) {
-            ((Zoglin) copy).setBaby(((Zoglin) original).isBaby());
         }
 
         /*
@@ -842,7 +860,7 @@ public class StackUtils {
         }
 
         // Ensure we have a match with the name pattern. Remove all quote start/ends to prevent issues.
-        return namePattern.matcher(name.replace("\\Q", "").replace("\\E", "")).matches();
+        return namePattern.matcher(Pattern.quote(name)).matches();
     }
 
     /**
@@ -859,7 +877,7 @@ public class StackUtils {
         }
 
         // Create a matcher for the Pattern. Remove all quote start/ends to prevent issues.
-        Matcher matcher = namePattern.matcher(name.replace("\\Q", "").replace("\\E", ""));
+        Matcher matcher = namePattern.matcher(Pattern.quote(name));
 
         // Ensure we have a match.
         if (!matcher.matches()) {

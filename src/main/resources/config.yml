@@ -136,7 +136,7 @@ stack-mob-type:
   ENDERMAN: true
   ENDERMITE: true
   EVOKER: false # Limited spawns
-  FOX: false # TODO when API is fleshed out
+  FOX: true
   GHAST: true
   GIANT: true
   GUARDIAN: true
@@ -150,11 +150,12 @@ stack-mob-type:
   MULE: false # Possible to copy good horses' stats
   MUSHROOM_COW: true
   OCELOT: false
-  PANDA: false # TODO when API is fleshed out
+  PANDA: true
   PARROT: true
   PHANTOM: false
   PIG: true
   PIGLIN: true
+  PIGLIN_BRUTE: true
   PILLAGER: false
   POLAR_BEAR: false
   PUFFERFISH: false # Fish are buggy and not fully supported
@@ -171,7 +172,7 @@ stack-mob-type:
   SPIDER: true
   SQUID: false
   STRAY: true
-  STRIDER: false # Striders missing saddle API
+  STRIDER: true
   TRADER_LLAMA: false
   TROPICAL_FISH: false # Fish are buggy and not fully supported
   TURTLE: false # Turtle spawn point, "home beach" will be messed up

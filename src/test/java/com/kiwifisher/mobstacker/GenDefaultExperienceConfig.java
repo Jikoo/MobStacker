@@ -171,6 +171,7 @@ public class GenDefaultExperienceConfig {
         entry = new BaseExperienceEntry();
         entry.setMinimum(20);
         pool.setEntries(Collections.singletonList(entry));
+        defaults.put("minecraft:piglin_brute", pool);
         defaults.put("minecraft:ravager", pool);
 
         pool = new BaseExperiencePool();
