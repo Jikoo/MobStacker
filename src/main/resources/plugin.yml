@@ -7,8 +7,8 @@ api-version: "1.16"
 
 commands:
   mobstacker:
-    usage: /mobstacker help
-    permission: mobstacker.reload;mobstacker.toggle;mobstacker.clearall
+    usage: /<command> help
+    permission: mobstacker.reload;mobstacker.toggle;mobstacker.clearall;mobstacker.inspect;mobstacker.merge
 
 permissions:
   mobstacker.*:
@@ -24,3 +24,9 @@ permissions:
       mobstacker.clearall:
         default: op
         description: Permission to use /mobstacker clearall
+      mobstacker.inspect:
+        default: op
+        description: Permission to use /mobstacker inspect
+      mobstacker.merge:
+        default: op
+        description: Permission to use /mobstacker merge
