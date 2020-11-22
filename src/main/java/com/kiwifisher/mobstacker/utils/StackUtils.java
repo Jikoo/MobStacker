@@ -89,11 +89,9 @@ public class StackUtils {
                 .replace("\\E", "");
 
         // Replace quantity and type tags with regular expressions to match any valid names
-        naming = naming.replace("{QTY}", "\\E([0-9]+)\\Q").replace("{TYPE}", "\\E[A-Z ]+\\Q");
+        naming = "\\Q" + naming.replace("{QTY}", "\\E([0-9]+)\\Q").replace("{TYPE}", "\\E[A-Z ]+\\Q") + "\\E";
 
-        // Prepend quote start and append quote end
-
-        namePattern = Pattern.compile("\\Q" + naming + "\\E");
+        namePattern = Pattern.compile(naming);
     }
 
     public void attemptToStack(final LivingEntity stack, final int attempts) {
@@ -860,7 +858,7 @@ public class StackUtils {
         }
 
         // Ensure we have a match with the name pattern. Remove all quote start/ends to prevent issues.
-        return namePattern.matcher(Pattern.quote(name)).matches();
+        return namePattern.matcher(name.replace("\\Q", "").replace("\\E", "")).matches();
     }
 
     /**
@@ -877,7 +875,7 @@ public class StackUtils {
         }
 
         // Create a matcher for the Pattern. Remove all quote start/ends to prevent issues.
-        Matcher matcher = namePattern.matcher(Pattern.quote(name));
+        Matcher matcher = namePattern.matcher(name.replace("\\Q", "").replace("\\E", ""));
 
         // Ensure we have a match.
         if (!matcher.matches()) {
